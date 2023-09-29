@@ -9,8 +9,10 @@ export const StoryMachine = createMachine({
     ready: {
       on: {
         TOGGLE: "playing",
+        AUTHOR: "edit",
       },
     },
     playing: {},
+    edit: {}
   },
 });

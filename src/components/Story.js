@@ -12,6 +12,7 @@ import { generateRowAndColumnFunctions } from "./utilities/layoutFunction";
 import { enrichLandmarks } from "./Pose/landmark_utilities";
 import firebase from "firebase/compat";
 import "firebase/compat/auth";
+import PoseAuthoring from "./PoseAuthoring.js";
 
 const [
   numRows,
@@ -116,6 +117,13 @@ const Story = () => {
             width={width}
             height={height}
             startCallback={() => send("TOGGLE")}
+            editCallback={() => send("AUTHOR")}
+          />
+        )}
+        {state.value === "edit" && (
+          <PoseAuthoring
+            width={width}
+            height={height}
           />
         )}
         {state.value === "playing" && (
