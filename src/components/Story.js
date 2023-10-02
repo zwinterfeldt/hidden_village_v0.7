@@ -124,6 +124,9 @@ const Story = () => {
           <PoseAuthoring
             width={width}
             height={height}
+            poseData={poseData}
+            columnDimensions={columnDimensions}
+            rowDimensions={rowDimensions}
           />
         )}
         {state.value === "playing" && (
