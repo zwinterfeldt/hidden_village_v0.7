@@ -26,7 +26,55 @@ const PoseAuthoring = (props) => {
               fontSize: 50,
               fontWeight: 800,
               fill: [green],
-              letterSpacing: -5,
+              letterSpacing: 0,
+            })
+          }
+          anchor={0.5}
+        />
+        <Text
+          text={"Start Pose"}
+          x={width * 0.19}
+          y={height * 0.29}
+          style={
+            new TextStyle({
+              align: "center",
+              fontFamily: "Futura",
+              fontSize: 30,
+              fontWeight: 800,
+              fill: [green],
+              letterSpacing: -1,
+            })
+          }
+          anchor={0.5}
+        />
+        <Text
+          text={"Intermediate Pose"}
+          x={width * 0.19}
+          y={height * 0.59}
+          style={
+            new TextStyle({
+              align: "center",
+              fontFamily: "Futura",
+              fontSize: 30,
+              fontWeight: 800,
+              fill: [green],
+              letterSpacing: -1,
+            })
+          }
+          anchor={0.5}
+        />
+        <Text
+          text={"End Pose"}
+          x={width * 0.19}
+          y={height * 0.89}
+          style={
+            new TextStyle({
+              align: "center",
+              fontFamily: "Futura",
+              fontSize: 30,
+              fontWeight: 800,
+              fill: [green],
+              letterSpacing: -1,
             })
           }
           anchor={0.5}
