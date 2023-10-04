@@ -43,7 +43,7 @@ const ExperimentalTask = (props) => {
     // If the recording param is set to true, begin writing data to the database.
     if (recordingUrlParam.toLowerCase() === "true") {
       // Get the fps parameter from the URL. If it's not set, default to 30.
-      const fpsUrlParam = parseInt(queryParameters.get("fps")) || 30;
+      const fpsUrlParam = parseInt(queryParameters.get("fps")) || 12;
 
       // Empty array to hold the promise objects.
       // This is important so we can assure that all the promises get settled on component unmount.
