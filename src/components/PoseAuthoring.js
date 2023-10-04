@@ -14,7 +14,7 @@ const PoseAuthoring = (props) => {
 
     return (
       <>
-        <Background height={screen.availHeight} width={screen.availWidth} />
+        <Background height={height} width={width} />
         <Text
           text={"Pose Sequence Editor"}
           x={width * 0.5}
@@ -79,10 +79,10 @@ const PoseAuthoring = (props) => {
           }
           anchor={0.5}
         />
-        <MainBox height width />
-        <StartBox height width />
-        <IntermediateBox height width />
-        <EndBox height width />
+        <MainBox height={height} width={width} />
+        <StartBox height={height} width={width} />
+        <IntermediateBox height={height} width={width} />
+        <EndBox height={height} width={width} />
         <Pose
           poseData={props.poseData}
           colAttr={playerColumn}
