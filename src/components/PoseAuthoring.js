@@ -14,7 +14,7 @@ const PoseAuthoring = (props) => {
 
     return (
       <>
-        <Background height={height} width={width} />
+        <Background height={screen.availHeight} width={screen.availWidth} />
         <Text
           text={"Pose Sequence Editor"}
           x={width * 0.5}
@@ -33,8 +33,8 @@ const PoseAuthoring = (props) => {
         />
         <Text
           text={"Start Pose"}
-          x={width * 0.19}
-          y={height * 0.29}
+          x={width * 0.195}
+          y={height * 0.35}
           style={
             new TextStyle({
               align: "center",
@@ -49,8 +49,8 @@ const PoseAuthoring = (props) => {
         />
         <Text
           text={"Intermediate Pose"}
-          x={width * 0.19}
-          y={height * 0.59}
+          x={width * 0.195}
+          y={height * 0.65}
           style={
             new TextStyle({
               align: "center",
@@ -65,8 +65,8 @@ const PoseAuthoring = (props) => {
         />
         <Text
           text={"End Pose"}
-          x={width * 0.19}
-          y={height * 0.89}
+          x={width * 0.195}
+          y={height * 0.95}
           style={
             new TextStyle({
               align: "center",
@@ -79,10 +79,10 @@ const PoseAuthoring = (props) => {
           }
           anchor={0.5}
         />
-        <MainBox height={height * 0.65} width={width * 1.5} />
-        <StartBox height={height * 0.35} width={width * 0.25} />
-        <IntermediateBox height={height * 1.35} width={width * 0.25} />
-        <EndBox height={height * 2.35} width={width * 0.25} />
+        <MainBox height width />
+        <StartBox height width />
+        <IntermediateBox height width />
+        <EndBox height width />
         <Pose
           poseData={props.poseData}
           colAttr={playerColumn}

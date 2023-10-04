@@ -5,10 +5,10 @@ import { black, yellow } from "../utils/colors";
 export const MainBox = (props) => {
   // Box holding moving user pose that will be used to capture
   // Calculate the position and dimensions of the MainBox
-  const rectangleX = props.width * 0.3;
-  const rectangleY = props.height * 0.3;
-  const rectangleWidth = 750; // Adjust the width as needed
-  const rectangleHeight = 400; // Adjust the height as needed
+  const rectangleX = screen.availWidth * 0.5;
+  const rectangleY = screen.availHeight * 0.15;
+  const rectangleWidth = screen.availWidth * 0.4; // Adjust the width as needed
+  const rectangleHeight = screen.availHeight * 0.5; // Adjust the height as needed
 
   // Create a drawing function for the MainBox
   const drawRectangle = (g) => {
@@ -35,10 +35,10 @@ export const MainBox = (props) => {
 export const StartBox = (props) => {
   // Box holding starting pose in conjecture
   // Calculate the position and dimensions of the StartBox
-  const rectangleX = props.width * 0.3;
-  const rectangleY = props.height * 0.3;
-  const rectangleWidth = 450; // Adjust the width as needed
-  const rectangleHeight = 150; // Adjust the height as needed
+  const rectangleX = screen.availWidth * 0.1;
+  const rectangleY = screen.availHeight * 0.10;
+  const rectangleWidth = screen.availWidth * 0.2; // Adjust the width as needed
+  const rectangleHeight = screen.availHeight * 0.2; // Adjust the height as needed
 
   // Create a drawing function for the StartBox
   const drawRectangle = (g) => {
@@ -65,10 +65,10 @@ export const StartBox = (props) => {
 export const IntermediateBox = (props) => {
   // Box holding intermediate pose in conjecture
   // Calculate the position and dimensions of the IntermediateBox
-  const rectangleX = props.width * 0.3;
-  const rectangleY = props.height * 0.3;
-  const rectangleWidth = 450; // Adjust the width as needed
-  const rectangleHeight = 150; // Adjust the height as needed
+  const rectangleX = screen.availWidth * 0.1;
+  const rectangleY = screen.availHeight * 0.37;
+  const rectangleWidth = screen.availWidth * 0.2; // Adjust the width as needed
+  const rectangleHeight = screen.availHeight * 0.2; // Adjust the height as needed
 
   // Create a drawing function for the IntermediateBox
   const drawRectangle = (g) => {
@@ -95,10 +95,10 @@ export const IntermediateBox = (props) => {
 export const EndBox = (props) => {
   // Box holding end pose in conjecture
   // Calculate the position and dimensions of the EndBox
-  const rectangleX = props.width * 0.3;
-  const rectangleY = props.height * 0.3;
-  const rectangleWidth = 450; // Adjust the width as needed
-  const rectangleHeight = 150; // Adjust the height as needed
+  const rectangleX = screen.availWidth * 0.1;
+  const rectangleY = screen.availHeight * 0.64;
+  const rectangleWidth = screen.availWidth * 0.2; // Adjust the width as needed
+  const rectangleHeight = screen.availHeight * 0.2; // Adjust the height as needed
 
   // Create a drawing function for the EndBox
   const drawRectangle = (g) => {
