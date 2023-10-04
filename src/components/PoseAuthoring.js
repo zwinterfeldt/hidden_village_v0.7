@@ -2,7 +2,7 @@ import Background from "./Background";
 import Button from "./Button";
 import Pose from "./Pose";
 import { useState } from "react";
-import { MainBox, StartBox, IntermediateBox, EndBox } from "./PoseAuthoringBoxes";
+import { MainBox, StartBox, IntermediateBox, EndBox, CaptureButton } from "./PoseAuthoringBoxes";
 import { Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { green } from "../utils/colors";
@@ -14,7 +14,7 @@ const PoseAuthoring = (props) => {
 
     return (
       <>
-        <Background height={height} width={width} />
+        <Background height={screen.availHeight} width={screen.availWidth} />
         <Text
           text={"Pose Sequence Editor"}
           x={width * 0.5}
@@ -79,10 +79,14 @@ const PoseAuthoring = (props) => {
           }
           anchor={0.5}
         />
-        <MainBox height={height} width={width} />
-        <StartBox height={height} width={width} />
-        <IntermediateBox height={height} width={width} />
-        <EndBox height={height} width={width} />
+        <MainBox height={screen.availHeight} width={screen.availWidth} />
+        <StartBox height={screen.availHeight} width={screen.availWidth} />
+        <IntermediateBox height={screen.availHeight} width={screen.availWidth} />
+        <EndBox height={screen.availHeight} width={screen.availWidth} />
+        <CaptureButton 
+          height={screen.availHeight} 
+          width={screen.availWidth}
+        />
         <Pose
           poseData={props.poseData}
           colAttr={playerColumn}
