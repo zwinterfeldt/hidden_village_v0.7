@@ -5,7 +5,7 @@ import { black, yellow } from "../utils/colors";
 export const MainBox = (props) => {
   // Box holding moving user pose that will be used to capture
   // Calculate the position and dimensions of the MainBox
-  const rectangleX = props.width * 0.5;
+  const rectangleX = props.width * 0.475;
   const rectangleY = props.height * 0.15;
   const rectangleWidth = props.width * 0.4; // Adjust the width as needed
   const rectangleHeight = props.height * 0.5; // Adjust the height as needed
@@ -35,9 +35,9 @@ export const MainBox = (props) => {
 export const StartBox = (props) => {
   // Box holding starting pose in conjecture
   // Calculate the position and dimensions of the StartBox
-  const rectangleX = props.width * 0.1; // use this to maintain aspect ratio => windows.devicepixelratio
-  const rectangleY = props.height * 0.10;
-  const rectangleWidth = props.width * 0.2; // Adjust the width as needed
+  const rectangleX = props.width * 0.1;
+  const rectangleY = props.height * 0.17;
+  const rectangleWidth = props.width * 0.2; // Adjust the width as needed,    maintain aspect ratio => windows.devicepixelratio
   const rectangleHeight = props.height * 0.2; // Adjust the height as needed
 
   // Create a drawing function for the StartBox
@@ -66,7 +66,7 @@ export const IntermediateBox = (props) => {
   // Box holding intermediate pose in conjecture
   // Calculate the position and dimensions of the IntermediateBox
   const rectangleX = props.width * 0.1;
-  const rectangleY = props.height * 0.37;
+  const rectangleY = props.height * 0.41;
   const rectangleWidth = props.width * 0.2; // Adjust the width as needed
   const rectangleHeight = props.height * 0.2; // Adjust the height as needed
 
@@ -96,7 +96,7 @@ export const EndBox = (props) => {
   // Box holding end pose in conjecture
   // Calculate the position and dimensions of the EndBox
   const rectangleX = props.width * 0.1;
-  const rectangleY = props.height * 0.64;
+  const rectangleY = props.height * 0.65;
   const rectangleWidth = props.width * 0.2; // Adjust the width as needed
   const rectangleHeight = props.height * 0.2; // Adjust the height as needed
 
@@ -107,36 +107,6 @@ export const EndBox = (props) => {
     g.lineStyle(4, black, 1); // Outline color (black) and thickness (4)
 
     // Use g.moveTo and g.lineTo to draw the EndBox outline
-    g.moveTo(rectangleX, rectangleY);
-    g.lineTo(rectangleX + rectangleWidth, rectangleY);
-    g.lineTo(rectangleX + rectangleWidth, rectangleY + rectangleHeight);
-    g.lineTo(rectangleX, rectangleY + rectangleHeight);
-    g.lineTo(rectangleX, rectangleY); // Close the path by returning to the starting point
-    g.endFill();
-  };
-
-  return (
-    <Container>
-      <Graphics draw={drawRectangle} />
-    </Container>
-  );
-};
-
-export const CaptureButton = (props) => {
-  // Box holding moving user pose that will be used to capture
-  // Calculate the position and dimensions of the MainBox
-  const rectangleX = props.width * 0.4;
-  const rectangleY = props.height * 0.55;
-  const rectangleWidth = props.width * 0.1; // Adjust the width as needed
-  const rectangleHeight = props.height * 0.1; // Adjust the height as needed
-
-  // Create a drawing function for the MainBox
-  const drawRectangle = (g) => {
-    g.clear();
-    g.beginFill(yellow);      // Fill MainBox with yellow
-    g.lineStyle(4, black, 1); // Outline color (black) and thickness (4)
-
-    // Use g.moveTo and g.lineTo to draw the MainBox outline
     g.moveTo(rectangleX, rectangleY);
     g.lineTo(rectangleX + rectangleWidth, rectangleY);
     g.lineTo(rectangleX + rectangleWidth, rectangleY + rectangleHeight);

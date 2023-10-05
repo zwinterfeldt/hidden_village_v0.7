@@ -127,6 +127,7 @@ const Story = () => {
             poseData={poseData}
             columnDimensions={columnDimensions}
             rowDimensions={rowDimensions}
+            mainCallback={() => send("HOME")} // returns to home
           />
         )}
         {state.value === "playing" && (
