@@ -14,11 +14,11 @@ const PoseAuthoring = (props) => {
 
     return (
       <>
-        <Background height={screen.availHeight} width={screen.availWidth} />
+        <Background height={height} width={width} />
         <Text
           text={"Pose Sequence Editor"}
-          x={screen.availWidth * 0.5}
-          y={screen.availHeight * 0.05}
+          x={width * 0.5}
+          y={height * 0.05}
           style={
             new TextStyle({
               align: "center",
@@ -33,8 +33,8 @@ const PoseAuthoring = (props) => {
         />
           <Text
           text={"Conjecture: This is a sample text"}
-          x={screen.availWidth * 0.5}
-          y={screen.availHeight * 0.12}
+          x={width * 0.5}
+          y={height * 0.12}
           style={
             new TextStyle({
               align: "center",
@@ -49,8 +49,8 @@ const PoseAuthoring = (props) => {
         />
         <Text
           text={"Start Pose"}
-          x={screen.availWidth * 0.195}
-          y={screen.availHeight * 0.39}
+          x={width * 0.195}
+          y={height * 0.39}
           style={
             new TextStyle({
               align: "center",
@@ -65,8 +65,8 @@ const PoseAuthoring = (props) => {
         />
         <Text
           text={"Intermediate Pose"}
-          x={screen.availWidth * 0.195}
-          y={screen.availHeight * 0.63}
+          x={width * 0.195}
+          y={height * 0.63}
           style={
             new TextStyle({
               align: "center",
@@ -81,8 +81,8 @@ const PoseAuthoring = (props) => {
         />
         <Text
           text={"End Pose"}
-          x={screen.availWidth * 0.195}
-          y={screen.availHeight * 0.87}
+          x={width * 0.195}
+          y={height * 0.87}
           style={
             new TextStyle({
               align: "center",
@@ -95,10 +95,10 @@ const PoseAuthoring = (props) => {
           }
           anchor={0.5}
         />
-        <MainBox height={screen.availHeight} width={screen.availWidth} />
-        <StartBox height={screen.availHeight} width={screen.availWidth} />
-        <IntermediateBox height={screen.availHeight} width={screen.availWidth} />
-        <EndBox height={screen.availHeight} width={screen.availWidth} />
+        <MainBox height={height} width={width} />
+        <StartBox height={height} width={width} />
+        <IntermediateBox height={height} width={width} />
+        <EndBox height={height} width={width} />
         <Pose
           poseData={props.poseData}
           colAttr={playerColumn}
@@ -107,8 +107,8 @@ const PoseAuthoring = (props) => {
         <RectButton
         height={height * 0.12}
         width={width * 0.15}
-        x={screen.availWidth * 0.5}
-        y={screen.availHeight * 0.7}
+        x={width * 0.5}
+        y={height * 0.7}
         color={green}
         fontSize={24}
         fontColor={blue}
@@ -119,8 +119,8 @@ const PoseAuthoring = (props) => {
         <RectButton
         height={height * 0.12}
         width={width * 0.15}
-        x={screen.availWidth * 0.6}
-        y={screen.availHeight * 0.7}
+        x={width * 0.6}
+        y={height * 0.7}
         color={green}
         fontSize={24}
         fontColor={blue}
@@ -131,8 +131,8 @@ const PoseAuthoring = (props) => {
         <RectButton
         height={height * 0.12}
         width={width * 0.15}
-        x={screen.availWidth * 0.7}
-        y={screen.availHeight * 0.7}
+        x={width * 0.7}
+        y={height * 0.7}
         color={green}
         fontSize={24}
         fontColor={blue}
@@ -143,8 +143,8 @@ const PoseAuthoring = (props) => {
         <RectButton
         height={height * 0.12}
         width={width * 0.15}
-        x={screen.availWidth * 0.8}
-        y={screen.availHeight * 0.7}
+        x={width * 0.8}
+        y={height * 0.7}
         color={green}
         fontSize={24}
         fontColor={blue}
