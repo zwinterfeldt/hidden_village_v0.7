@@ -18,7 +18,7 @@ const Button = (props) => {
     (g) => {
       g.clear();
       g.beginFill(color);
-      g.drawCircle(x, y, width * 0.45);
+      g.drawCircle(x, y, width * 0.45); // Draws a circular button
       g.endFill();
     },
     [width]

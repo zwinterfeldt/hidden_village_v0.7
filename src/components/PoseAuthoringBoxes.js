@@ -1,6 +1,7 @@
-import { Container, Graphics } from "@inlet/react-pixi";
+import { Container, Graphics, Text } from "@inlet/react-pixi";
+import { TextStyle } from "@pixi/text";
 import React from "react";
-import { black, yellow } from "../utils/colors";
+import { black, yellow, green } from "../utils/colors";
 
 export const MainBox = (props) => {
   // Box holding moving user pose that will be used to capture
@@ -28,6 +29,38 @@ export const MainBox = (props) => {
   return (
     <Container>
       <Graphics draw={drawRectangle} />
+      <Text
+          text={"Pose Sequence Editor"}
+          x={props.width * 0.5}
+          y={props.height * 0.05}
+          style={
+            new TextStyle({
+              align: "center",
+              fontFamily: "Futura",
+              fontSize: 50,
+              fontWeight: 800,
+              fill: [green],
+              letterSpacing: 0,
+            })
+          }
+          anchor={0.5}
+        />
+        <Text
+          text={"Conjecture: This is a sample text"}
+          x={props.width * 0.5}
+          y={props.height * 0.12}
+          style={
+            new TextStyle({
+              align: "center",
+              fontFamily: "Futura",
+              fontSize: 30,
+              fontWeight: 800,
+              fill: [green],
+              letterSpacing: 0,
+            })
+          }
+          anchor={0.5}
+        />
     </Container>
   );
 };
@@ -58,6 +91,22 @@ export const StartBox = (props) => {
   return (
     <Container>
       <Graphics draw={drawRectangle} />
+      <Text
+          text={"Start Pose"}
+          x={props.width * 0.195}
+          y={props.height * 0.39}
+          style={
+            new TextStyle({
+              align: "center",
+              fontFamily: "Futura",
+              fontSize: 30,
+              fontWeight: 800,
+              fill: [green],
+              letterSpacing: -1,
+            })
+          }
+          anchor={0.5}
+        />
     </Container>
   );
 };
@@ -88,6 +137,22 @@ export const IntermediateBox = (props) => {
   return (
     <Container>
       <Graphics draw={drawRectangle} />
+      <Text
+          text={"Intermediate Pose"}
+          x={props.width * 0.195}
+          y={props.height * 0.63}
+          style={
+            new TextStyle({
+              align: "center",
+              fontFamily: "Futura",
+              fontSize: 30,
+              fontWeight: 800,
+              fill: [green],
+              letterSpacing: -1,
+            })
+          }
+          anchor={0.5}
+        />
     </Container>
   );
 };
@@ -118,6 +183,22 @@ export const EndBox = (props) => {
   return (
     <Container>
       <Graphics draw={drawRectangle} />
+      <Text
+          text={"End Pose"}
+          x={props.width * 0.195}
+          y={props.height * 0.87}
+          style={
+            new TextStyle({
+              align: "center",
+              fontFamily: "Futura",
+              fontSize: 30,
+              fontWeight: 800,
+              fill: [green],
+              letterSpacing: -1,
+            })
+          }
+          anchor={0.5}
+        />
     </Container>
   );
 };
