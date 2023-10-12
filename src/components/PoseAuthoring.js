@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MainBox, StartBox, IntermediateBox, EndBox } from "./PoseAuthoringBoxes";
 import { Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
-import { green, blue } from "../utils/colors";
+import { green, blue, white, pink, orange } from "../utils/colors";
 import RectButton from "./RectButton";
 
 const PoseAuthoring = (props) => {
@@ -26,34 +26,34 @@ const PoseAuthoring = (props) => {
         />
         <RectButton
         height={height * 0.12}
-        width={width * 0.15}
-        x={width * 0.5}
-        y={height * 0.7}
-        color={green}
+        width={width * 0.20}
+        x={width * 0.41}
+        y={height * 0.83}
+        color={white}
         fontSize={24}
-        fontColor={blue}
+        fontColor={pink}
         text={"Capture"}
         fontWeight={800}
         callback={null} // Implement Pose-Capturing
       />
         <RectButton
         height={height * 0.12}
-        width={width * 0.15}
-        x={width * 0.6}
-        y={height * 0.7}
-        color={green}
+        width={width * 0.20}
+        x={width * 0.52}
+        y={height * 0.83}
+        color={white}
         fontSize={24}
-        fontColor={blue}
+        fontColor={green}
         text={"Save"}
         fontWeight={800}
         callback={null} // Implement Save Feature
       />
         <RectButton
         height={height * 0.12}
-        width={width * 0.15}
-        x={width * 0.7}
-        y={height * 0.7}
-        color={green}
+        width={width * 0.20}
+        x={width * 0.67}
+        y={height * 0.83}
+        color={white}
         fontSize={24}
         fontColor={blue}
         text={"Done"}
@@ -62,12 +62,12 @@ const PoseAuthoring = (props) => {
       />
         <RectButton
         height={height * 0.12}
-        width={width * 0.15}
-        x={width * 0.8}
-        y={height * 0.7}
-        color={green}
+        width={width * 0.20}
+        x={width * 0.78}
+        y={height * 0.83}
+        color={white}
         fontSize={24}
-        fontColor={blue}
+        fontColor={orange}
         text={"Reset"}
         fontWeight={800}
         callback={null} // Implement Pose-Capturing

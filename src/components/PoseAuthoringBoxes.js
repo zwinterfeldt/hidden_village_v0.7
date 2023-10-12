@@ -1,15 +1,15 @@
 import { Container, Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import React from "react";
-import { black, yellow, green } from "../utils/colors";
+import { black, yellow, green, white, red } from "../utils/colors";
 
 export const MainBox = (props) => {
   // Box holding moving user pose that will be used to capture
   // Calculate the position and dimensions of the MainBox
-  const rectangleX = props.width * 0.475;
-  const rectangleY = props.height * 0.15;
-  const rectangleWidth = props.width * 0.4; // Adjust the width as needed
-  const rectangleHeight = props.height * 0.5; // Adjust the height as needed
+  const rectangleX = props.width * 0.375;
+  const rectangleY = props.height * 0.17;
+  const rectangleWidth = props.width * 0.52; // Adjust the width as needed
+  const rectangleHeight = props.height * 0.65; // Adjust the height as needed
 
   // Create a drawing function for the MainBox
   const drawRectangle = (g) => {
@@ -26,9 +26,17 @@ export const MainBox = (props) => {
     g.endFill();
   };
 
+  const drawTextBox = (g) => {  // Draws a black box around the buttons
+    g.clear();
+    g.beginFill(black);
+    g.drawRect(props.width * 0.374, props.height * 0.822, props.width * 0.522, props.height * 0.07);  // (x, y, width, height)
+    g.endFill();
+  };
+
   return (
     <Container>
       <Graphics draw={drawRectangle} />
+      <Graphics draw={drawTextBox} />
       <Text
           text={"Pose Sequence Editor"}
           x={props.width * 0.5}
@@ -88,9 +96,17 @@ export const StartBox = (props) => {
     g.endFill();
   };
 
+  const drawTextBox = (g) => {  // Draws a black box around the text
+      g.clear();
+      g.beginFill(black);
+      g.drawRect(props.width * 0.099, props.height * 0.37, props.width * 0.202, props.height * 0.04);  // (x, y, width, height)
+      g.endFill();
+    };
+
   return (
     <Container>
       <Graphics draw={drawRectangle} />
+      <Graphics draw={drawTextBox} />
       <Text
           text={"Start Pose"}
           x={props.width * 0.195}
@@ -99,10 +115,10 @@ export const StartBox = (props) => {
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 30,
+              fontSize: 29,
               fontWeight: 800,
               fill: [green],
-              letterSpacing: -1,
+              letterSpacing: 0,
             })
           }
           anchor={0.5}
@@ -134,9 +150,17 @@ export const IntermediateBox = (props) => {
     g.endFill();
   };
 
+  const drawTextBox = (g) => {  // Draws a black box around the text
+    g.clear();
+    g.beginFill(black);
+    g.drawRect(props.width * 0.099, props.height * 0.61, props.width * 0.202, props.height * 0.04);  // (x, y, width, height)
+    g.endFill();
+  };
+
   return (
     <Container>
       <Graphics draw={drawRectangle} />
+      <Graphics draw={drawTextBox} />
       <Text
           text={"Intermediate Pose"}
           x={props.width * 0.195}
@@ -145,10 +169,10 @@ export const IntermediateBox = (props) => {
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 30,
+              fontSize: 29,
               fontWeight: 800,
-              fill: [green],
-              letterSpacing: -1,
+              fill: [white],
+              letterSpacing: 0,
             })
           }
           anchor={0.5}
@@ -180,9 +204,17 @@ export const EndBox = (props) => {
     g.endFill();
   };
 
+  const drawTextBox = (g) => {  // Draws a black box around the text
+    g.clear();
+    g.beginFill(black);
+    g.drawRect(props.width * 0.099, props.height * 0.85, props.width * 0.202, props.height * 0.04);  // (x, y, width, height)
+    g.endFill();
+  };
+
   return (
     <Container>
       <Graphics draw={drawRectangle} />
+      <Graphics draw={drawTextBox} />
       <Text
           text={"End Pose"}
           x={props.width * 0.195}
@@ -191,10 +223,10 @@ export const EndBox = (props) => {
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 30,
+              fontSize: 29,
               fontWeight: 800,
-              fill: [green],
-              letterSpacing: -1,
+              fill: [red],
+              letterSpacing: 0,
             })
           }
           anchor={0.5}
