@@ -2,9 +2,10 @@ import { Text, Graphics } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { useCallback } from "react";
 
-const Button = (props) => {
+const RectButton = (props) => {
   const {
     width,
+    height,
     x,
     y,
     text,
@@ -18,7 +19,7 @@ const Button = (props) => {
     (g) => {
       g.clear();
       g.beginFill(color);
-      g.drawCircle(x, y, width * 0.45); // Draws a circular button
+      g.drawRect(x, y, width * 0.4, height * 0.4);  // Draws a rectangular button
       g.endFill();
     },
     [width]
@@ -40,12 +41,12 @@ const Button = (props) => {
         }
         interactive={true}
         pointerdown={callback}
-        x={x}
-        y={y}
+        x={x * 1.04}
+        y={y * 1.02}
         anchor={0.5}
       />
     </>
   );
 };
 
-export default Button;
+export default RectButton;

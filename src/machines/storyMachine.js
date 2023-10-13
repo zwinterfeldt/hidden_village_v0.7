@@ -8,9 +8,13 @@ export const StoryMachine = createMachine({
   states: {
     ready: {
       on: {
-        TOGGLE: "playing",
+        TOGGLE: "playing",  // move to game
+        AUTHOR: "edit", // move to poseauthoring
+        HOME: "home",  // move to home
       },
     },
     playing: {},
+    edit: {},
+    home: {}, // when uncommented, freezes entire program
   },
 });
