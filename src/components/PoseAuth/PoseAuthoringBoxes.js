@@ -1,7 +1,7 @@
 import { Container, Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import React from "react";
-import { black, yellow, green, white, red } from "../utils/colors";
+import { black, yellow, green, white, red } from "../../utils/colors";
 
 export const MainBox = (props) => {
   // Box holding moving user pose that will be used to capture

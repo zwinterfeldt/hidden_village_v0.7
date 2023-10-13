@@ -1,11 +1,11 @@
-import Background from "./Background";
-import Pose from "./Pose";
+import Background from "../Background";
+import Pose from "../Pose";
 import { useState } from "react";
 import { MainBox, StartBox, IntermediateBox, EndBox } from "./PoseAuthoringBoxes";
 import { Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
-import { green, blue, white, pink, orange } from "../utils/colors";
-import RectButton from "./RectButton";
+import { green, blue, white, pink, orange } from "../../utils/colors";
+import RectButton from "../RectButton";
 
 const PoseAuthoring = (props) => {
     const { height, width, poseData, columnDimensions, rowDimensions, mainCallBack } = props;

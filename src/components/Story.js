@@ -12,7 +12,7 @@ import { generateRowAndColumnFunctions } from "./utilities/layoutFunction";
 import { enrichLandmarks } from "./Pose/landmark_utilities";
 import firebase from "firebase/compat";
 import "firebase/compat/auth";
-import PoseAuthoring from "./PoseAuthoring.js";
+import PoseAuthoring from "./PoseAuth/PoseAuthoring.js";
 
 const [
   numRows,
