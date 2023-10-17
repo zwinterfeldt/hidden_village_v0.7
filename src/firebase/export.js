@@ -69,6 +69,14 @@ ref.once('value', (snapshot) => {
         poseLandmarks: parsedPoseData.poseLandmarks.map(landmark => `[X:${landmark.x};Y:${landmark.y};Z:${landmark.z};visibility:${landmark.visibility}]`).join(', '),
         timeStamp: objectData.timestamp || '',
         userId: objectData.userId || '',
+        conjectureId: objectData.conjectureId !== undefined ? objectData.conjectureId : 'null',
+        frameRate: objectData.frameRate || 'null',
+        leftHandLandmarks: parsedPoseData.leftHandLandmarks.length > 0 ? parsedPoseData.leftHandLandmarks.map(landmark => `[X:${landmark.x};Y:${landmark.y};Z:${landmark.z}]`).join(', ') : 'null',
+        rightHandLandmarks: parsedPoseData.rightHandLandmarks.length > 0 ? parsedPoseData.rightHandLandmarks.map(landmark => `[X:${landmark.x};Y:${landmark.y};Z:${landmark.z}]`).join(', ') : 'null',
+        faceLandmarks: parsedPoseData.faceLandmarks.length > 0 ? parsedPoseData.faceLandmarks.map(landmark => `[X:${landmark.x};Y:${landmark.y};Z:${landmark.z}]`).join(', ') : 'null',
+        poseLandmarks: parsedPoseData.poseLandmarks.length > 0 ? parsedPoseData.poseLandmarks.map(landmark => `[X:${landmark.x};Y:${landmark.y};Z:${landmark.z};visibility:${landmark.visibility}]`).join(', ') : 'null',
+        timeStamp: objectData.timestamp || 'null',
+        userId: objectData.userId || 'null',
       };
 
       // Push formatted data into the dataArray created before 
