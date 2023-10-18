@@ -130,14 +130,6 @@ const Story = () => {
             mainCallback={() => send("HOME")} // returns to home
           />
         )}
-        {state.value === "home" && (
-          <Home
-            width={width}
-            height={height}
-            startCallback={() => send("TOGGLE")}
-            editCallback={() => send("AUTHOR")}
-          />
-        )}
         {state.value === "playing" && (
           <Game
             poseData={poseData}
