@@ -16,64 +16,142 @@ const PoseAuthoring = (props) => {
       <>
         <Background height={height} width={width} />
         <MainBox height={height} width={width} />
+        
         <StartBox height={height} width={width} />
+        <RectButton
+        // Start Pose button
+          height={height * 0.05}
+          width={width * 0.10}
+          x={width * 0.25}
+          y={height * .19}
+          color={white}
+          fontSize={16}
+          fontColor={green}
+          text={"EDIT"}
+          fontWeight={800}
+          callback={null}
+        />
+        <RectButton
+        // Start Pose button
+          height={height * 0.05}
+          width={width * 0.10}
+          x={width * 0.25}
+          y={height * 0.33}
+          color={white}
+          fontSize={16}
+          fontColor={green}
+          text={"TOL%"}
+          fontWeight={800}
+          callback={null}
+        />
+
         <IntermediateBox height={height} width={width} />
+        <RectButton
+          height={height * 0.05}
+          width={width * 0.10}
+          x={width * 0.25}
+          y={height * 0.43}
+          color={white}
+          fontSize={16}
+          fontColor={green}
+          text={"EDIT"}
+          fontWeight={800}
+          callback={null}
+        />
+        <RectButton
+          height={height * 0.05}
+          width={width * 0.10}
+          x={width * 0.25}
+          y={height * 0.57}
+          color={white}
+          fontSize={16}
+          fontColor={green}
+          text={"TOL%"}
+          fontWeight={800}
+          callback={null}
+        />
+
         <EndBox height={height} width={width} />
+        <RectButton
+          height={height * 0.05}
+          width={width * 0.10}
+          x={width * 0.25}
+          y={height * 0.67}
+          color={white}
+          fontSize={16}
+          fontColor={green}
+          text={"EDIT"}
+          fontWeight={800}
+          callback={null}
+        />
+        <RectButton
+          height={height * 0.05}
+          width={width * 0.10}
+          x={width * 0.25}
+          y={height * 0.81}
+          color={white}
+          fontSize={16}
+          fontColor={green}
+          text={"TOL%"}
+          fontWeight={800}
+          callback={null}
+        />
+
         <Pose
           poseData={props.poseData}
           colAttr={playerColumn}
           similarityScores={poseSimilarity}
         />
         <RectButton
-        height={height * 0.12}
-        width={width * 0.20}
-        x={width * 0.41}
-        y={height * 0.83}
-        color={white}
-        fontSize={24}
-        fontColor={pink}
-        text={"Capture"}
-        fontWeight={800}
-        callback={null} // Implement Pose-Capturing
-      />
+          height={height * 0.12}
+          width={width * 0.20}
+          x={width * 0.41}
+          y={height * 0.83}
+          color={white}
+          fontSize={24}
+          fontColor={pink}
+          text={"Capture"}
+          fontWeight={800}
+          callback={null} // Implement Pose-Capturing
+        />
         <RectButton
-        height={height * 0.12}
-        width={width * 0.20}
-        x={width * 0.52}
-        y={height * 0.83}
-        color={white}
-        fontSize={24}
-        fontColor={green}
-        text={"Save"}
-        fontWeight={800}
-        callback={null} // Implement Save Feature
-      />
+          height={height * 0.12}
+          width={width * 0.20}
+          x={width * 0.52}
+          y={height * 0.83}
+          color={white}
+          fontSize={24}
+          fontColor={green}
+          text={"Save"}
+          fontWeight={800}
+          callback={null} // Implement Save Feature
+        />
         <RectButton
-        height={height * 0.12}
-        width={width * 0.20}
-        x={width * 0.67}
-        y={height * 0.83}
-        color={white}
-        fontSize={24}
-        fontColor={blue}
-        text={"Done"}
-        fontWeight={800}
-        callback={mainCallBack} // Implement Exit To Main Menu
-      />
+          height={height * 0.12}
+          width={width * 0.20}
+          x={width * 0.67}
+          y={height * 0.83}
+          color={white}
+          fontSize={24}
+          fontColor={blue}
+          text={"Done"}
+          fontWeight={800}
+          callback={mainCallBack} // Implement Exit To Main Menu
+        />
         <RectButton
-        height={height * 0.12}
-        width={width * 0.20}
-        x={width * 0.78}
-        y={height * 0.83}
-        color={white}
-        fontSize={24}
-        fontColor={orange}
-        text={"Reset"}
-        fontWeight={800}
-        callback={null} // Implement Pose-Capturing
-      />
+          height={height * 0.12}
+          width={width * 0.20}
+          x={width * 0.78}
+          y={height * 0.83}
+          color={white}
+          fontSize={24}
+          fontColor={orange}
+          text={"Reset"}
+          fontWeight={800}
+          callback={null} // Implement Reset??
+        />
       </>
     );
-  };
-  
-  export default PoseAuthoring;
+};
+
+export default PoseAuthoring;
