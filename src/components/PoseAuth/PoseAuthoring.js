@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MainBox, StartBox, IntermediateBox, EndBox } from "./PoseAuthoringBoxes";
 import { Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
-import { green, blue, white, pink, orange } from "../../utils/colors";
+import { black, green, blue, white, pink, orange } from "../../utils/colors";
 import RectButton from "../RectButton";
 
 const PoseAuthoring = (props) => {
@@ -19,27 +19,27 @@ const PoseAuthoring = (props) => {
         
         <StartBox height={height} width={width} />
         <RectButton
-        // Start Pose button
-          height={height * 0.05}
-          width={width * 0.10}
+          // Start Pose button
+          height={height * 0.05}  
+          width={width * 0.10}    
           x={width * 0.25}
           y={height * .19}
           color={white}
           fontSize={16}
-          fontColor={green}
+          fontColor={black}
           text={"EDIT"}
           fontWeight={800}
           callback={null}
         />
         <RectButton
-        // Start Pose button
-          height={height * 0.05}
-          width={width * 0.10}
+          // Start Pose button
+          height={height * 0.05}  
+          width={width * 0.10}    
           x={width * 0.25}
           y={height * 0.33}
           color={white}
           fontSize={16}
-          fontColor={green}
+          fontColor={black}
           text={"TOL%"}
           fontWeight={800}
           callback={null}
@@ -53,7 +53,7 @@ const PoseAuthoring = (props) => {
           y={height * 0.43}
           color={white}
           fontSize={16}
-          fontColor={green}
+          fontColor={black}
           text={"EDIT"}
           fontWeight={800}
           callback={null}
@@ -65,7 +65,7 @@ const PoseAuthoring = (props) => {
           y={height * 0.57}
           color={white}
           fontSize={16}
-          fontColor={green}
+          fontColor={black}
           text={"TOL%"}
           fontWeight={800}
           callback={null}
@@ -79,7 +79,7 @@ const PoseAuthoring = (props) => {
           y={height * 0.67}
           color={white}
           fontSize={16}
-          fontColor={green}
+          fontColor={black}
           text={"EDIT"}
           fontWeight={800}
           callback={null}
@@ -91,7 +91,7 @@ const PoseAuthoring = (props) => {
           y={height * 0.81}
           color={white}
           fontSize={16}
-          fontColor={green}
+          fontColor={black}
           text={"TOL%"}
           fontWeight={800}
           callback={null}
