@@ -22,10 +22,10 @@ const PoseAuthoring = (props) => {
           // Start Pose button
           height={height * 0.05}  
           width={width * 0.10}    
-          x={width * 0.25}
+          x={width * 0.25}  // width * 0.25
           y={height * .19}
           color={white}
-          fontSize={16}
+          fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
           text={"EDIT"}
           fontWeight={800}
@@ -38,7 +38,7 @@ const PoseAuthoring = (props) => {
           x={width * 0.25}
           y={height * 0.33}
           color={white}
-          fontSize={16}
+          fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
           text={"TOL%"}
           fontWeight={800}
@@ -52,7 +52,7 @@ const PoseAuthoring = (props) => {
           x={width * 0.25}
           y={height * 0.43}
           color={white}
-          fontSize={16}
+          fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
           text={"EDIT"}
           fontWeight={800}
@@ -64,7 +64,7 @@ const PoseAuthoring = (props) => {
           x={width * 0.25}
           y={height * 0.57}
           color={white}
-          fontSize={16}
+          fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
           text={"TOL%"}
           fontWeight={800}
@@ -78,7 +78,7 @@ const PoseAuthoring = (props) => {
           x={width * 0.25}
           y={height * 0.67}
           color={white}
-          fontSize={16}
+          fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
           text={"EDIT"}
           fontWeight={800}
@@ -90,7 +90,7 @@ const PoseAuthoring = (props) => {
           x={width * 0.25}
           y={height * 0.81}
           color={white}
-          fontSize={16}
+          fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
           text={"TOL%"}
           fontWeight={800}
@@ -108,7 +108,7 @@ const PoseAuthoring = (props) => {
           x={width * 0.41}
           y={height * 0.83}
           color={white}
-          fontSize={24}
+          fontSize={width * 0.021}  //  Dynamically modify font size based on screen width
           fontColor={pink}
           text={"Capture"}
           fontWeight={800}
@@ -120,7 +120,7 @@ const PoseAuthoring = (props) => {
           x={width * 0.52}
           y={height * 0.83}
           color={white}
-          fontSize={24}
+          fontSize={width * 0.021}  //  Dynamically modify font size based on screen width
           fontColor={green}
           text={"Save"}
           fontWeight={800}
@@ -132,7 +132,7 @@ const PoseAuthoring = (props) => {
           x={width * 0.67}
           y={height * 0.83}
           color={white}
-          fontSize={24}
+          fontSize={width * 0.021}  //  Dynamically modify font size based on screen width
           fontColor={blue}
           text={"Done"}
           fontWeight={800}
@@ -144,7 +144,7 @@ const PoseAuthoring = (props) => {
           x={width * 0.78}
           y={height * 0.83}
           color={white}
-          fontSize={24}
+          fontSize={width * 0.021}  //  Dynamically modify font size based on screen width
           fontColor={orange}
           text={"Reset"}
           fontWeight={800}

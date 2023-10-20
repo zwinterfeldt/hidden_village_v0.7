@@ -45,7 +45,7 @@ export const MainBox = (props) => {
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 50,
+              fontSize: props.width * 0.05,
               fontWeight: 800,
               fill: [green],
               letterSpacing: 0,
@@ -61,7 +61,7 @@ export const MainBox = (props) => {
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 30,
+              fontSize: props.width * 0.03,
               fontWeight: 800,
               fill: [green],
               letterSpacing: 0,
@@ -115,7 +115,7 @@ export const StartBox = (props) => {
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 29,
+              fontSize: props.width * 0.02,
               fontWeight: 800,
               fill: [green],
               letterSpacing: 0,
@@ -169,7 +169,7 @@ export const IntermediateBox = (props) => {
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 29,
+              fontSize: props.width * 0.02,
               fontWeight: 800,
               fill: [white],
               letterSpacing: 0,
@@ -223,7 +223,7 @@ export const EndBox = (props) => {
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 29,
+              fontSize: props.width * 0.02,
               fontWeight: 800,
               fill: [red],
               letterSpacing: 0,
