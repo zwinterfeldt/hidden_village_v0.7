@@ -6,18 +6,21 @@ import { Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { black, green, blue, white, pink, orange } from "../../utils/colors";
 import RectButton from "../RectButton";
+import { useMachine } from "@xstate/react";
+import { PoseAuthMachine } from "../../machines/poseauthMachine";
 
 const PoseAuthoring = (props) => {
-    const { height, width, poseData, columnDimensions, rowDimensions, mainCallBack } = props;
+    const { height, width, poseData, columnDimensions, rowDimensions, mainCallback } = props;
     const playerColumn = props.columnDimensions(3);
     const [poseSimilarity, setPoseSimilarity] = useState([]);
+    const [state, send] = useMachine(PoseAuthMachine);
 
     return (
       <>
         <Background height={height} width={width} />
         <MainBox height={height} width={width} />
         
-        <StartBox height={height} width={width} />
+        <StartBox height={height} width={width} boxState={state.value} />
         <RectButton
           // Start Pose button
           height={height * 0.05}  
@@ -29,7 +32,7 @@ const PoseAuthoring = (props) => {
           fontColor={black}
           text={"EDIT"}
           fontWeight={800}
-          callback={null}
+          callback={() => send("START")}
         />
         <RectButton
           // Start Pose button
@@ -45,7 +48,7 @@ const PoseAuthoring = (props) => {
           callback={null}
         />
 
-        <IntermediateBox height={height} width={width} />
+        <IntermediateBox height={height} width={width} boxState={state.value} />
         <RectButton
           height={height * 0.05}
           width={width * 0.10}
@@ -56,7 +59,7 @@ const PoseAuthoring = (props) => {
           fontColor={black}
           text={"EDIT"}
           fontWeight={800}
-          callback={null}
+          callback={() => send("INTERMEDIATE")}
         />
         <RectButton
           height={height * 0.05}
@@ -71,7 +74,7 @@ const PoseAuthoring = (props) => {
           callback={null}
         />
 
-        <EndBox height={height} width={width} />
+        <EndBox height={height} width={width} boxState={state.value} />
         <RectButton
           height={height * 0.05}
           width={width * 0.10}
@@ -82,7 +85,7 @@ const PoseAuthoring = (props) => {
           fontColor={black}
           text={"EDIT"}
           fontWeight={800}
-          callback={null}
+          callback={() => send("END")}
         />
         <RectButton
           height={height * 0.05}
@@ -136,7 +139,7 @@ const PoseAuthoring = (props) => {
           fontColor={blue}
           text={"Done"}
           fontWeight={800}
-          callback={mainCallBack} // Implement Exit To Main Menu
+          callback={props.mainCallback} // Implement Exit To Main Menu
         />
         <RectButton
           height={height * 0.12}

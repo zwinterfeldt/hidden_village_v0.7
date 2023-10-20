@@ -103,6 +103,17 @@ export const StartBox = (props) => {
       g.endFill();
     };
 
+    const drawBoxOutline = (g) => {
+      g.clear();
+      g.lineStyle(7, green);
+  
+      g.moveTo(rectangleX, rectangleY);
+      g.lineTo(rectangleX + rectangleWidth, rectangleY);
+      g.lineTo(rectangleX + rectangleWidth, rectangleY + rectangleHeight);
+      g.lineTo(rectangleX, rectangleY + rectangleHeight);
+      g.lineTo(rectangleX, rectangleY);
+    }
+
   return (
     <Container>
       <Graphics draw={drawRectangle} />
@@ -123,6 +134,9 @@ export const StartBox = (props) => {
           }
           anchor={0.5}
         />
+        {props.boxState === "start" && (
+        <Graphics draw={drawBoxOutline} />
+      )}
     </Container>
   );
 };
@@ -157,6 +171,17 @@ export const IntermediateBox = (props) => {
     g.endFill();
   };
 
+  const drawBoxOutline = (g) => {
+    g.clear();
+    g.lineStyle(7, green);
+
+    g.moveTo(rectangleX, rectangleY);
+    g.lineTo(rectangleX + rectangleWidth, rectangleY);
+    g.lineTo(rectangleX + rectangleWidth, rectangleY + rectangleHeight);
+    g.lineTo(rectangleX, rectangleY + rectangleHeight);
+    g.lineTo(rectangleX, rectangleY);
+  }
+
   return (
     <Container>
       <Graphics draw={drawRectangle} />
@@ -177,6 +202,9 @@ export const IntermediateBox = (props) => {
           }
           anchor={0.5}
         />
+        {props.boxState === "intermediate" && (
+        <Graphics draw={drawBoxOutline} />
+      )}
     </Container>
   );
 };
@@ -211,6 +239,17 @@ export const EndBox = (props) => {
     g.endFill();
   };
 
+  const drawBoxOutline = (g) => {
+    g.clear();
+    g.lineStyle(7, green);
+
+    g.moveTo(rectangleX, rectangleY);
+    g.lineTo(rectangleX + rectangleWidth, rectangleY);
+    g.lineTo(rectangleX + rectangleWidth, rectangleY + rectangleHeight);
+    g.lineTo(rectangleX, rectangleY + rectangleHeight);
+    g.lineTo(rectangleX, rectangleY);
+  }
+
   return (
     <Container>
       <Graphics draw={drawRectangle} />
@@ -231,6 +270,9 @@ export const EndBox = (props) => {
           }
           anchor={0.5}
         />
+        {props.boxState === "end" && (
+        <Graphics draw={drawBoxOutline} />
+      )}
     </Container>
   );
 };
