@@ -14,6 +14,11 @@ const PoseAuthoring = (props) => {
     const playerColumn = props.columnDimensions(3);
     const [poseSimilarity, setPoseSimilarity] = useState([]);
     const [state, send] = useMachine(PoseAuthMachine);
+    const mainBoxWidth = props.width * 0.52;
+    const mainBoxHeight = props.height * 0.65;
+    const mainBoxX = props.width * 0.375;
+    const mainBoxY = props.height * 0.17;
+
 
     return (
       <>
@@ -102,9 +107,15 @@ const PoseAuthoring = (props) => {
 
         <Pose
           poseData={props.poseData}
-          colAttr={playerColumn}
+          colAttr={{
+            x: (mainBoxX + (mainBoxWidth - (mainBoxWidth * 0.8)) / 1.75),
+            y: (mainBoxY + (mainBoxHeight - (mainBoxHeight * 0.8)) / 1.75),
+            width: mainBoxWidth * 0.8,
+            height: mainBoxHeight * 0.8,
+          }}
           similarityScores={poseSimilarity}
         />
+
         <RectButton
           height={height * 0.12}
           width={width * 0.20}
