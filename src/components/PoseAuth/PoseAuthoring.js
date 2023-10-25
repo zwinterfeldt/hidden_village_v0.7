@@ -8,6 +8,7 @@ import { black, green, blue, white, pink, orange } from "../../utils/colors";
 import RectButton from "../RectButton";
 import { useMachine } from "@xstate/react";
 import { PoseAuthMachine } from "../../machines/poseauthMachine";
+import { capturePose, saveConjecture, resetConjecture } from "./ButtonFunctions";
 
 const PoseAuthoring = (props) => {
     const { height, width, poseData, columnDimensions, rowDimensions, mainCallback } = props;
@@ -25,7 +26,7 @@ const PoseAuthoring = (props) => {
         <Background height={height} width={width} />
         <MainBox height={height} width={width} />
         
-        <StartBox height={height} width={width} boxState={state.value} />
+        <StartBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
         <RectButton
           // Start Pose button
           height={height * 0.05}  
@@ -126,7 +127,7 @@ const PoseAuthoring = (props) => {
           fontColor={pink}
           text={"Capture"}
           fontWeight={800}
-          callback={null} // Implement Pose-Capturing
+          callback={() => capturePose(props.poseData, state.value)} // Implement Pose-Capturing
         />
         <RectButton
           height={height * 0.12}
@@ -138,7 +139,7 @@ const PoseAuthoring = (props) => {
           fontColor={green}
           text={"Save"}
           fontWeight={800}
-          callback={null} // Implement Save Feature
+          callback={() => saveConjecture()} // Implement Save Feature
         />
         <RectButton
           height={height * 0.12}
@@ -162,7 +163,7 @@ const PoseAuthoring = (props) => {
           fontColor={orange}
           text={"Reset"}
           fontWeight={800}
-          callback={null} // Implement Reset??
+          callback={() => resetConjecture()} // Implement Reset??
         />
       </>
     );

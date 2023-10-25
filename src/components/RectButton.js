@@ -1,4 +1,4 @@
-import { Text, Graphics } from "@inlet/react-pixi";
+import { Text, Graphics, Container } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { useCallback } from "react";
 
@@ -25,7 +25,7 @@ const RectButton = (props) => {
     [width]
   );
   return (
-    <>
+    <Container>
       <Graphics draw={draw} interactive={true} pointerdown={callback} />
       <Text
         text={text}                                 // The text to display
@@ -45,7 +45,7 @@ const RectButton = (props) => {
         y={y + 1.02}                          // Center the text vertically within the button
         anchor={-.01}                                // Set the anchor to the center of the text
       />
-    </>
+    </Container>
   );
 };
 
