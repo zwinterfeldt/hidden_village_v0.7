@@ -54,7 +54,7 @@ const PoseAuthoring = (props) => {
           callback={null}
         />
 
-        <IntermediateBox height={height} width={width} boxState={state.value} />
+        <IntermediateBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
         <RectButton
           height={height * 0.05}
           width={width * 0.10}
@@ -80,7 +80,7 @@ const PoseAuthoring = (props) => {
           callback={null}
         />
 
-        <EndBox height={height} width={width} boxState={state.value} />
+        <EndBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
         <RectButton
           height={height * 0.05}
           width={width * 0.10}

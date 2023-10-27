@@ -2,6 +2,7 @@ import { Container, Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import React from "react";
 import { black, yellow, green, white, red } from "../../utils/colors";
+import Pose from "../Pose";
 
 export const MainBox = (props) => {
   // Box holding moving user pose that will be used to capture
@@ -174,6 +175,18 @@ export const StartBox = (props) => {
         {props.boxState === "start" && (
         <Graphics draw={drawBoxOutline} />
       )}
+      {localStorage.getItem('start.json') !== null && (
+        <Pose
+          poseData={JSON.parse(localStorage.getItem('start.json'))}
+          colAttr={{
+            x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
+            y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
+            width: rectangleWidth * 0.5,
+            height: rectangleWidth * 0.47,
+          }}
+          similarityScores={props.similarityScores}
+        />
+        )}
     </Container>
   );
 };
@@ -242,6 +255,18 @@ export const IntermediateBox = (props) => {
         {props.boxState === "intermediate" && (
         <Graphics draw={drawBoxOutline} />
       )}
+      {localStorage.getItem('intermediate.json') !== null && (
+        <Pose
+          poseData={JSON.parse(localStorage.getItem('intermediate.json'))}
+          colAttr={{
+            x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
+            y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
+            width: rectangleWidth * 0.5,
+            height: rectangleWidth * 0.47,
+          }}
+          similarityScores={props.similarityScores}
+        />
+        )}
     </Container>
   );
 };
@@ -310,6 +335,18 @@ export const EndBox = (props) => {
         {props.boxState === "end" && (
         <Graphics draw={drawBoxOutline} />
       )}
+      {localStorage.getItem('end.json') !== null && (
+        <Pose
+          poseData={JSON.parse(localStorage.getItem('end.json'))}
+          colAttr={{
+            x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
+            y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
+            width: rectangleWidth * 0.5,
+            height: rectangleWidth * 0.47,
+          }}
+          similarityScores={props.similarityScores}
+        />
+        )}
     </Container>
   );
 };
