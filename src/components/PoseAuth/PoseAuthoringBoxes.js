@@ -70,43 +70,38 @@ export const MainBox = (props) => {
           }
           anchor={0.5}
         />
-        <Container>
-          <Text
-            text={"You're Too Close!"}
-            x={props.width * 0.635}
-            y={props.height * 0.44}
-            style={
-              new TextStyle({
+        {localStorage.getItem("user_depth") && (
+          <>
+            <Text
+              text={"You're Too Close!"}
+              x={props.width * 0.635}
+              y={props.height * 0.44}
+                style={new TextStyle({
+                  align: "center",
+                  fontFamily: "Futura",
+                  fontSize: props.width * 0.03,
+                  fontWeight: 800,
+                  fill: [red],
+                  letterSpacing: 0,
+                })}
+              anchor={0.5}
+            />
+            <Text
+              text={"Please Move Back."}
+              x={props.width * 0.635}
+              y={props.height * 0.52}
+              style={new TextStyle({
                 align: "center",
                 fontFamily: "Futura",
                 fontSize: props.width * 0.03,
                 fontWeight: 800,
                 fill: [red],
                 letterSpacing: 0,
-              })
-            }
-            visible={true}
-            anchor={0.5}
-          />
-          <Text
-            text={"Please Move Back."}
-            x={props.width * 0.635}
-            y={props.height * 0.52}
-            style={
-              new TextStyle({
-                align: "center",
-                fontFamily: "Futura",
-                fontSize: props.width * 0.03,
-                fontWeight: 800,
-                fill: [red],
-                letterSpacing: 0,
-              })
-            }
-            visible={true}
-            anchor={0.5}
-          />
-          
-        </Container>
+              })}
+              anchor={0.5}
+            />
+          </>
+        )}
     </Container>
   );
 };

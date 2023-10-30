@@ -1,14 +1,13 @@
 import Background from "../Background";
 import Pose from "../Pose";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MainBox, StartBox, IntermediateBox, EndBox } from "./PoseAuthoringBoxes";
-import { Graphics, Text } from "@inlet/react-pixi";
-import { TextStyle } from "@pixi/text";
 import { black, green, blue, white, pink, orange } from "../../utils/colors";
 import RectButton from "../RectButton";
 import { useMachine } from "@xstate/react";
 import { PoseAuthMachine } from "../../machines/poseauthMachine";
 import { capturePose, saveConjecture, resetConjecture } from "./ButtonFunctions";
+import { calculateFaceDepth } from "../Pose/landmark_utilities";
 
 const PoseAuthoring = (props) => {
     const { height, width, poseData, columnDimensions, rowDimensions, mainCallback } = props;
@@ -20,12 +19,25 @@ const PoseAuthoring = (props) => {
     const mainBoxX = props.width * 0.375;
     const mainBoxY = props.height * 0.17;
 
+    useEffect(() => {
+      if (props.poseData && props.poseData.poseLandmarks) {
+        const depth = calculateFaceDepth(props.poseData.poseLandmarks);
+        // console.log lets you see the depth in youre browsers console; ctrl + shift + i
+        console.log(depth)
+        if (depth < -2) { // You can change the negative integer lower for closer range
+          console.warn("Warning: You are too close to the camera!");
+          localStorage.setItem('user_depth', depth);  // Logs current depth so that it can be used to generate text
+          setTimeout(function() {   // Removes message on screen after 1 second
+            localStorage.removeItem('user_depth');
+          }, 1000)
+        }
+      }
+    }, [props.poseData])
 
     return (
       <>
         <Background height={height} width={width} />
         <MainBox height={height} width={width} />
-        
         <StartBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
         <RectButton
           // Start Pose button
