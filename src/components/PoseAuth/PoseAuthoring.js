@@ -1,5 +1,6 @@
 import Background from "../Background";
 import Pose from "../Pose";
+// Importing the useState hook from React to manage component state
 import { useState, useEffect } from "react";
 import { MainBox, StartBox, IntermediateBox, EndBox } from "./PoseAuthoringBoxes";
 import { black, green, blue, white, pink, orange } from "../../utils/colors";
@@ -8,6 +9,26 @@ import { useMachine } from "@xstate/react";
 import { PoseAuthMachine } from "../../machines/poseauthMachine";
 import { capturePose, saveConjecture, resetConjecture } from "./ButtonFunctions";
 import { calculateFaceDepth } from "../Pose/landmark_utilities";
+// Importing Text and Graphics components from @inlet/react-pixi for rendering text and shapes in Pixi
+import { Text, Graphics } from '@inlet/react-pixi';
+
+// Defining a NotificationBox component using Pixi components
+const NotificationBox = ({ message }) => {
+  return (
+    // Graphics component to draw a rectangle
+    <Graphics
+      draw={(g) => {
+        g.clear(); // Clearing any previous drawings
+        g.beginFill(0xffffff); // Setting the fill color to white
+        g.drawRect(630, 165, 400, 100); // Drawing a rectangle (adjust size as needed)
+        g.endFill(); // Ending the fill operation
+      }}
+    >
+
+      <Text text={message} x={630} y={165} style={{ fill: 0x000000 }} />
+    </Graphics>
+  );
+};
 
 const PoseAuthoring = (props) => {
     const { height, width, poseData, columnDimensions, rowDimensions, mainCallback } = props;
@@ -18,6 +39,82 @@ const PoseAuthoring = (props) => {
     const mainBoxHeight = props.height * 0.65;
     const mainBoxX = props.width * 0.375;
     const mainBoxY = props.height * 0.17;
+
+    const [isBoxVisible, setBoxVisible] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState("");
+    const [showConfirmExit, setShowConfirmExit] = useState(false);
+    const [timeoutId, setTimeoutId] = useState(null);
+
+
+    const handleSave = () => {
+      if (localStorage.length === 0) {
+        console.log("Local Storage is empty. Nothing to save.");
+        return;
+      }
+  
+      saveConjecture();
+      setNotificationMessage("Saved Successfully!");
+      setBoxVisible(true);
+      setTimeout(() => setBoxVisible(false), 3000);
+    };
+
+    const handleDone = () => {
+      console.log("Done button clicked");
+      setShowConfirmExit(true);
+    
+      // Set a timeout to hide the confirmation button after 3 seconds
+      const timeoutId = setTimeout(() => {
+        setShowConfirmExit(false);
+      }, 3000);
+    
+      // Save the timeout ID in the component's state
+      setTimeoutId(timeoutId);
+    };
+    
+    
+    const exitPoseAuthoring = () => {
+      setNotificationMessage("Done, exiting Pose Authoring");
+      setBoxVisible(true);
+      setTimeout(() => {
+        setBoxVisible(false);
+        props.mainCallback();
+      }, 2000);
+    };
+
+    const handleConfirmExit = () => {
+      // Clear the timeout
+      clearTimeout(timeoutId);
+    
+      // Hide the confirmation button
+      setShowConfirmExit(false);
+    
+      // Show the exit message
+      setNotificationMessage("Done, exiting Pose Authoring");
+      setBoxVisible(true);
+    
+      // Proceed with the exit after a delay
+      setTimeout(() => {
+        setBoxVisible(false);
+        props.mainCallback();
+      }, 2000);
+    };
+    
+
+    const handleCapture = () => {
+      setNotificationMessage("Captured pose.");
+      setBoxVisible(true);
+      capturePose(props.poseData, state.value) // Implement Pose-Capturing
+      setTimeout(() => setBoxVisible(false), 1000);
+    };
+    
+    const handleReset = () => {
+      setNotificationMessage("Clearing poses.");
+      setBoxVisible(true);
+      resetConjecture()
+      setTimeout(() => setBoxVisible(false), 1000);
+    };
+    
+
 
     useEffect(() => {
       if (props.poseData && props.poseData.poseLandmarks) {
@@ -139,7 +236,7 @@ const PoseAuthoring = (props) => {
           fontColor={pink}
           text={"Capture"}
           fontWeight={800}
-          callback={() => capturePose(props.poseData, state.value)} // Implement Pose-Capturing
+          callback={handleCapture} // Implement Pose-Capturing
         />
         <RectButton
           height={height * 0.12}
@@ -151,7 +248,7 @@ const PoseAuthoring = (props) => {
           fontColor={green}
           text={"Save"}
           fontWeight={800}
-          callback={() => saveConjecture()} // Implement Save Feature
+          callback={handleSave} // Implement Save Feature
         />
         <RectButton
           height={height * 0.12}
@@ -163,7 +260,8 @@ const PoseAuthoring = (props) => {
           fontColor={blue}
           text={"Done"}
           fontWeight={800}
-          callback={props.mainCallback} // Implement Exit To Main Menu
+          callback={handleDone}
+          //callback={props.mainCallback} // Implement Exit To Main Menu
         />
         <RectButton
           height={height * 0.12}
@@ -175,8 +273,24 @@ const PoseAuthoring = (props) => {
           fontColor={orange}
           text={"Reset"}
           fontWeight={800}
-          callback={() => resetConjecture()} // Implement Reset??
+          callback={handleReset} // Implement Reset??
         />
+      {/* Conditionally rendering the NotificationBox based on the isBoxVisible state */}
+      {isBoxVisible && <NotificationBox message={notificationMessage} />}
+      {showConfirmExit && (
+        <RectButton
+          height={props.height * 0.12}
+          width={props.width * 0.20}
+          x={props.width * 0.40}
+          y={props.height * 0.50}
+          color={white}
+          fontSize={props.width * 0.021}
+          fontColor={blue}
+          text={"Are you sure you want to exit?"}
+          fontWeight={800}
+          callback={handleConfirmExit}
+        />
+      )}
       </>
     );
 };
