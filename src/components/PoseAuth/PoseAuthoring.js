@@ -45,6 +45,26 @@ const PoseAuthoring = (props) => {
     const [showConfirmExit, setShowConfirmExit] = useState(false);
     const [timeoutId, setTimeoutId] = useState(null);
 
+    //test timer variables
+    const [showTimer, setShowTimer] = useState(false);
+    const [timer, setTimer] = useState(10);
+
+    const startTimer = () => {
+      setTimer(10)
+      setShowTimer(true);
+      const timerInterval = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer > 0) {
+            return prevTimer - 1;
+          } else {
+            clearInterval(timerInterval);
+            setShowTimer(false);
+            handleCapture();
+            return prevTimer;
+          }
+        });
+      }, 1000);
+    };
 
     const handleSave = () => {
       if (localStorage.length === 0) {
@@ -113,8 +133,6 @@ const PoseAuthoring = (props) => {
       resetConjecture()
       setTimeout(() => setBoxVisible(false), 1000);
     };
-    
-
 
     useEffect(() => {
       if (props.poseData && props.poseData.poseLandmarks) {
@@ -226,6 +244,29 @@ const PoseAuthoring = (props) => {
           similarityScores={poseSimilarity}
         />
 
+        {showTimer && (
+          <Graphics
+            draw={graphics => {
+              graphics.lineStyle(2, 0x000000);
+              graphics.beginFill(0, 0);
+              graphics.drawRect(mainBoxX + mainBoxWidth - 50, mainBoxY + 15, 40, 40, 5);
+              graphics.endFill();
+            }}
+          >
+            <Text
+              text={`${timer}`}
+              style={{
+                fill: black,
+                fontSize: 25,
+                fontFamily: "Arial",
+              }}
+              x={mainBoxX + mainBoxWidth - 45}
+              y={mainBoxY + 20}
+            />
+          </Graphics>
+        )}
+
+
         <RectButton
           height={height * 0.12}
           width={width * 0.20}
@@ -236,7 +277,7 @@ const PoseAuthoring = (props) => {
           fontColor={pink}
           text={"Capture"}
           fontWeight={800}
-          callback={handleCapture} // Implement Pose-Capturing
+          callback={() => startTimer()} // Implement Pose-Capturing
         />
         <RectButton
           height={height * 0.12}
