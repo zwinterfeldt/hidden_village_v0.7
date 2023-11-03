@@ -36,7 +36,7 @@ const RectButton = (props) => {
             fontSize: fontSize,                      // Set the font size
             fontWeight: fontWeight,                  // Set the font weight
             fill: [fontColor],                       // Set the font color
-            wordWrap: true,                          // Wrap the text if it exceeds its container
+            wordWrap: false,                          // Wrap the text if it exceeds its container
           })
         }
         interactive={true}                          // Make the text interactive (clickable)

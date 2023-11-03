@@ -13,19 +13,17 @@ import { calculateFaceDepth } from "../Pose/landmark_utilities";
 import { Text, Graphics } from '@inlet/react-pixi';
 
 // Defining a NotificationBox component using Pixi components
-const NotificationBox = ({ message }) => {
+const NotificationBox = ({ message, textSize }) => {
   return (
-    // Graphics component to draw a rectangle
     <Graphics
       draw={(g) => {
-        g.clear(); // Clearing any previous drawings
-        g.beginFill(0xffffff); // Setting the fill color to white
-        g.drawRect(630, 165, 400, 100); // Drawing a rectangle (adjust size as needed)
-        g.endFill(); // Ending the fill operation
+        g.clear();
+        g.beginFill(0xffffff); // white background
+        g.drawRect(630, 165, 400, 100); // adjust size as needed
+        g.endFill();
       }}
     >
-
-      <Text text={message} x={630} y={165} style={{ fill: 0x000000 }} />
+      <Text text={message} x={630} y={165} style={{ fill: 0x000000, fontSize: textSize }} />
     </Graphics>
   );
 };
@@ -40,6 +38,7 @@ const PoseAuthoring = (props) => {
     const mainBoxX = props.width * 0.375;
     const mainBoxY = props.height * 0.17;
 
+    // Save/Capture/Done/Reset button variables
     const [isBoxVisible, setBoxVisible] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState("");
     const [showConfirmExit, setShowConfirmExit] = useState(false);
@@ -80,15 +79,21 @@ const PoseAuthoring = (props) => {
 
     const handleDone = () => {
       console.log("Done button clicked");
-      setShowConfirmExit(true);
     
-      // Set a timeout to hide the confirmation button after 3 seconds
-      const timeoutId = setTimeout(() => {
-        setShowConfirmExit(false);
-      }, 3000);
-    
-      // Save the timeout ID in the component's state
-      setTimeoutId(timeoutId);
+      // Check if local storage is empty
+      if (localStorage.length === 0) {
+        exitPoseAuthoring();
+      } else {
+        setShowConfirmExit(true);
+      
+        // Set a timeout to hide the confirmation button after 3 seconds
+        const timeoutId = setTimeout(() => {
+          setShowConfirmExit(false);
+        }, 3000);
+      
+        // Save the timeout ID in the component's state
+        setTimeoutId(timeoutId);
+      }
     };
     
     
@@ -108,15 +113,8 @@ const PoseAuthoring = (props) => {
       // Hide the confirmation button
       setShowConfirmExit(false);
     
-      // Show the exit message
-      setNotificationMessage("Done, exiting Pose Authoring");
-      setBoxVisible(true);
-    
-      // Proceed with the exit after a delay
-      setTimeout(() => {
-        setBoxVisible(false);
-        props.mainCallback();
-      }, 2000);
+      // Exit Pose Authoring
+      exitPoseAuthoring();
     };
     
 
@@ -317,17 +315,17 @@ const PoseAuthoring = (props) => {
           callback={handleReset} // Implement Reset??
         />
       {/* Conditionally rendering the NotificationBox based on the isBoxVisible state */}
-      {isBoxVisible && <NotificationBox message={notificationMessage} />}
+      {isBoxVisible && <NotificationBox message={notificationMessage} textSize={30} />}
       {showConfirmExit && (
         <RectButton
-          height={props.height * 0.12}
-          width={props.width * 0.20}
+          height={props.height * 0.30}
+          width={props.width * .50}
           x={props.width * 0.40}
           y={props.height * 0.50}
           color={white}
           fontSize={props.width * 0.021}
           fontColor={blue}
-          text={"Are you sure you want to exit?"}
+          text={"Exit Pose Authoring?\n (Click to exit)"}
           fontWeight={800}
           callback={handleConfirmExit}
         />
