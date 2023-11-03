@@ -7,7 +7,7 @@ import { black, green, blue, white, pink, orange } from "../../utils/colors";
 import RectButton from "../RectButton";
 import { useMachine } from "@xstate/react";
 import { PoseAuthMachine } from "../../machines/poseauthMachine";
-import { capturePose, saveConjecture, resetConjecture } from "./ButtonFunctions";
+import { capturePose, saveConjecture, resetConjecture, startTolerance, intermediateTolerance, endTolerance } from "./ButtonFunctions";
 import { calculateFaceDepth } from "../Pose/landmark_utilities";
 // Importing Text and Graphics components from @inlet/react-pixi for rendering text and shapes in Pixi
 import { Text, Graphics } from '@inlet/react-pixi';
@@ -47,6 +47,21 @@ const PoseAuthoring = (props) => {
     //test timer variables
     const [showTimer, setShowTimer] = useState(false);
     const [timer, setTimer] = useState(10);
+
+    // sets the intial tolerance buttons text on startup to "TOL%",
+    // and allows them to still be changed to a percentage later on.
+    var intialTolerance = (function() {
+      var executed = false
+      return function() {
+        if (executed === false) {
+          executed = true
+          localStorage.setItem('Start Tolerance', "TOL%")
+          localStorage.setItem('Intermediate Tolerance', "TOL%")
+          localStorage.setItem('End Tolerance', "TOL%")
+        }
+      }
+    }
+    )
 
     const startTimer = () => {
       setTimer(10)
@@ -174,9 +189,9 @@ const PoseAuthoring = (props) => {
           color={white}
           fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
-          text={"TOL%"}
+          text={localStorage.getItem('Start Tolerance')}          
           fontWeight={800}
-          callback={null}
+          callback={startTolerance}
         />
 
         <IntermediateBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
@@ -200,9 +215,9 @@ const PoseAuthoring = (props) => {
           color={white}
           fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
-          text={"TOL%"}
+          text={localStorage.getItem('Intermediate Tolerance')}
           fontWeight={800}
-          callback={null}
+          callback={intermediateTolerance}
         />
 
         <EndBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
@@ -226,9 +241,9 @@ const PoseAuthoring = (props) => {
           color={white}
           fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
-          text={"TOL%"}
+          text={localStorage.getItem('End Tolerance')}
           fontWeight={800}
-          callback={null}
+          callback={endTolerance}
         />
 
         <Pose
@@ -263,7 +278,6 @@ const PoseAuthoring = (props) => {
             />
           </Graphics>
         )}
-
 
         <RectButton
           height={height * 0.12}
@@ -330,6 +344,8 @@ const PoseAuthoring = (props) => {
           callback={handleConfirmExit}
         />
       )}
+
+      {intialTolerance()}
       </>
     );
 };

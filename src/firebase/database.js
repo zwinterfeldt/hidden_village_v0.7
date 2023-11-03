@@ -42,7 +42,7 @@ export const writeToDatabase = async (poseData, conjectureId, frameRate) => {
   return promise;
 };
 
-export const writeToDatabasePoseAuth = async (poseData, state) => {
+export const writeToDatabasePoseAuth = async (poseData, state, tolerance) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
@@ -57,6 +57,7 @@ export const writeToDatabasePoseAuth = async (poseData, state) => {
     poseData,
     timestamp,
     state,
+    tolerance,
   };
 
   // Push the data to the database using the dbRef reference
