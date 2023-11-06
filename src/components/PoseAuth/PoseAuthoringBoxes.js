@@ -2,6 +2,7 @@ import { Container, Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import React from "react";
 import { black, yellow, green, white, red } from "../../utils/colors";
+import Pose from "../Pose";
 
 export const MainBox = (props) => {
   // Box holding moving user pose that will be used to capture
@@ -45,7 +46,7 @@ export const MainBox = (props) => {
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 50,
+              fontSize: props.width * 0.05,
               fontWeight: 800,
               fill: [green],
               letterSpacing: 0,
@@ -61,7 +62,7 @@ export const MainBox = (props) => {
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 30,
+              fontSize: props.width * 0.03,
               fontWeight: 800,
               fill: [green],
               letterSpacing: 0,
@@ -69,6 +70,38 @@ export const MainBox = (props) => {
           }
           anchor={0.5}
         />
+        {localStorage.getItem("user_depth") && (
+          <>
+            <Text
+              text={"You're Too Close!"}
+              x={props.width * 0.635}
+              y={props.height * 0.44}
+                style={new TextStyle({
+                  align: "center",
+                  fontFamily: "Futura",
+                  fontSize: props.width * 0.03,
+                  fontWeight: 800,
+                  fill: [red],
+                  letterSpacing: 0,
+                })}
+              anchor={0.5}
+            />
+            <Text
+              text={"Please Move Back."}
+              x={props.width * 0.635}
+              y={props.height * 0.52}
+              style={new TextStyle({
+                align: "center",
+                fontFamily: "Futura",
+                fontSize: props.width * 0.03,
+                fontWeight: 800,
+                fill: [red],
+                letterSpacing: 0,
+              })}
+              anchor={0.5}
+            />
+          </>
+        )}
     </Container>
   );
 };
@@ -103,6 +136,17 @@ export const StartBox = (props) => {
       g.endFill();
     };
 
+    const drawBoxOutline = (g) => {
+      g.clear();
+      g.lineStyle(7, green);
+  
+      g.moveTo(rectangleX, rectangleY);
+      g.lineTo(rectangleX + rectangleWidth, rectangleY);
+      g.lineTo(rectangleX + rectangleWidth, rectangleY + rectangleHeight);
+      g.lineTo(rectangleX, rectangleY + rectangleHeight);
+      g.lineTo(rectangleX, rectangleY);
+    }
+
   return (
     <Container>
       <Graphics draw={drawRectangle} />
@@ -115,7 +159,7 @@ export const StartBox = (props) => {
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 29,
+              fontSize: props.width * 0.02,
               fontWeight: 800,
               fill: [green],
               letterSpacing: 0,
@@ -123,6 +167,21 @@ export const StartBox = (props) => {
           }
           anchor={0.5}
         />
+        {props.boxState === "start" && (
+        <Graphics draw={drawBoxOutline} />
+      )}
+      {localStorage.getItem('start.json') !== null && (
+        <Pose
+          poseData={JSON.parse(localStorage.getItem('start.json'))}
+          colAttr={{
+            x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
+            y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
+            width: rectangleWidth * 0.5,
+            height: rectangleWidth * 0.47,
+          }}
+          similarityScores={props.similarityScores}
+        />
+        )}
     </Container>
   );
 };
@@ -157,6 +216,17 @@ export const IntermediateBox = (props) => {
     g.endFill();
   };
 
+  const drawBoxOutline = (g) => {
+    g.clear();
+    g.lineStyle(7, green);
+
+    g.moveTo(rectangleX, rectangleY);
+    g.lineTo(rectangleX + rectangleWidth, rectangleY);
+    g.lineTo(rectangleX + rectangleWidth, rectangleY + rectangleHeight);
+    g.lineTo(rectangleX, rectangleY + rectangleHeight);
+    g.lineTo(rectangleX, rectangleY);
+  }
+
   return (
     <Container>
       <Graphics draw={drawRectangle} />
@@ -169,7 +239,7 @@ export const IntermediateBox = (props) => {
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 29,
+              fontSize: props.width * 0.02,
               fontWeight: 800,
               fill: [white],
               letterSpacing: 0,
@@ -177,6 +247,21 @@ export const IntermediateBox = (props) => {
           }
           anchor={0.5}
         />
+        {props.boxState === "intermediate" && (
+        <Graphics draw={drawBoxOutline} />
+      )}
+      {localStorage.getItem('intermediate.json') !== null && (
+        <Pose
+          poseData={JSON.parse(localStorage.getItem('intermediate.json'))}
+          colAttr={{
+            x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
+            y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
+            width: rectangleWidth * 0.5,
+            height: rectangleWidth * 0.47,
+          }}
+          similarityScores={props.similarityScores}
+        />
+        )}
     </Container>
   );
 };
@@ -211,6 +296,17 @@ export const EndBox = (props) => {
     g.endFill();
   };
 
+  const drawBoxOutline = (g) => {
+    g.clear();
+    g.lineStyle(7, green);
+
+    g.moveTo(rectangleX, rectangleY);
+    g.lineTo(rectangleX + rectangleWidth, rectangleY);
+    g.lineTo(rectangleX + rectangleWidth, rectangleY + rectangleHeight);
+    g.lineTo(rectangleX, rectangleY + rectangleHeight);
+    g.lineTo(rectangleX, rectangleY);
+  }
+
   return (
     <Container>
       <Graphics draw={drawRectangle} />
@@ -223,7 +319,7 @@ export const EndBox = (props) => {
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 29,
+              fontSize: props.width * 0.02,
               fontWeight: 800,
               fill: [red],
               letterSpacing: 0,
@@ -231,6 +327,21 @@ export const EndBox = (props) => {
           }
           anchor={0.5}
         />
+        {props.boxState === "end" && (
+        <Graphics draw={drawBoxOutline} />
+      )}
+      {localStorage.getItem('end.json') !== null && (
+        <Pose
+          poseData={JSON.parse(localStorage.getItem('end.json'))}
+          colAttr={{
+            x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
+            y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
+            width: rectangleWidth * 0.5,
+            height: rectangleWidth * 0.47,
+          }}
+          similarityScores={props.similarityScores}
+        />
+        )}
     </Container>
   );
 };
