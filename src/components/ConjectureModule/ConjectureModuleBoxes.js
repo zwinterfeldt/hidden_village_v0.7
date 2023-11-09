@@ -37,6 +37,86 @@ export const NameBox = (props) => {
         }
         anchor={0.5}
         />
+        <Text
+        text={"AUTHOR:"}
+        x={props.width * 0.9}
+        y={props.height * 0.15}
+        style={
+          new TextStyle({
+            align: "center",
+            fontFamily: "Futura",
+            fontSize: 30,
+            fontWeight: 800,
+            fill: [blue],
+            letterSpacing: 0,
+          })
+        }
+        anchor={0.5}
+        />
+        <Text
+        text={"PIN:"}
+        x={props.width * 0.11}
+        y={props.height * 0.15}
+        style={
+          new TextStyle({
+            align: "center",
+            fontFamily: "Futura",
+            fontSize: 30,
+            fontWeight: 800,
+            fill: [blue],
+            letterSpacing: 0,
+          })
+        }
+        anchor={0.5}
+        />
+        <Text
+        text={"KEYWORDS:"}
+        x={props.width * 0.13}
+        y={props.height * 0.30}
+        style={
+          new TextStyle({
+            align: "center",
+            fontFamily: "Futura",
+            fontSize: 30,
+            fontWeight: 800,
+            fill: [blue],
+            letterSpacing: 0,
+          })
+        }
+        anchor={0.5}
+        />
+        <Text
+        text={"CURRENT M-CLIP:"}
+        x={props.width * 0.30}
+        y={props.height * 0.15}
+        style={
+          new TextStyle({
+            align: "center",
+            fontFamily: "Futura",
+            fontSize: 30,
+            fontWeight: 800,
+            fill: [blue],
+            letterSpacing: 0,
+          })
+        }
+        anchor={0.5}
+        />
+        <Text
+        text={"MULTIPLE CHOICE"}
+        x={props.width * 0.50}
+        y={props.height * 0.15}
+        style={
+          new TextStyle({
+            align: "center",
+            fontFamily: "Futura",
+            fontSize: 30,
+            fontWeight: 800,
+            fill: [blue],
+            letterSpacing: 0,
+          })
+        }
+        anchor={0.5}
+        />
         </>
     )
 }
