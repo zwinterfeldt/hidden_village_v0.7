@@ -2,10 +2,10 @@ import Background from "./Background";
 import Button from "./Button";
 import { Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
-import { yellow, blue, green } from "../utils/colors";
+import { yellow, blue, green, white, red } from "../utils/colors";
 
 const Home = (props) => {
-  const { height, width, startCallback, editCallback } = props;
+  const { height, width, startCallback, editCallback, conjectureCallback } = props;
   return (
     <>
       <Background height={height} width={width} />
@@ -20,6 +20,18 @@ const Home = (props) => {
         text={"Start"}
         fontWeight={800}
         callback={startCallback}
+      />
+      <Button
+        height={height * 0.2}
+        width={width * 0.1}
+        x={width * 0.75}
+        y={height * 0.1}
+        color={red}
+        fontSize={24}
+        fontColor={white}
+        text={"Conjecture Editor"}
+        fontWeight={800}
+        callback={conjectureCallback}
       />
       <Button
         height={height * 0.2}

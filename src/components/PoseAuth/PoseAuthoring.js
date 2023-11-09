@@ -8,7 +8,7 @@ import { green, blue, white, pink, orange } from "../../utils/colors";
 import RectButton from "../RectButton";
 
 const PoseAuthoring = (props) => {
-    const { height, width, poseData, columnDimensions, rowDimensions, mainCallBack } = props;
+    const { height, width, poseData, columnDimensions, rowDimensions, mainCallback } = props;
     const playerColumn = props.columnDimensions(3);
     const [poseSimilarity, setPoseSimilarity] = useState([]);
 
@@ -58,7 +58,7 @@ const PoseAuthoring = (props) => {
         fontColor={blue}
         text={"Done"}
         fontWeight={800}
-        callback={mainCallBack} // Implement Exit To Main Menu
+        callback={mainCallback} // Implement Exit To Main Menu
       />
         <RectButton
         height={height * 0.12}
