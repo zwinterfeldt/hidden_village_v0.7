@@ -1,3 +1,5 @@
+import { Graphics, Text } from "@inlet/react-pixi";
+import { TextStyle } from "@pixi/text";
 import { blue } from "../../utils/colors"
 
 export const NameBox = (props) => {
