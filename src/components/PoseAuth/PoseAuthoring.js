@@ -48,6 +48,9 @@ const PoseAuthoring = (props) => {
     const [showTimer, setShowTimer] = useState(false);
     const [timer, setTimer] = useState(10);
 
+    // State to indicate whether we should capture the pose
+    const [shouldCapture, setShouldCapture] = useState(false);
+
     // sets the intial tolerance buttons text on startup to "TOL%",
     // and allows them to still be changed to a percentage later on.
     var intialTolerance = (function() {
@@ -64,7 +67,7 @@ const PoseAuthoring = (props) => {
     )
 
     const startTimer = () => {
-      setTimer(10)
+      setTimer(10);
       setShowTimer(true);
       const timerInterval = setInterval(() => {
         setTimer((prevTimer) => {
@@ -73,7 +76,7 @@ const PoseAuthoring = (props) => {
           } else {
             clearInterval(timerInterval);
             setShowTimer(false);
-            handleCapture();
+            setShouldCapture(true); // Set the flag to true when the timer finishes
             return prevTimer;
           }
         });
@@ -132,11 +135,18 @@ const PoseAuthoring = (props) => {
       exitPoseAuthoring();
     };
     
+  // UseEffect to capture pose data when the flag is set and poseData changes
+  useEffect(() => {
+    if (shouldCapture) {
+      handleCapture();
+      setShouldCapture(false); // Reset the flag after capturing
+    }
+  }, [props.poseData, shouldCapture]); // Only re-run if props.poseData or shouldCapture changes
 
     const handleCapture = () => {
       setNotificationMessage("Captured pose.");
       setBoxVisible(true);
-      capturePose(props.poseData, state.value) // Implement Pose-Capturing
+      capturePose(props.poseData, state.value); // Implement Pose-Capturing
       setTimeout(() => setBoxVisible(false), 1000);
     };
     
