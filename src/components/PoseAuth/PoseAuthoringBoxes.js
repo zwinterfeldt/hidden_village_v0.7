@@ -70,7 +70,7 @@ export const MainBox = (props) => {
           }
           anchor={0.5}
         />
-        {localStorage.getItem("user_depth") && (
+        {localStorage.getItem("user_depth") !== null && (
           <>
             <Text
               text={"You're Too Close!"}
@@ -182,6 +182,24 @@ export const StartBox = (props) => {
           similarityScores={props.similarityScores}
         />
         )}
+      {localStorage.getItem('Start Tolerance') !== null && (
+        <Text
+        text={localStorage.getItem('Start Tolerance')}
+        x={props.width * 0.125}
+        y={props.height * 0.345}
+        style={
+          new TextStyle({
+            align: "center",
+            fontFamily: "Futura",
+            fontSize: props.width * 0.016,
+            fontWeight: 800,
+            fill: [black],
+            letterSpacing: 0,
+          })
+        }
+        anchor={0.5}
+      />
+      )}
     </Container>
   );
 };
@@ -262,6 +280,24 @@ export const IntermediateBox = (props) => {
           similarityScores={props.similarityScores}
         />
         )}
+      {localStorage.getItem('Intermediate Tolerance') !== null && (
+        <Text
+        text={localStorage.getItem('Intermediate Tolerance')}
+        x={props.width * 0.125}
+        y={props.height * 0.585}
+        style={
+          new TextStyle({
+            align: "center",
+            fontFamily: "Futura",
+            fontSize: props.width * 0.016,
+            fontWeight: 800,
+            fill: [black],
+            letterSpacing: 0,
+          })
+        }
+        anchor={0.5}
+      />
+      )}
     </Container>
   );
 };
@@ -342,6 +378,24 @@ export const EndBox = (props) => {
           similarityScores={props.similarityScores}
         />
         )}
+      {localStorage.getItem('End Tolerance') !== null && (
+        <Text
+        text={localStorage.getItem('End Tolerance')}
+        x={props.width * 0.125}
+        y={props.height * 0.825}
+        style={
+          new TextStyle({
+            align: "center",
+            fontFamily: "Futura",
+            fontSize: props.width * 0.016,
+            fontWeight: 800,
+            fill: [black],
+            letterSpacing: 0,
+          })
+        }
+        anchor={0.5}
+      />
+      )}
     </Container>
   );
 };

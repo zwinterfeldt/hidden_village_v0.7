@@ -210,7 +210,7 @@ const enrichLandmarks = (newResults) => {
 };
 
 // export how far away face is from camera
-export const calculateFaceDepth = (poseLandmarks) => {
+export function calculateFaceDepth(poseLandmarks) {
   const faceLandmarks = [
     POSE_LANDMARKS.NOSE,
     POSE_LANDMARKS.LEFT_EYE_INNER,

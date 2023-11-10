@@ -7,7 +7,7 @@ import { black, green, blue, white, pink, orange } from "../../utils/colors";
 import RectButton from "../RectButton";
 import { useMachine } from "@xstate/react";
 import { PoseAuthMachine } from "../../machines/poseauthMachine";
-import { capturePose, saveConjecture, resetConjecture, startTolerance, intermediateTolerance, endTolerance } from "./ButtonFunctions";
+import { capturePose, saveConjecture, resetConjecture } from "./ButtonFunctions";
 import { calculateFaceDepth } from "../Pose/landmark_utilities";
 // Importing Text and Graphics components from @inlet/react-pixi for rendering text and shapes in Pixi
 import { Text, Graphics } from '@inlet/react-pixi';
@@ -50,21 +50,6 @@ const PoseAuthoring = (props) => {
 
     // State to indicate whether we should capture the pose
     const [shouldCapture, setShouldCapture] = useState(false);
-
-    // sets the intial tolerance buttons text on startup to "TOL%",
-    // and allows them to still be changed to a percentage later on.
-    var intialTolerance = (function() {
-      var executed = false
-      return function() {
-        if (executed === false) {
-          executed = true
-          localStorage.setItem('Start Tolerance', "TOL%")
-          localStorage.setItem('Intermediate Tolerance', "TOL%")
-          localStorage.setItem('End Tolerance', "TOL%")
-        }
-      }
-    }
-    )
 
     const startTimer = () => {
       setTimer(10);
@@ -127,6 +112,9 @@ const PoseAuthoring = (props) => {
     const handleConfirmExit = () => {
       // Clear the timeout
       clearTimeout(timeoutId);
+
+      // Clear local storage
+      localStorage.clear();
     
       // Hide the confirmation button
       setShowConfirmExit(false);
@@ -156,6 +144,51 @@ const PoseAuthoring = (props) => {
       resetConjecture()
       setTimeout(() => setBoxVisible(false), 1000);
     };
+
+    // Creates a popup in which the user can enter a tolerance amount for the Start Pose
+    function startTolerance() {
+      let tolerance = prompt("Please Enter Your Tolerance Amount (0-100%)", "50");
+      if (tolerance != null) {
+        tolerance = parseInt(tolerance, 10);
+        if (!isNaN(tolerance) && tolerance >= 0 && tolerance <= 100) {
+          localStorage.setItem('Start Tolerance', tolerance + "%") }
+        else {
+          setNotificationMessage("Please enter a valid\ntolerance value between\n0 and 100.");
+          setBoxVisible(true);
+          setTimeout(() => setBoxVisible(false), 2000);
+        }
+      }
+    }
+
+    // Creates a popup in which the user can enter a tolerance amount for the Intermediate Pose
+    function intermediateTolerance() {
+      let tolerance = prompt("Please Enter Your Tolerance Amount (0-100%)", "50");
+      if (tolerance != null) {
+        tolerance = parseInt(tolerance, 10);
+        if (!isNaN(tolerance) && tolerance >= 0 && tolerance <= 100) {
+          localStorage.setItem('Intermediate Tolerance', tolerance + "%") }
+        else {
+          setNotificationMessage("Please enter a valid\ntolerance value between\n0 and 100.");
+          setBoxVisible(true);
+          setTimeout(() => setBoxVisible(false), 2000);
+        }
+      }
+    }
+
+    // Creates a popup in which the user can enter a tolerance amount for the End Pose
+    function endTolerance() {
+      let tolerance = prompt("Please Enter Your Tolerance Amount (0-100%)", "50");
+      if (tolerance != null) {
+        tolerance = parseInt(tolerance, 10);
+        if (!isNaN(tolerance) && tolerance >= 0 && tolerance <= 100) {
+          localStorage.setItem('End Tolerance', tolerance + "%") }
+        else {
+          setNotificationMessage("Please enter a valid\ntolerance value between\n0 and 100.");
+          setBoxVisible(true);
+          setTimeout(() => setBoxVisible(false), 2000);
+        }
+      }
+    }
 
     useEffect(() => {
       if (props.poseData && props.poseData.poseLandmarks) {
@@ -199,9 +232,9 @@ const PoseAuthoring = (props) => {
           color={white}
           fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
-          text={localStorage.getItem('Start Tolerance')}          
+          text={"TOL%"}          
           fontWeight={800}
-          callback={startTolerance}
+          callback={() => startTolerance()}
         />
 
         <IntermediateBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
@@ -225,9 +258,9 @@ const PoseAuthoring = (props) => {
           color={white}
           fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
-          text={localStorage.getItem('Intermediate Tolerance')}
+          text={"TOL%"}
           fontWeight={800}
-          callback={intermediateTolerance}
+          callback={() => intermediateTolerance()}
         />
 
         <EndBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
@@ -251,9 +284,9 @@ const PoseAuthoring = (props) => {
           color={white}
           fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
-          text={localStorage.getItem('End Tolerance')}
+          text={"TOL%"}
           fontWeight={800}
-          callback={endTolerance}
+          callback={() => endTolerance()}
         />
 
         <Pose
@@ -349,13 +382,11 @@ const PoseAuthoring = (props) => {
           color={white}
           fontSize={props.width * 0.021}
           fontColor={blue}
-          text={"Exit Pose Authoring?\n (Click to exit)"}
+          text={"Exit Pose Authoring?\n(Click to exit)"}
           fontWeight={800}
           callback={handleConfirmExit}
         />
       )}
-
-      {intialTolerance()}
       </>
     );
 };
