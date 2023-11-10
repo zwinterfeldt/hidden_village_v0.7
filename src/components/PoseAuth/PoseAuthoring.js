@@ -33,6 +33,8 @@ const PoseAuthoring = (props) => {
     const playerColumn = props.columnDimensions(3);
     const [poseSimilarity, setPoseSimilarity] = useState([]);
     const [state, send] = useMachine(PoseAuthMachine);
+
+    // constants for the layout
     const mainBoxWidth = props.width * 0.52;
     const mainBoxHeight = props.height * 0.65;
     const mainBoxX = props.width * 0.375;
@@ -44,26 +46,42 @@ const PoseAuthoring = (props) => {
     const [showConfirmExit, setShowConfirmExit] = useState(false);
     const [timeoutId, setTimeoutId] = useState(null);
 
-    //test timer variables
+    // timer variables
     const [showTimer, setShowTimer] = useState(false);
     const [timer, setTimer] = useState(10);
+    const [isTooClose, setIsTooClose] = useState(false);
 
     // State to indicate whether we should capture the pose
     const [shouldCapture, setShouldCapture] = useState(false);
 
+    // function to start the on screen timer once the capture button is pressed
     const startTimer = () => {
       setTimer(10);
       setShowTimer(true);
       const timerInterval = setInterval(() => {
         setTimer((prevTimer) => {
+          const depth = localStorage.getItem('user_depth');
+          // if this depth value is inside of local storage set the timer to false and clear the interval 
+          if (depth !== null && parseFloat(depth) < -2) {
+            setShowTimer(false);
+            clearInterval(timerInterval);
+            handleCaptureError();
+            return;
+          }
+          
+          // if the timer is active subtract 1 from the current number
           if (prevTimer > 0) {
             return prevTimer - 1;
-          } else {
+          } 
+          // if the timer has reached 0 set the flag to true which will trigger the handleCapture function
+          else {
             clearInterval(timerInterval);
             setShowTimer(false);
-            setShouldCapture(true); // Set the flag to true when the timer finishes
+            if (!isTooClose) {
+              setShouldCapture(true); // Set the flag to true when the timer finishes if not too close
+            }
             return prevTimer;
-          }
+            }
         });
       }, 1000);
     };
@@ -99,7 +117,12 @@ const PoseAuthoring = (props) => {
       }
     };
     
-    
+    const handleCaptureError = () => {
+      setNotificationMessage("Error caturing pose\nToo close to the camera \nPlease try again");
+      setBoxVisible(true);
+      setTimeout(() => setBoxVisible(false), 3000);
+    }
+      
     const exitPoseAuthoring = () => {
       setNotificationMessage("Done, exiting Pose Authoring");
       setBoxVisible(true);
@@ -123,13 +146,13 @@ const PoseAuthoring = (props) => {
       exitPoseAuthoring();
     };
     
-  // UseEffect to capture pose data when the flag is set and poseData changes
-  useEffect(() => {
-    if (shouldCapture) {
-      handleCapture();
-      setShouldCapture(false); // Reset the flag after capturing
-    }
-  }, [props.poseData, shouldCapture]); // Only re-run if props.poseData or shouldCapture changes
+    // UseEffect to capture pose data when the flag is set and poseData changes
+    useEffect(() => {
+      if (shouldCapture) {
+        handleCapture();
+        setShouldCapture(false); // Reset the flag after capturing
+      }
+    }, [props.poseData, shouldCapture]); // Only re-run if props.poseData or shouldCapture changes
 
     const handleCapture = () => {
       setNotificationMessage("Captured pose.");
@@ -236,7 +259,6 @@ const PoseAuthoring = (props) => {
           fontWeight={800}
           callback={() => startTolerance()}
         />
-
         <IntermediateBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
         <RectButton
           height={height * 0.05}
@@ -262,7 +284,6 @@ const PoseAuthoring = (props) => {
           fontWeight={800}
           callback={() => intermediateTolerance()}
         />
-
         <EndBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
         <RectButton
           height={height * 0.05}
@@ -288,7 +309,6 @@ const PoseAuthoring = (props) => {
           fontWeight={800}
           callback={() => endTolerance()}
         />
-
         <Pose
           poseData={props.poseData}
           colAttr={{
@@ -299,7 +319,6 @@ const PoseAuthoring = (props) => {
           }}
           similarityScores={poseSimilarity}
         />
-
         {showTimer && (
           <Graphics
             draw={graphics => {
@@ -321,7 +340,6 @@ const PoseAuthoring = (props) => {
             />
           </Graphics>
         )}
-
         <RectButton
           height={height * 0.12}
           width={width * 0.20}
@@ -371,22 +389,22 @@ const PoseAuthoring = (props) => {
           fontWeight={800}
           callback={handleReset} // Implement Reset??
         />
-      {/* Conditionally rendering the NotificationBox based on the isBoxVisible state */}
-      {isBoxVisible && <NotificationBox message={notificationMessage} textSize={30} />}
-      {showConfirmExit && (
-        <RectButton
-          height={props.height * 0.30}
-          width={props.width * .50}
-          x={props.width * 0.40}
-          y={props.height * 0.50}
-          color={white}
-          fontSize={props.width * 0.021}
-          fontColor={blue}
-          text={"Exit Pose Authoring?\n(Click to exit)"}
-          fontWeight={800}
-          callback={handleConfirmExit}
-        />
-      )}
+        {/* Conditionally rendering the NotificationBox based on the isBoxVisible state */}
+        {isBoxVisible && <NotificationBox message={notificationMessage} textSize={30} />}
+        {showConfirmExit && (
+          <RectButton
+            height={props.height * 0.30}
+            width={props.width * .50}
+            x={props.width * 0.40}
+            y={props.height * 0.50}
+            color={white}
+            fontSize={props.width * 0.021}
+            fontColor={blue}
+            text={"Exit Pose Authoring?\n(Click to exit)"}
+            fontWeight={800}
+            callback={handleConfirmExit}
+          />
+        )}
       </>
     );
 };
