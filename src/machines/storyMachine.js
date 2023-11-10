@@ -14,7 +14,11 @@ export const StoryMachine = createMachine({
       },
     },
     playing: {},
-    conjecture: {},
+    conjecture: {
+      on: {
+        AUTHOR: "edit", // move to poseauthoring
+      }
+    },
     edit: {
       on: {
         HOME: "ready",  // move to home

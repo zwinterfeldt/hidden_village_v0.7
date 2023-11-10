@@ -117,9 +117,9 @@ const Story = () => {
           <Home
             width={width}
             height={height}
-            startCallback={() => send("TOGGLE")}
-            editCallback={() => send("AUTHOR")}
-            conjectureCallback={() => send("CONJECT")}
+            startCallback={() => send("TOGGLE")}  // goes to the game
+            editCallback={() => send("AUTHOR")} // goes to the Pose Sequence Editor
+            conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
           />
         )}
         {state.value === "conjecture" && (
@@ -128,6 +128,7 @@ const Story = () => {
             height={height}
             columnDimensions={columnDimensions}
             rowDimensions={rowDimensions}
+            editCallback={() => send("AUTHOR")} // goes to the Pose Sequence Editor
           />
         )}
         {state.value === "edit" && (

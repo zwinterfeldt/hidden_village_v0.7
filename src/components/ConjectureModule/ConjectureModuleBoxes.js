@@ -1,11 +1,9 @@
 import { Graphics, Text } from "@inlet/react-pixi";
-import Button from "../Button";
 import { TextStyle } from "@pixi/text";
-import { blue } from "../../utils/colors"
 import { yellow, blue, green, white, red } from "../../utils/colors";
 
 export const NameBox = (props) => {
-    const { height, width, startCallback, editCallback, conjectureCallback,mainCallback } = props;
+    const { height, width } = props;
     return (
         <>
         <Text
@@ -120,18 +118,6 @@ export const NameBox = (props) => {
         }
         anchor={0.5}
         />
-      <Button
-        height={height * 0.2}
-        width={width * 0.1}
-        x={width * 0.15}
-        y={height * 0.50}
-        color={blue}
-        fontSize={38}
-        fontColor={white}
-        text={"POSE EDiTOR"}
-        fontWeight={800}
-        callback={mainCallback}
-      />
         </>
     )
 }
