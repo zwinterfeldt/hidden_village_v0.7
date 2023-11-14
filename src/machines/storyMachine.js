@@ -17,11 +17,12 @@ export const StoryMachine = createMachine({
     conjecture: {
       on: {
         AUTHOR: "edit", // move to poseauthoring
+        HOME: "ready", // move to home
       }
     },
     edit: {
       on: {
-        HOME: "ready",  // move to home
+        CONJECT: "conjecture", // move to conjecture editor
       }
     },
   },

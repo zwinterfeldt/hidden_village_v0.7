@@ -24,7 +24,7 @@ const Home = (props) => {
       <Button
         height={height * 0.2}
         width={width * 0.1}
-        x={width * 0.75}
+        x={width * 0.85}
         y={height * 0.1}
         color={red}
         fontSize={24}
@@ -32,18 +32,6 @@ const Home = (props) => {
         text={"Conjecture Editor"}
         fontWeight={800}
         callback={conjectureCallback}
-      />
-      <Button
-        height={height * 0.2}
-        width={width * 0.1}
-        x={width * 0.85}
-        y={height * 0.1}
-        color={green}
-        fontSize={24}
-        fontColor={blue}
-        text={"Pose Authoring"}
-        fontWeight={800}
-        callback={editCallback}
       />
       <Text
         text={"Hidden Village"}
