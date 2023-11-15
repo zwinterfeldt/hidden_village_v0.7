@@ -1,8 +1,9 @@
 import { Text, Graphics } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { useCallback } from "react";
+import { black } from "../utils/colors";
 
-const RectButton = (props) => {
+const InputBox = (props) => {
   const {
     width,
     height,
@@ -31,22 +32,21 @@ const RectButton = (props) => {
         text={text}
         style={
           new TextStyle({
-            align: "center",
             fontFamily: "Futura",
             fontSize: fontSize,
             fontWeight: fontWeight,
             fill: [fontColor],
-            wordWrap: true,
+            wordWrap: false,
           })
         }
         interactive={true}
         pointerdown={callback}
-        x={x * 1.04}
-        y={y * 1.02}
+        x={x * 1.42}
+        y={y * 1.15}
         anchor={0.5}
       />
     </>
   );
 };
 
-export default RectButton;
+export default InputBox;
