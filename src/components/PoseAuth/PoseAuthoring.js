@@ -393,10 +393,10 @@ const PoseAuthoring = (props) => {
         {isBoxVisible && <NotificationBox message={notificationMessage} textSize={30} />}
         {showConfirmExit && (
           <RectButton
-            height={props.height * 0.30}
-            width={props.width * .50}
+            height={props.height * 0.98}
+            width={props.width * .35}
             x={props.width * 0.40}
-            y={props.height * 0.50}
+            y={props.height * 0.30}
             color={white}
             fontSize={props.width * 0.021}
             fontColor={blue}
