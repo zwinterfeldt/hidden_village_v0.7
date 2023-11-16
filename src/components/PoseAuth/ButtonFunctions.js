@@ -1,5 +1,4 @@
 import { writeToDatabasePoseAuth } from "../../firebase/database";
-import { Text, Graphics } from '@inlet/react-pixi';
 
 // Function will capture current pose on screen and depending on which box is selected,
 // store it in a JSON file with the appropriate name. This function uses localStorage
@@ -53,42 +52,9 @@ export function saveConjecture() {
          writeToDatabasePoseAuth(endPose, 'EndPose', localStorage.getItem('End Tolerance'));
       }
    }
-
-   // Clear localStorage after being saved.
-   localStorage.clear();
-   localStorage.setItem('Start Tolerance', "TOL%")
-   localStorage.setItem('Intermediate Tolerance', "TOL%")
-   localStorage.setItem('End Tolerance', "TOL%")
 }
 
 // removes all poses stored in localStorage.
 export function resetConjecture() {
    localStorage.clear();
-   localStorage.setItem('Start Tolerance', "TOL%")
-   localStorage.setItem('Intermediate Tolerance', "TOL%")
-   localStorage.setItem('End Tolerance', "TOL%")
 }
-
-// Creates a popup in which the user can enter a tolerance amount for the Start Pose
-export function startTolerance() {
-   let tolerance = prompt("Please Enter Your Tolerance Amount (0-100%)", "50");
-   if (tolerance != null) {
-      localStorage.setItem('Start Tolerance', tolerance + "%")
-   }
- }
-
- // Creates a popup in which the user can enter a tolerance amount for the Intermediate Pose
- export function intermediateTolerance() {
-   let tolerance = prompt("Please Enter Your Tolerance Amount (0-100%)", "50");
-   if (tolerance != null) {
-      localStorage.setItem('Intermediate Tolerance', tolerance + "%")
-   }
- }
-
- // Creates a popup in which the user can enter a tolerance amount for the End Pose
- export function endTolerance() {
-   let tolerance = prompt("Please Enter Your Tolerance Amount (0-100%)", "50");
-   if (tolerance != null) {
-      localStorage.setItem('End Tolerance', tolerance + "%")
-   }
- }

@@ -7,7 +7,7 @@ import { black, green, blue, white, pink, orange } from "../../utils/colors";
 import RectButton from "../RectButton";
 import { useMachine } from "@xstate/react";
 import { PoseAuthMachine } from "../../machines/poseauthMachine";
-import { capturePose, saveConjecture, resetConjecture, startTolerance, intermediateTolerance, endTolerance } from "./ButtonFunctions";
+import { capturePose, saveConjecture, resetConjecture } from "./ButtonFunctions";
 import { calculateFaceDepth } from "../Pose/landmark_utilities";
 // Importing Text and Graphics components from @inlet/react-pixi for rendering text and shapes in Pixi
 import { Text, Graphics } from '@inlet/react-pixi';
@@ -33,6 +33,8 @@ const PoseAuthoring = (props) => {
     const playerColumn = props.columnDimensions(3);
     const [poseSimilarity, setPoseSimilarity] = useState([]);
     const [state, send] = useMachine(PoseAuthMachine);
+
+    // constants for the layout
     const mainBoxWidth = props.width * 0.52;
     const mainBoxHeight = props.height * 0.65;
     const mainBoxX = props.width * 0.375;
@@ -44,38 +46,42 @@ const PoseAuthoring = (props) => {
     const [showConfirmExit, setShowConfirmExit] = useState(false);
     const [timeoutId, setTimeoutId] = useState(null);
 
-    //test timer variables
+    // timer variables
     const [showTimer, setShowTimer] = useState(false);
     const [timer, setTimer] = useState(10);
+    const [isTooClose, setIsTooClose] = useState(false);
 
-    // sets the intial tolerance buttons text on startup to "TOL%",
-    // and allows them to still be changed to a percentage later on.
-    var intialTolerance = (function() {
-      var executed = false
-      return function() {
-        if (executed === false) {
-          executed = true
-          localStorage.setItem('Start Tolerance', "TOL%")
-          localStorage.setItem('Intermediate Tolerance', "TOL%")
-          localStorage.setItem('End Tolerance', "TOL%")
-        }
-      }
-    }
-    )
+    // State to indicate whether we should capture the pose
+    const [shouldCapture, setShouldCapture] = useState(false);
 
+    // function to start the on screen timer once the capture button is pressed
     const startTimer = () => {
-      setTimer(10)
+      setTimer(10);
       setShowTimer(true);
       const timerInterval = setInterval(() => {
         setTimer((prevTimer) => {
+          const depth = localStorage.getItem('user_depth');
+          // if this depth value is inside of local storage set the timer to false and clear the interval 
+          if (depth !== null && parseFloat(depth) < -2) {
+            setShowTimer(false);
+            clearInterval(timerInterval);
+            handleCaptureError();
+            return;
+          }
+          
+          // if the timer is active subtract 1 from the current number
           if (prevTimer > 0) {
             return prevTimer - 1;
-          } else {
+          } 
+          // if the timer has reached 0 set the flag to true which will trigger the handleCapture function
+          else {
             clearInterval(timerInterval);
             setShowTimer(false);
-            handleCapture();
+            if (!isTooClose) {
+              setShouldCapture(true); // Set the flag to true when the timer finishes if not too close
+            }
             return prevTimer;
-          }
+            }
         });
       }, 1000);
     };
@@ -111,7 +117,12 @@ const PoseAuthoring = (props) => {
       }
     };
     
-    
+    const handleCaptureError = () => {
+      setNotificationMessage("Error caturing pose\nToo close to the camera \nPlease try again");
+      setBoxVisible(true);
+      setTimeout(() => setBoxVisible(false), 3000);
+    }
+      
     const exitPoseAuthoring = () => {
       setNotificationMessage("Done, exiting Pose Authoring");
       setBoxVisible(true);
@@ -124,6 +135,9 @@ const PoseAuthoring = (props) => {
     const handleConfirmExit = () => {
       // Clear the timeout
       clearTimeout(timeoutId);
+
+      // Clear local storage
+      localStorage.clear();
     
       // Hide the confirmation button
       setShowConfirmExit(false);
@@ -132,11 +146,18 @@ const PoseAuthoring = (props) => {
       exitPoseAuthoring();
     };
     
+    // UseEffect to capture pose data when the flag is set and poseData changes
+    useEffect(() => {
+      if (shouldCapture) {
+        handleCapture();
+        setShouldCapture(false); // Reset the flag after capturing
+      }
+    }, [props.poseData, shouldCapture]); // Only re-run if props.poseData or shouldCapture changes
 
     const handleCapture = () => {
       setNotificationMessage("Captured pose.");
       setBoxVisible(true);
-      capturePose(props.poseData, state.value) // Implement Pose-Capturing
+      capturePose(props.poseData, state.value); // Implement Pose-Capturing
       setTimeout(() => setBoxVisible(false), 1000);
     };
     
@@ -146,6 +167,51 @@ const PoseAuthoring = (props) => {
       resetConjecture()
       setTimeout(() => setBoxVisible(false), 1000);
     };
+
+    // Creates a popup in which the user can enter a tolerance amount for the Start Pose
+    function startTolerance() {
+      let tolerance = prompt("Please Enter Your Tolerance Amount (0-100%)", "50");
+      if (tolerance != null) {
+        tolerance = parseInt(tolerance, 10);
+        if (!isNaN(tolerance) && tolerance >= 0 && tolerance <= 100) {
+          localStorage.setItem('Start Tolerance', tolerance + "%") }
+        else {
+          setNotificationMessage("Please enter a valid\ntolerance value between\n0 and 100.");
+          setBoxVisible(true);
+          setTimeout(() => setBoxVisible(false), 2000);
+        }
+      }
+    }
+
+    // Creates a popup in which the user can enter a tolerance amount for the Intermediate Pose
+    function intermediateTolerance() {
+      let tolerance = prompt("Please Enter Your Tolerance Amount (0-100%)", "50");
+      if (tolerance != null) {
+        tolerance = parseInt(tolerance, 10);
+        if (!isNaN(tolerance) && tolerance >= 0 && tolerance <= 100) {
+          localStorage.setItem('Intermediate Tolerance', tolerance + "%") }
+        else {
+          setNotificationMessage("Please enter a valid\ntolerance value between\n0 and 100.");
+          setBoxVisible(true);
+          setTimeout(() => setBoxVisible(false), 2000);
+        }
+      }
+    }
+
+    // Creates a popup in which the user can enter a tolerance amount for the End Pose
+    function endTolerance() {
+      let tolerance = prompt("Please Enter Your Tolerance Amount (0-100%)", "50");
+      if (tolerance != null) {
+        tolerance = parseInt(tolerance, 10);
+        if (!isNaN(tolerance) && tolerance >= 0 && tolerance <= 100) {
+          localStorage.setItem('End Tolerance', tolerance + "%") }
+        else {
+          setNotificationMessage("Please enter a valid\ntolerance value between\n0 and 100.");
+          setBoxVisible(true);
+          setTimeout(() => setBoxVisible(false), 2000);
+        }
+      }
+    }
 
     useEffect(() => {
       if (props.poseData && props.poseData.poseLandmarks) {
@@ -189,11 +255,10 @@ const PoseAuthoring = (props) => {
           color={white}
           fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
-          text={localStorage.getItem('Start Tolerance')}          
+          text={"TOL%"}          
           fontWeight={800}
-          callback={startTolerance}
+          callback={() => startTolerance()}
         />
-
         <IntermediateBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
         <RectButton
           height={height * 0.05}
@@ -215,11 +280,10 @@ const PoseAuthoring = (props) => {
           color={white}
           fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
-          text={localStorage.getItem('Intermediate Tolerance')}
+          text={"TOL%"}
           fontWeight={800}
-          callback={intermediateTolerance}
+          callback={() => intermediateTolerance()}
         />
-
         <EndBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
         <RectButton
           height={height * 0.05}
@@ -241,11 +305,10 @@ const PoseAuthoring = (props) => {
           color={white}
           fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
           fontColor={black}
-          text={localStorage.getItem('End Tolerance')}
+          text={"TOL%"}
           fontWeight={800}
-          callback={endTolerance}
+          callback={() => endTolerance()}
         />
-
         <Pose
           poseData={props.poseData}
           colAttr={{
@@ -256,7 +319,6 @@ const PoseAuthoring = (props) => {
           }}
           similarityScores={poseSimilarity}
         />
-
         {showTimer && (
           <Graphics
             draw={graphics => {
@@ -278,7 +340,6 @@ const PoseAuthoring = (props) => {
             />
           </Graphics>
         )}
-
         <RectButton
           height={height * 0.12}
           width={width * 0.20}
@@ -328,24 +389,22 @@ const PoseAuthoring = (props) => {
           fontWeight={800}
           callback={handleReset} // Implement Reset??
         />
-      {/* Conditionally rendering the NotificationBox based on the isBoxVisible state */}
-      {isBoxVisible && <NotificationBox message={notificationMessage} textSize={30} />}
-      {showConfirmExit && (
-        <RectButton
-          height={props.height * 0.30}
-          width={props.width * .50}
-          x={props.width * 0.40}
-          y={props.height * 0.50}
-          color={white}
-          fontSize={props.width * 0.021}
-          fontColor={blue}
-          text={"Exit Pose Authoring?\n (Click to exit)"}
-          fontWeight={800}
-          callback={handleConfirmExit}
-        />
-      )}
-
-      {intialTolerance()}
+        {/* Conditionally rendering the NotificationBox based on the isBoxVisible state */}
+        {isBoxVisible && <NotificationBox message={notificationMessage} textSize={30} />}
+        {showConfirmExit && (
+          <RectButton
+            height={props.height * 0.98}
+            width={props.width * .35}
+            x={props.width * 0.40}
+            y={props.height * 0.30}
+            color={white}
+            fontSize={props.width * 0.021}
+            fontColor={blue}
+            text={"Exit Pose Authoring?\n(Click to exit)"}
+            fontWeight={800}
+            callback={handleConfirmExit}
+          />
+        )}
       </>
     );
 };
