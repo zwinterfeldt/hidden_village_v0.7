@@ -204,7 +204,31 @@ const enrichLandmarks = (newResults) => {
     newResults.poseLandmarks[POSE_LANDMARKS.PELVIS] = pelvis;
     newResults.poseLandmarks[POSE_LANDMARKS.SOLAR_PLEXIS] = solarPlexis;
   }
+
+
   return newResults;
+};
+
+// export how far away face is from camera
+export function calculateFaceDepth(poseLandmarks) {
+  const faceLandmarks = [
+    POSE_LANDMARKS.NOSE,
+    POSE_LANDMARKS.LEFT_EYE_INNER,
+    POSE_LANDMARKS.LEFT_EYE,
+    POSE_LANDMARKS.LEFT_EYE_OUTER,
+    POSE_LANDMARKS.RIGHT_EYE_INNER,
+    POSE_LANDMARKS.RIGHT_EYE,
+    POSE_LANDMARKS.RIGHT_EYE_OUTER,
+    POSE_LANDMARKS.LEFT_EAR,
+    POSE_LANDMARKS.RIGHT_EAR,
+  ];
+
+  const totalDepth = faceLandmarks.reduce((sum, landmark) => {
+    return sum + poseLandmarks[landmark].z;
+  }, 0);
+
+  const averageDepth = totalDepth / faceLandmarks.length;
+  return averageDepth;
 };
 
 export { enrichLandmarks };

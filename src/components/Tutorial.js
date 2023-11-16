@@ -9,6 +9,7 @@ import { TextStyle } from "@pixi/text";
 import cursorPoseData from "../models/rawPoses/cursorPose.json";
 import tutorialPoseData from "../models/rawPoses/tutorialPoses.json";
 import { enrichLandmarks } from "./Pose/landmark_utilities";
+import { calculateFaceDepth } from "./Pose/landmark_utilities"; // new
 import {
   matchSegmentToLandmarks,
   segmentSimilarity,
@@ -27,9 +28,22 @@ const Tutorial = (props) => {
   const [poseSimilarity, setPoseSimilarity] = useState([]);
 
   // on mount, create an array of the poses that will be used in the tutorial
+
+  // This detects when the user is too close and trips a warning
   useEffect(() => {
+
     setPoses([...tutorialPoseData.poses, cursorPoseData]);
   }, []);
+  useEffect(() => {
+    if (props.poseData && props.poseData.poseLandmarks) {
+      const depth = calculateFaceDepth(props.poseData.poseLandmarks);
+      // console.log lets you see the depth in youre browsers console; ctrl + shift + i
+      // console.log(depth)
+      if (depth < -4) { // You can change the negative integer lower for closer range
+        console.warn("Warning: You are too close to the camera!");
+      }
+    }
+  }, [props.poseData]);
 
   // monitor the state value -- when you get to a running state, update the current
   // pose for the model to emulate. If there are no more poses to emulate,
@@ -61,7 +75,7 @@ const Tutorial = (props) => {
       props.onComplete();
     }
   }, [state.value]);
-
+  
   // if there is a pose to match, calculate the similarity between the player's current
   // pose and the model pose (foreach segment to be matched). Set the similarity scores
   // into a variable to be monitored

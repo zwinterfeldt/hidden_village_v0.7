@@ -42,6 +42,31 @@ export const writeToDatabase = async (poseData, conjectureId, frameRate) => {
   return promise;
 };
 
+export const writeToDatabasePoseAuth = async (poseData, state, tolerance) => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+
+  // Create a reference to the Firebase Realtime Database
+  const dbRef = ref(db, "/PoseAuthoring");
+
+  // Create an object to send to the database
+  // This object includes the userId, poseData, conjectureId, frameRate, and timestamp
+  const dataToSend = {
+    userId,
+    poseData,
+    timestamp,
+    state,
+    tolerance,
+  };
+
+  // Push the data to the database using the dbRef reference
+  const promise = push(dbRef, dataToSend);
+
+  // Return the promise that push() returns
+  return promise;
+};
+
 // Set the initial time of the last alert to the current time
 let lastAlertTime = Date.now();
 

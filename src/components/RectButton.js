@@ -1,4 +1,4 @@
-import { Text, Graphics } from "@inlet/react-pixi";
+import { Text, Graphics, Container } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { useCallback } from "react";
 
@@ -25,27 +25,27 @@ const RectButton = (props) => {
     [width]
   );
   return (
-    <>
+    <Container>
       <Graphics draw={draw} interactive={true} pointerdown={callback} />
       <Text
-        text={text}
-        style={
+        text={text}                                 // The text to display
+        style={                                     // Define the text's style
           new TextStyle({
-            align: "center",
-            fontFamily: "Futura",
-            fontSize: fontSize,
-            fontWeight: fontWeight,
-            fill: [fontColor],
-            wordWrap: true,
+            align: "center",                        // Center the text
+            fontFamily: "Futura",                   // Set the font family
+            fontSize: fontSize,                      // Set the font size
+            fontWeight: fontWeight,                  // Set the font weight
+            fill: [fontColor],                       // Set the font color
+            wordWrap: false,                          // Wrap the text if it exceeds its container
           })
         }
-        interactive={true}
-        pointerdown={callback}
-        x={x * 1.04}
-        y={y * 1.02}
-        anchor={0.5}
+        interactive={true}                          // Make the text interactive (clickable)
+        pointerdown={callback}                      // Callback function to be called when the text is clicked
+        x={x + 1.04}                           // Center the text horizontally within the button
+        y={y + 1.02}                          // Center the text vertically within the button
+        anchor={-.01}                                // Set the anchor to the center of the text
       />
-    </>
+    </Container>
   );
 };
 
