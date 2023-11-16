@@ -16,6 +16,74 @@ export const NameBox = (props) => {
   }
     return (
         <>
+        {/* multiChoice1 InputBox */}
+        <InputBox
+          height={height * .19}
+          width={width * 2}
+          x={width * 0.134}
+          y={height * 0.55}
+          color={white}
+          fontSize={width * 0.014}
+          fontColor={black}
+          text={
+            localStorage.getItem('Conjecture Name').slice(0, 100) +
+            (localStorage.getItem('Conjecture Name').length > 100 ? '...' : '')
+          }
+          fontWeight={800}
+          outlineColor={black}
+          callback={nameBoxInput} // Implement Popup
+        />
+        {/* multiChoice2 InputBox */}
+        <InputBox
+          height={height * .19}
+          width={width * 2}
+          y={height * 0.64}
+          color={white}
+          fontSize={width * 0.014}
+          fontColor={black}
+          text={
+            localStorage.getItem('Conjecture Name').slice(0, 100) +
+            (localStorage.getItem('Conjecture Name').length > 100 ? '...' : '')
+          }
+          fontWeight={800}
+          outlineColor={black}
+          callback={nameBoxInput} // Implement Popup
+        />
+        {/* multiChoice3 InputBox */}
+        <InputBox
+          height={height * .19}
+          width={width * 2}
+          x={width * 0.134}
+          y={height * 0.73}
+          color={white}
+          fontSize={width * 0.014}
+          fontColor={black}
+          text={
+            localStorage.getItem('Conjecture Name').slice(0, 100) +
+            (localStorage.getItem('Conjecture Name').length > 100 ? '...' : '')
+          }
+          fontWeight={800}
+          outlineColor={black}
+          callback={nameBoxInput} // Implement Popup
+        />
+        {/* multiChoice4 InputBox */}
+        <InputBox
+          height={height * .19}
+          width={width * 2}
+          x={width * 0.134}
+          y={height * 0.82}
+          color={white}
+          fontSize={width * 0.014}
+          fontColor={black}
+          text={
+            localStorage.getItem('Conjecture Name').slice(0, 100) +
+            (localStorage.getItem('Conjecture Name').length > 100 ? '...' : '')
+          }
+          fontWeight={800}
+          outlineColor={black}
+          callback={nameBoxInput} // Implement Popup
+        />
+        
         <Text
         text={"Conjecture Editor"}
         x={props.width * 0.5}
@@ -101,7 +169,7 @@ export const NameBox = (props) => {
         <Text
         text={"MULTIPLE CHOICE"}
         x={props.width * 0.50}
-        y={props.height * 0.57}
+        y={props.height * 0.52}
         style={
           new TextStyle({
             align: "center",
