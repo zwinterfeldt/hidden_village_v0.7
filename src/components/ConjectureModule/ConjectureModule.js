@@ -28,21 +28,21 @@ const ConjectureModule = (props) => {
         {/* Save Button */}
         <RectButton
           height={height * 0.15}
-          width={width * 0.20}
+          width={width * 0.25}
           x={width * 0.65}
           y={height * 0.9}
           color={green}
           fontSize={width * 0.02}
           fontColor={white}
-          text={"Save"}
+          text={"Save Draft"}
           fontWeight={800}
           callback={null} // Implement Save feature
         />
         {/* Cancel Button */}
         <RectButton
           height={height * 0.15}
-          width={width * 0.20}
-          x={width * 0.77}
+          width={width * 0.25}
+          x={width * 0.80}
           y={height * 0.9}
           color={red}
           fontSize={width * 0.02}

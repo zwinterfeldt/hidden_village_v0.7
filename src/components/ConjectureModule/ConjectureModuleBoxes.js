@@ -20,7 +20,7 @@ export const NameBox = (props) => {
           new TextStyle({
             align: "center",
             fontFamily: "Futura",
-            fontSize: 45,
+            fontSize: props.width * 0.025,
             fontWeight: 800,
             fill: [blue],
             letterSpacing: 0,
@@ -30,13 +30,13 @@ export const NameBox = (props) => {
         />
         <Text
         text={"NAME:"}
-        x={props.width * 0.11}
+        x={props.width * 0.102}
         y={props.height * 0.15}
         style={
           new TextStyle({
             align: "center",
             fontFamily: "Futura",
-            fontSize: 30,
+            fontSize: props.width * 0.018,
             fontWeight: 800,
             fill: [blue],
             letterSpacing: 0,
@@ -48,7 +48,7 @@ export const NameBox = (props) => {
         <InputBox
           height={height * 0.10}
           width={width * 1.05}
-          x={width * 0.139}
+          x={width * 0.134}
           y={height * 0.13}
           color={white}
           fontSize={width * 0.015}
@@ -66,7 +66,7 @@ export const NameBox = (props) => {
           new TextStyle({
             align: "center",
             fontFamily: "Futura",
-            fontSize: 30,
+            fontSize: props.width * 0.018,
             fontWeight: 800,
             fill: [blue],
             letterSpacing: 0,
@@ -82,7 +82,7 @@ export const NameBox = (props) => {
           new TextStyle({
             align: "center",
             fontFamily: "Futura",
-            fontSize: 30,
+            fontSize: props.width * 0.018,
             fontWeight: 800,
             fill: [blue],
             letterSpacing: 0,
@@ -98,7 +98,7 @@ export const NameBox = (props) => {
           new TextStyle({
             align: "center",
             fontFamily: "Futura",
-            fontSize: 30,
+            fontSize: props.width * 0.018,
             fontWeight: 800,
             fill: [blue],
             letterSpacing: 0,
@@ -126,13 +126,13 @@ export const PINBox = (props) => {
       <>
       <Text
       text={"PIN:"}
-      x={props.width * 0.8}
+      x={props.width * 0.797}
       y={props.height * 0.15}
       style={
         new TextStyle({
           align: "center",
           fontFamily: "Futura",
-          fontSize: 30,
+          fontSize: props.width * 0.018,
           fontWeight: 800,
           fill: [blue],
           letterSpacing: 0,
@@ -164,9 +164,9 @@ export const ConjectureBox = (props) => {
         {/* ConjextureBox InputBox */}
         <InputBox
           height={height * 0.30}
-          width={width * 2.1335}
-          x={props.width * 0.085}
-          y={height * 0.175}
+          width={width * 2.1645}
+          x={width * 0.072}
+          y={height * 0.1755}
           color={white}
           fontSize={width * 0.02}
           fontColor={black}
@@ -184,13 +184,13 @@ export const KeywordsBox = (props) => {
       <>
         <Text
           text={"KEYWORDS:"}
-          x={props.width * 0.1345}
+          x={props.width * 0.1275}
           y={props.height * 0.322}
           style={
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: 30,
+              fontSize: props.width * 0.018,
               fontWeight: 800,
               fill: [blue],
               letterSpacing: 0,
@@ -201,7 +201,7 @@ export const KeywordsBox = (props) => {
         {/* KeywordsBox InputBox */}
         <InputBox
           height={height * 0.10}
-          width={width * 1.883}
+          width={width * 1.8815}
           x={width * 0.1855}
           y={props.height * 0.301}
           color={white}
