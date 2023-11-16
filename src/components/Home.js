@@ -2,10 +2,10 @@ import Background from "./Background";
 import Button from "./Button";
 import { Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
-import { yellow, blue, green } from "../utils/colors";
+import { yellow, blue, green, white, red } from "../utils/colors";
 
 const Home = (props) => {
-  const { height, width, startCallback, editCallback } = props;
+  const { height, width, startCallback, editCallback, conjectureCallback } = props;
   return (
     <>
       <Background height={height} width={width} />
@@ -26,12 +26,12 @@ const Home = (props) => {
         width={width * 0.1}
         x={width * 0.85}
         y={height * 0.1}
-        color={green}
+        color={red}
         fontSize={24}
-        fontColor={blue}
-        text={"Pose Authoring"}
+        fontColor={white}
+        text={"Conjecture Editor"}
         fontWeight={800}
-        callback={editCallback}
+        callback={conjectureCallback}
       />
       <Text
         text={"Hidden Village"}

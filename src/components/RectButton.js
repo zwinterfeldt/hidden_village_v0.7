@@ -19,7 +19,7 @@ const RectButton = (props) => {
     (g) => {
       g.clear();
       g.beginFill(color);
-      g.drawRect(x, y, width * 0.4, height * 0.4);  // Draws a rectangular button
+      g.drawRect(x, y, width * 0.4, height * 0.4);  // Draws a rectangle
       g.endFill();
     },
     [width]

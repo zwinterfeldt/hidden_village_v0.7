@@ -13,6 +13,7 @@ import { enrichLandmarks } from "./Pose/landmark_utilities";
 import firebase from "firebase/compat";
 import "firebase/compat/auth";
 import PoseAuthoring from "./PoseAuth/PoseAuthoring.js";
+import ConjectureModule from "./ConjectureModule/ConjectureModule.js";
 
 const [
   numRows,
@@ -116,8 +117,18 @@ const Story = () => {
           <Home
             width={width}
             height={height}
-            startCallback={() => send("TOGGLE")}
-            editCallback={() => send("AUTHOR")}
+            startCallback={() => send("TOGGLE")}  // goes to the game
+            conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
+          />
+        )}
+        {state.value === "conjecture" && (
+          <ConjectureModule
+            width={width}
+            height={height}
+            columnDimensions={columnDimensions}
+            rowDimensions={rowDimensions}
+            editCallback={() => send("AUTHOR")} // goes to the Pose Sequence Editor
+            mainCallback={() => send("HOME")} // goes to Home
           />
         )}
         {state.value === "edit" && (
@@ -127,7 +138,7 @@ const Story = () => {
             poseData={poseData}
             columnDimensions={columnDimensions}
             rowDimensions={rowDimensions}
-            mainCallback={() => send("HOME")} // returns to home
+            conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
           />
         )}
         {state.value === "playing" && (

@@ -9,15 +9,21 @@ export const StoryMachine = createMachine({
     ready: {
       on: {
         TOGGLE: "playing",  // move to game
+        CONJECT: "conjecture", // move to conjecture editor
         AUTHOR: "edit", // move to poseauthoring
       },
     },
     playing: {},
+    conjecture: {
+      on: {
+        AUTHOR: "edit", // move to poseauthoring
+        HOME: "ready", // move to home
+      }
+    },
     edit: {
       on: {
-        HOME: "ready",  // move to home
-      },
+        CONJECT: "conjecture", // move to conjecture editor
+      }
     },
-    home: {}, // when uncommented, freezes entire program
   },
 });

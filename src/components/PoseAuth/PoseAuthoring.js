@@ -29,7 +29,7 @@ const NotificationBox = ({ message, textSize }) => {
 };
 
 const PoseAuthoring = (props) => {
-    const { height, width, poseData, columnDimensions, rowDimensions, mainCallback } = props;
+    const { height, width, poseData, columnDimensions, rowDimensions, conjectureCallback } = props;
     const playerColumn = props.columnDimensions(3);
     const [poseSimilarity, setPoseSimilarity] = useState([]);
     const [state, send] = useMachine(PoseAuthMachine);
@@ -365,18 +365,17 @@ const PoseAuthoring = (props) => {
           callback={handleSave} // Implement Save Feature
         />
         <RectButton
-          height={height * 0.12}
-          width={width * 0.20}
-          x={width * 0.67}
-          y={height * 0.83}
-          color={white}
-          fontSize={width * 0.021}  //  Dynamically modify font size based on screen width
-          fontColor={blue}
-          text={"Done"}
-          fontWeight={800}
-          callback={handleDone}
-          //callback={props.mainCallback} // Implement Exit To Main Menu
-        />
+        height={height * 0.12}
+        width={width * 0.20}
+        x={width * 0.67}
+        y={height * 0.83}
+        color={white}
+        fontSize={24}
+        fontColor={blue}
+        text={"Done"}
+        fontWeight={800}
+        callback={props.conjectureCallback} // Exit Back To Conjecture Module
+      />
         <RectButton
           height={height * 0.12}
           width={width * 0.20}
