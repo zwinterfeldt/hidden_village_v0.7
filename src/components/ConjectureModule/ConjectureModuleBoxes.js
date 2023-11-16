@@ -7,8 +7,12 @@ export const NameBox = (props) => {
   const { height, width } = props;
   // Creates a popup in which the user can enter a name for their conjecture
   function nameBoxInput() {
-    let conjectureName = prompt("Please Enter Your Conjecture Name");
-    localStorage.setItem('Conjecture Name', conjectureName) 
+    const existingName = localStorage.getItem('Conjecture Name');
+    const newConjectureName = prompt("Please Enter Your Conjecture Name", existingName);
+    
+    if (newConjectureName !== null) {
+      localStorage.setItem('Conjecture Name', newConjectureName);
+    }
   }
     return (
         <>
@@ -46,18 +50,22 @@ export const NameBox = (props) => {
         />
         {/* NameBox InputBox */}
         <InputBox
-          height={height * 0.10}
+          height={height * 0.13}
           width={width * 1.05}
           x={width * 0.134}
-          y={height * 0.13}
+          y={height * 0.125}
           color={white}
-          fontSize={width * 0.015}
+          fontSize={width * 0.014}
           fontColor={black}
-          text={localStorage.getItem('Conjecture Name')}
-          fontWeight={300}
+          text={
+            localStorage.getItem('Conjecture Name').slice(0, 100) +
+            (localStorage.getItem('Conjecture Name').length > 100 ? '...' : '')
+          }
+          fontWeight={800}
           outlineColor={black}
           callback={nameBoxInput} // Implement Popup
         />
+
         <Text
         text={"AUTHOR:"}
         x={props.width * 0.6}
