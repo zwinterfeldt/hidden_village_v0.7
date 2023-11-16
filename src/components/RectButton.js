@@ -15,14 +15,16 @@ const RectButton = (props) => {
     fontWeight,
     callback,
   } = props;
+  
+  const buttonWidth = width * 0.4; // Adjust the width scaling if needed
   const draw = useCallback(
     (g) => {
       g.clear();
       g.beginFill(color);
-      g.drawRect(x, y, width * 0.4, height * 0.4);  // Draws a rectangle
+      g.drawRect(x, y, buttonWidth, height * 0.4); // Draws a rectangular button
       g.endFill();
     },
-    [width]
+    [width, height, x, y, color, buttonWidth]
   );
   return (
     <Container>
@@ -36,14 +38,15 @@ const RectButton = (props) => {
             fontSize: fontSize,                      // Set the font size
             fontWeight: fontWeight,                  // Set the font weight
             fill: [fontColor],                       // Set the font color
-            wordWrap: false,                          // Wrap the text if it exceeds its container
+            wordWrap: true,                          // Wrap the text if it exceeds its container
+            wordWrapWidth: buttonWidth, // Setting the word wrap width
           })
         }
-        interactive={true}                          // Make the text interactive (clickable)
-        pointerdown={callback}                      // Callback function to be called when the text is clicked
-        x={x + 1.04}                           // Center the text horizontally within the button
-        y={y + 1.02}                          // Center the text vertically within the button
-        anchor={-.01}                                // Set the anchor to the center of the text
+        interactive={true}
+        pointerdown={callback}
+        x={x + buttonWidth / 2} // Centering text in the button
+        y={y + height * 0.2} // Adjusting the y-position for text
+        anchor={0.5}
       />
     </Container>
   );
