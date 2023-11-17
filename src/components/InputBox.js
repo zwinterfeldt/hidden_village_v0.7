@@ -43,6 +43,7 @@ const InputBox = (props) => {
             fontWeight: fontWeight,
             fill: [fontColor],
             wordWrap: true,
+            wordWrapWidth: buttonWidth,
           })
         }
         interactive={true}
