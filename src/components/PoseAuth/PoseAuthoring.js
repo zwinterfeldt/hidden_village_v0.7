@@ -232,7 +232,7 @@ const PoseAuthoring = (props) => {
       <>
         <Background height={height} width={width} />
         <MainBox height={height} width={width} />
-        <StartBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
+        <StartBox height={height} width={width} x={1} y={1} boxState={state.value} similarityScores={poseSimilarity} inCE={false} />
         <RectButton
           // Start Pose button
           height={height * 0.05}  
@@ -259,7 +259,7 @@ const PoseAuthoring = (props) => {
           fontWeight={800}
           callback={() => startTolerance()}
         />
-        <IntermediateBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
+        <IntermediateBox height={height} width={width}  x={1} y={1} boxState={state.value} similarityScores={poseSimilarity} inCE={false} />
         <RectButton
           height={height * 0.05}
           width={width * 0.10}
@@ -284,7 +284,7 @@ const PoseAuthoring = (props) => {
           fontWeight={800}
           callback={() => intermediateTolerance()}
         />
-        <EndBox height={height} width={width} boxState={state.value} similarityScores={poseSimilarity} />
+        <EndBox height={height} width={width}  x={1} y={1} boxState={state.value} similarityScores={poseSimilarity} inCE={false} />
         <RectButton
           height={height * 0.05}
           width={width * 0.10}
@@ -370,7 +370,7 @@ const PoseAuthoring = (props) => {
         x={width * 0.67}
         y={height * 0.83}
         color={white}
-        fontSize={24}
+        fontSize={width * 0.021}
         fontColor={blue}
         text={"Done"}
         fontWeight={800}

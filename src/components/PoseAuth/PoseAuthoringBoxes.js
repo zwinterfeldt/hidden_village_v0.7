@@ -109,8 +109,8 @@ export const MainBox = (props) => {
 export const StartBox = (props) => {
   // Box holding starting pose in conjecture
   // Calculate the position and dimensions of the StartBox
-  const rectangleX = props.width * 0.1;
-  const rectangleY = props.height * 0.17;
+  const rectangleX = props.width * 0.1 * props.x;
+  const rectangleY = props.height * 0.17 * props.y;
   const rectangleWidth = props.width * 0.2; // Adjust the width as needed,    maintain aspect ratio => windows.devicepixelratio
   const rectangleHeight = props.height * 0.2; // Adjust the height as needed
 
@@ -128,11 +128,16 @@ export const StartBox = (props) => {
     g.lineTo(rectangleX, rectangleY); // Close the path by returning to the starting point
     g.endFill();
   };
-
+  
   const drawTextBox = (g) => {  // Draws a black box around the text
       g.clear();
       g.beginFill(black);
-      g.drawRect(props.width * 0.099, props.height * 0.37, props.width * 0.202, props.height * 0.04);  // (x, y, width, height)
+      if (props.inCE === true) {
+        g.drawRect(props.width * 0.498, props.height * 0.976, props.width * 0.2045, props.height * 0.04);  // (x, y, width, height)
+      }
+      else {
+        g.drawRect(props.width * 0.099, props.height * 0.37, props.width * 0.202, props.height * 0.04);  // (x, y, width, height)
+      }
       g.endFill();
     };
 
@@ -147,68 +152,127 @@ export const StartBox = (props) => {
       g.lineTo(rectangleX, rectangleY);
     }
 
-  return (
-    <Container>
-      <Graphics draw={drawRectangle} />
-      <Graphics draw={drawTextBox} />
-      <Text
-          text={"Start Pose"}
-          x={props.width * 0.195}
-          y={props.height * 0.39}
-          style={
-            new TextStyle({
-              align: "center",
-              fontFamily: "Futura",
-              fontSize: props.width * 0.02,
-              fontWeight: 800,
-              fill: [green],
-              letterSpacing: 0,
-            })
-          }
-          anchor={0.5}
-        />
-        {props.boxState === "start" && (
-        <Graphics draw={drawBoxOutline} />
-      )}
-      {localStorage.getItem('start.json') !== null && (
-        <Pose
-          poseData={JSON.parse(localStorage.getItem('start.json'))}
-          colAttr={{
-            x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
-            y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
-            width: rectangleWidth * 0.5,
-            height: rectangleWidth * 0.47,
-          }}
-          similarityScores={props.similarityScores}
-        />
-        )}
-      {localStorage.getItem('Start Tolerance') !== null && (
-        <Text
-        text={localStorage.getItem('Start Tolerance')}
-        x={props.width * 0.125}
-        y={props.height * 0.345}
-        style={
-          new TextStyle({
-            align: "center",
-            fontFamily: "Futura",
-            fontSize: props.width * 0.016,
-            fontWeight: 800,
-            fill: [black],
-            letterSpacing: 0,
-          })
-        }
-        anchor={0.5}
-      />
-      )}
-    </Container>
-  );
+    if (props.inCE === true) {
+      return (
+        <Container>
+          <Graphics draw={drawRectangle} />
+          <Graphics draw={drawTextBox} />
+          <Text
+              text={"Start Pose"}
+              x={props.width * 0.599}
+              y={props.height * 0.997}
+              style={
+                new TextStyle({
+                  align: "center",
+                  fontFamily: "Futura",
+                  fontSize: props.width * 0.02,
+                  fontWeight: 800,
+                  fill: [green],
+                  letterSpacing: 0,
+                })
+              }
+              anchor={0.5}
+            />
+            {props.boxState === "start" && (
+            <Graphics draw={drawBoxOutline} />
+          )}
+          {localStorage.getItem('start.json') !== null && (
+            <Pose
+              poseData={JSON.parse(localStorage.getItem('start.json'))}
+              colAttr={{
+                x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
+                y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
+                width: rectangleWidth * 0.5,
+                height: rectangleWidth * 0.47,
+              }}
+              similarityScores={props.similarityScores}
+            />
+            )}
+          {localStorage.getItem('Start Tolerance') !== null && (
+            <Text
+            text={localStorage.getItem('Start Tolerance')}
+            x={props.width * 0.528}
+            y={props.height * 0.955}
+            style={
+              new TextStyle({
+                align: "center",
+                fontFamily: "Futura",
+                fontSize: props.width * 0.016,
+                fontWeight: 800,
+                fill: [black],
+                letterSpacing: 0,
+              })
+            }
+            anchor={0.5}
+          />
+          )}
+        </Container>
+      );
+    }
+    else {
+      return (
+        <Container>
+          <Graphics draw={drawRectangle} />
+          <Graphics draw={drawTextBox} />
+          <Text
+              text={"Start Pose"}
+              x={props.width * 0.197}
+              y={props.height * 0.39}
+              style={
+                new TextStyle({
+                  align: "center",
+                  fontFamily: "Futura",
+                  fontSize: props.width * 0.02,
+                  fontWeight: 800,
+                  fill: [green],
+                  letterSpacing: 0,
+                })
+              }
+              anchor={0.5}
+            />
+            {props.boxState === "start" && (
+            <Graphics draw={drawBoxOutline} />
+          )}
+          {localStorage.getItem('start.json') !== null && (
+            <Pose
+              poseData={JSON.parse(localStorage.getItem('start.json'))}
+              colAttr={{
+                x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
+                y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
+                width: rectangleWidth * 0.5,
+                height: rectangleWidth * 0.47,
+              }}
+              similarityScores={props.similarityScores}
+            />
+            )}
+          {localStorage.getItem('Start Tolerance') !== null && (
+            <Text
+            text={localStorage.getItem('Start Tolerance')}
+            x={props.width * 0.125}
+            y={props.height * 0.345}
+            style={
+              new TextStyle({
+                align: "center",
+                fontFamily: "Futura",
+                fontSize: props.width * 0.016,
+                fontWeight: 800,
+                fill: [black],
+                letterSpacing: 0,
+              })
+            }
+            anchor={0.5}
+          />
+          )}
+        </Container>
+      );
+    }
 };
 
 export const IntermediateBox = (props) => {
   // Box holding intermediate pose in conjecture
   // Calculate the position and dimensions of the IntermediateBox
-  const rectangleX = props.width * 0.1;
-  const rectangleY = props.height * 0.41;
+  const rectangleX = props.width * 0.1 * props.x;
+  const rectangleY = props.height * 0.41 * props.y;
   const rectangleWidth = props.width * 0.2; // Adjust the width as needed
   const rectangleHeight = props.height * 0.2; // Adjust the height as needed
 
@@ -230,7 +294,12 @@ export const IntermediateBox = (props) => {
   const drawTextBox = (g) => {  // Draws a black box around the text
     g.clear();
     g.beginFill(black);
-    g.drawRect(props.width * 0.099, props.height * 0.61, props.width * 0.202, props.height * 0.04);  // (x, y, width, height)
+    if (props.inCE === true) {
+      g.drawRect(props.width * 0.898, props.height * 0.976, props.width * 0.2045, props.height * 0.04);  // (x, y, width, height)
+    }
+    else {
+      g.drawRect(props.width * 0.099, props.height * 0.61, props.width * 0.202, props.height * 0.04);  // (x, y, width, height)
+    }
     g.endFill();
   };
 
@@ -245,68 +314,127 @@ export const IntermediateBox = (props) => {
     g.lineTo(rectangleX, rectangleY);
   }
 
-  return (
-    <Container>
-      <Graphics draw={drawRectangle} />
-      <Graphics draw={drawTextBox} />
-      <Text
-          text={"Intermediate Pose"}
-          x={props.width * 0.195}
-          y={props.height * 0.63}
+  if (props.inCE === true) {
+    return (
+      <Container>
+        <Graphics draw={drawRectangle} />
+        <Graphics draw={drawTextBox} />
+        <Text
+            text={"Intermediate Pose"}
+            x={props.width * 0.999}
+            y={props.height * 0.997}
+            style={
+              new TextStyle({
+                align: "center",
+                fontFamily: "Futura",
+                fontSize: props.width * 0.02,
+                fontWeight: 800,
+                fill: [white],
+                letterSpacing: 0,
+              })
+            }
+            anchor={0.5}
+          />
+          {props.boxState === "intermediate" && (
+          <Graphics draw={drawBoxOutline} />
+        )}
+        {localStorage.getItem('intermediate.json') !== null && (
+          <Pose
+            poseData={JSON.parse(localStorage.getItem('intermediate.json'))}
+            colAttr={{
+              x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
+              y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
+              width: rectangleWidth * 0.5,
+              height: rectangleWidth * 0.47,
+            }}
+            similarityScores={props.similarityScores}
+          />
+          )}
+        {localStorage.getItem('Intermediate Tolerance') !== null && (
+          <Text
+          text={localStorage.getItem('Intermediate Tolerance')}
+          x={props.width * 0.928}
+          y={props.height * 0.955}
           style={
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: props.width * 0.02,
+              fontSize: props.width * 0.016,
               fontWeight: 800,
-              fill: [white],
+              fill: [black],
               letterSpacing: 0,
             })
           }
           anchor={0.5}
         />
-        {props.boxState === "intermediate" && (
-        <Graphics draw={drawBoxOutline} />
-      )}
-      {localStorage.getItem('intermediate.json') !== null && (
-        <Pose
-          poseData={JSON.parse(localStorage.getItem('intermediate.json'))}
-          colAttr={{
-            x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
-            y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
-            width: rectangleWidth * 0.5,
-            height: rectangleWidth * 0.47,
-          }}
-          similarityScores={props.similarityScores}
+        )}
+      </Container>
+    );
+  }
+  else {
+    return (
+      <Container>
+        <Graphics draw={drawRectangle} />
+        <Graphics draw={drawTextBox} />
+        <Text
+            text={"Intermediate Pose"}
+            x={props.width * 0.197}
+            y={props.height * 0.63}
+            style={
+              new TextStyle({
+                align: "center",
+                fontFamily: "Futura",
+                fontSize: props.width * 0.02,
+                fontWeight: 800,
+                fill: [white],
+                letterSpacing: 0,
+              })
+            }
+            anchor={0.5}
+          />
+          {props.boxState === "intermediate" && (
+          <Graphics draw={drawBoxOutline} />
+        )}
+        {localStorage.getItem('intermediate.json') !== null && (
+          <Pose
+            poseData={JSON.parse(localStorage.getItem('intermediate.json'))}
+            colAttr={{
+              x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
+              y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
+              width: rectangleWidth * 0.5,
+              height: rectangleWidth * 0.47,
+            }}
+            similarityScores={props.similarityScores}
+          />
+          )}
+        {localStorage.getItem('Intermediate Tolerance') !== null && (
+          <Text
+          text={localStorage.getItem('Intermediate Tolerance')}
+          x={props.width * 0.125}
+          y={props.height * 0.585}
+          style={
+            new TextStyle({
+              align: "center",
+              fontFamily: "Futura",
+              fontSize: props.width * 0.016,
+              fontWeight: 800,
+              fill: [black],
+              letterSpacing: 0,
+            })
+          }
+          anchor={0.5}
         />
         )}
-      {localStorage.getItem('Intermediate Tolerance') !== null && (
-        <Text
-        text={localStorage.getItem('Intermediate Tolerance')}
-        x={props.width * 0.125}
-        y={props.height * 0.585}
-        style={
-          new TextStyle({
-            align: "center",
-            fontFamily: "Futura",
-            fontSize: props.width * 0.016,
-            fontWeight: 800,
-            fill: [black],
-            letterSpacing: 0,
-          })
-        }
-        anchor={0.5}
-      />
-      )}
-    </Container>
-  );
+      </Container>
+    );
+  }
 };
 
 export const EndBox = (props) => {
   // Box holding end pose in conjecture
   // Calculate the position and dimensions of the EndBox
-  const rectangleX = props.width * 0.1;
-  const rectangleY = props.height * 0.65;
+  const rectangleX = props.width * 0.1 * props.x;
+  const rectangleY = props.height * 0.65 * props.y;
   const rectangleWidth = props.width * 0.2; // Adjust the width as needed
   const rectangleHeight = props.height * 0.2; // Adjust the height as needed
 
@@ -328,7 +456,12 @@ export const EndBox = (props) => {
   const drawTextBox = (g) => {  // Draws a black box around the text
     g.clear();
     g.beginFill(black);
-    g.drawRect(props.width * 0.099, props.height * 0.85, props.width * 0.202, props.height * 0.04);  // (x, y, width, height)
+    if (props.inCE === true) {
+      g.drawRect(props.width * 1.298, props.height * 0.976, props.width * 0.2045, props.height * 0.04);  // (x, y, width, height)
+    }
+    else {
+      g.drawRect(props.width * 0.099, props.height * 0.85, props.width * 0.202, props.height * 0.04);  // (x, y, width, height)
+    }
     g.endFill();
   };
 
@@ -343,59 +476,118 @@ export const EndBox = (props) => {
     g.lineTo(rectangleX, rectangleY);
   }
 
-  return (
-    <Container>
-      <Graphics draw={drawRectangle} />
-      <Graphics draw={drawTextBox} />
-      <Text
-          text={"End Pose"}
-          x={props.width * 0.195}
-          y={props.height * 0.87}
+  if (props.inCE === true) {
+    return (
+      <Container>
+        <Graphics draw={drawRectangle} />
+        <Graphics draw={drawTextBox} />
+        <Text
+            text={"End Pose"}
+            x={props.width * 1.399}
+            y={props.height * 0.998}
+            style={
+              new TextStyle({
+                align: "center",
+                fontFamily: "Futura",
+                fontSize: props.width * 0.02,
+                fontWeight: 800,
+                fill: [red],
+                letterSpacing: 0,
+              })
+            }
+            anchor={0.5}
+          />
+          {props.boxState === "end" && (
+          <Graphics draw={drawBoxOutline} />
+        )}
+        {localStorage.getItem('end.json') !== null && (
+          <Pose
+            poseData={JSON.parse(localStorage.getItem('end.json'))}
+            colAttr={{
+              x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
+              y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
+              width: rectangleWidth * 0.5,
+              height: rectangleWidth * 0.47,
+            }}
+            similarityScores={props.similarityScores}
+          />
+          )}
+        {localStorage.getItem('End Tolerance') !== null && (
+          <Text
+          text={localStorage.getItem('End Tolerance')}
+          x={props.width * 1.328}
+          y={props.height * 0.955}
           style={
             new TextStyle({
               align: "center",
               fontFamily: "Futura",
-              fontSize: props.width * 0.02,
+              fontSize: props.width * 0.016,
               fontWeight: 800,
-              fill: [red],
+              fill: [black],
               letterSpacing: 0,
             })
           }
           anchor={0.5}
         />
-        {props.boxState === "end" && (
-        <Graphics draw={drawBoxOutline} />
-      )}
-      {localStorage.getItem('end.json') !== null && (
-        <Pose
-          poseData={JSON.parse(localStorage.getItem('end.json'))}
-          colAttr={{
-            x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
-            y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
-            width: rectangleWidth * 0.5,
-            height: rectangleWidth * 0.47,
-          }}
-          similarityScores={props.similarityScores}
+        )}
+      </Container>
+    );
+  }
+  else {
+    return (
+      <Container>
+        <Graphics draw={drawRectangle} />
+        <Graphics draw={drawTextBox} />
+        <Text
+            text={"End Pose"}
+            x={props.width * 0.197}
+            y={props.height * 0.87}
+            style={
+              new TextStyle({
+                align: "center",
+                fontFamily: "Futura",
+                fontSize: props.width * 0.02,
+                fontWeight: 800,
+                fill: [red],
+                letterSpacing: 0,
+              })
+            }
+            anchor={0.5}
+          />
+          {props.boxState === "end" && (
+          <Graphics draw={drawBoxOutline} />
+        )}
+        {localStorage.getItem('end.json') !== null && (
+          <Pose
+            poseData={JSON.parse(localStorage.getItem('end.json'))}
+            colAttr={{
+              x: (rectangleX + (rectangleWidth - (rectangleWidth * 0.5)) / 1.75),
+              y: (rectangleY + (rectangleHeight - (rectangleHeight * 0.95)) / 1.75),
+              width: rectangleWidth * 0.5,
+              height: rectangleWidth * 0.47,
+            }}
+            similarityScores={props.similarityScores}
+          />
+          )}
+        {localStorage.getItem('End Tolerance') !== null && (
+          <Text
+          text={localStorage.getItem('End Tolerance')}
+          x={props.width * 0.125}
+          y={props.height * 0.825}
+          style={
+            new TextStyle({
+              align: "center",
+              fontFamily: "Futura",
+              fontSize: props.width * 0.016,
+              fontWeight: 800,
+              fill: [black],
+              letterSpacing: 0,
+            })
+          }
+          anchor={0.5}
         />
         )}
-      {localStorage.getItem('End Tolerance') !== null && (
-        <Text
-        text={localStorage.getItem('End Tolerance')}
-        x={props.width * 0.125}
-        y={props.height * 0.825}
-        style={
-          new TextStyle({
-            align: "center",
-            fontFamily: "Futura",
-            fontSize: props.width * 0.016,
-            fontWeight: 800,
-            fill: [black],
-            letterSpacing: 0,
-          })
-        }
-        anchor={0.5}
-      />
-      )}
-    </Container>
-  );
+      </Container>
+    );
+  }
 };
