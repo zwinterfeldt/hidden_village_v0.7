@@ -3,6 +3,7 @@ import { green, blue, white, pink, orange, red, transparent } from "../../utils/
 import Button from "../Button";
 import RectButton from "../RectButton";
 import { ConjectureBox, KeywordsBox, NameBox, PINBox } from "./ConjectureModuleBoxes";
+import { EndBox, IntermediateBox, StartBox } from "../PoseAuth/PoseAuthoringBoxes";
 
 const ConjectureModule = (props) => {
   const { height, width, poseData, columnDimensions, rowDimensions, editCallback, mainCallback } = props;
@@ -13,6 +14,9 @@ const ConjectureModule = (props) => {
         <PINBox height={height} width={width} />
         {/* <ConjectureBox height={height} width={width} /> */}
         {/* <KeywordsBox height={height} width={width} /> */}
+        <StartBox height={height * 0.5} width={width * 0.5} x={5} y={4.6} boxState={null} similarityScores={null} inCE={true} />
+        <IntermediateBox height={height * 0.5} width={width * 0.5} x={9} y={1.906} boxState={null} similarityScores={null} inCE={true} />
+        <EndBox height={height * 0.5} width={width * 0.5} x={13} y={1.2035} boxState={null} similarityScores={null} inCE={true} />
         <Button
           height={height * 0.18}
           width={width * 0.08}
