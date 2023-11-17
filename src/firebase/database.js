@@ -1,5 +1,5 @@
 // Firebase Init
-import { ref, push, getDatabase } from "firebase/database";
+import { ref, push, getDatabase, set } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const db = getDatabase();
@@ -66,6 +66,86 @@ export const writeToDatabasePoseAuth = async (poseData, state, tolerance) => {
   // Return the promise that push() returns
   return promise;
 };
+
+// Export function for the publish button inside of the conjecture module 
+export const writeToDatabaseConjecture = async () => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+
+  // Initialize empty object to store the data inside
+  const dataToPush = {};
+
+  // Define data keys for the text inputs 
+  const keysToPush = [
+    "Conjecture Name",
+    "Author Name",
+    "PIN",
+    "Conjecture Keywords",
+    "Conjecture Description",
+    "Multiple Choice 1",
+    "Multiple Choice 2",
+    "Multiple Choice 3",
+    "Multiple Choice 4",
+  ];
+
+  // Fetch values from local storage for each key inside KeysToPush 
+  await Promise.all(keysToPush.map(async (key) => {
+    const value = localStorage.getItem(key);
+
+    if (value) {
+      // uses helper function to create text objects
+      Object.assign(dataToPush, await createTextObjects(key, value));
+    }
+  }));
+
+  // create pose objects
+  const startPoseData = await createPoseObjects(localStorage.getItem('start.json'), 'StartPose', localStorage.getItem('Start Tolerance'));
+  const intermediatePoseData = await createPoseObjects(localStorage.getItem('intermediate.json'), 'IntermediatePose', localStorage.getItem('Intermediate Tolerance'));
+  const endPoseData = await createPoseObjects(localStorage.getItem('end.json'), 'EndPose', localStorage.getItem('End Tolerance'));
+
+  // Define the database path
+  const conjecturePath = `Final/Conjecture ${localStorage.getItem("Conjecture Name")}`;
+
+  // creates promises to push all of the data to the database 
+  // uses set to overwrite the random firebaseKeys with easier to read key names
+  const promises = [
+    set(ref(db, `${conjecturePath}/Time`), timestamp),
+    set(ref(db, `${conjecturePath}/Start Pose`), startPoseData),
+    set(ref(db, `${conjecturePath}/Intermediate Pose`), intermediatePoseData),
+    set(ref(db, `${conjecturePath}/End Pose`), endPoseData),
+    set(ref(db, `${conjecturePath}/Text Boxes`), dataToPush),
+  ];
+
+  return promises;
+};
+
+// Helper function to create pose objects for the writeToDatabaseConjecture fucntion 
+const createPoseObjects = async (poseData, state, tolerance) => {
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+
+  const dataToSend = {
+    userId,
+    poseData,
+    timestamp,
+    state,
+    tolerance,
+  };
+
+  // Returns pose data
+  return dataToSend;
+}
+
+// Helper function to create text objects for the writeToDatabaseConjecture fucntion 
+const createTextObjects = async (key, value) => {
+  const dataToSend = {
+    [key]: value,
+  };
+
+  // Returns text data 
+  return dataToSend;
+}
 
 // Set the initial time of the last alert to the current time
 let lastAlertTime = Date.now();

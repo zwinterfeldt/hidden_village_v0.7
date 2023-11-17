@@ -1,7 +1,6 @@
 import { Text, Graphics } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { useCallback } from "react";
-import { black } from "../utils/colors";
 
 const InputBox = (props) => {
   const {
@@ -17,16 +16,18 @@ const InputBox = (props) => {
     callback,
   } = props;
 
-  const buttonWidth = width * 0.4; // Adjust the width scaling if needed
+  const buttonWidth = width * 0.4;
+  const cornerRadius = 10; // Adjust the corner radius as needed
 
   const draw = useCallback(
     (g) => {
       g.clear();
+      g.lineStyle(5, 0x000000, 1); // Setting border to black
       g.beginFill(color);
-      g.drawRect(x, y, buttonWidth, height * 0.4); // Draws a rectangular button
+      g.drawRoundedRect(x, y, buttonWidth, height * 0.4, cornerRadius); // Draws a rounded rectangle with curved corners
       g.endFill();
     },
-    [width, height, x, y, color, buttonWidth]
+    [width, height, x, y, color, buttonWidth, cornerRadius]
   );
 
   return (
@@ -37,18 +38,18 @@ const InputBox = (props) => {
         style={
           new TextStyle({
             align: "left",
-            fontFamily: "Arial (Bold)",
+            fontFamily: "Arial",
             fontSize: fontSize,
             fontWeight: fontWeight,
             fill: [fontColor],
             wordWrap: true,
-            wordWrapWidth: buttonWidth, // Setting the word wrap width
+            wordWrapWidth: buttonWidth,
           })
         }
         interactive={true}
         pointerdown={callback}
-        x={x + buttonWidth / 2} // Centering text in the button
-        y={y + height * 0.2} // Adjusting the y-position for text
+        x={x + buttonWidth / 2}
+        y={y + height * 0.2}
         anchor={0.5}
       />
     </>
