@@ -1,5 +1,5 @@
 import Background from "../Background";
-import { green, blue, white, pink, orange, red } from "../../utils/colors";
+import { green, blue, white, pink, orange, red, transparent } from "../../utils/colors";
 import Button from "../Button";
 import RectButton from "../RectButton";
 import { ConjectureBox, KeywordsBox, NameBox, PINBox } from "./ConjectureModuleBoxes";
@@ -11,8 +11,8 @@ const ConjectureModule = (props) => {
         <Background height={height * 1.1} width={width} />
         <NameBox height={height} width={width} />
         <PINBox height={height} width={width} />
-        <ConjectureBox height={height} width={width} />
-        <KeywordsBox height={height} width={width} />
+        {/* <ConjectureBox height={height} width={width} /> */}
+        {/* <KeywordsBox height={height} width={width} /> */}
         <Button
           height={height * 0.18}
           width={width * 0.08}
