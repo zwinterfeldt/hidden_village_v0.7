@@ -2,6 +2,8 @@ import { Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { yellow, blue, green, white, red, black } from "../../utils/colors";
 import InputBox from "../InputBox";
+import { writeToDatabaseConjecture } from "../../firebase/database";
+import RectButton from "../RectButton";
 
 function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, callback) {
   const text = localStorage.getItem(textKey)?.slice(0, charLimit) +
@@ -44,14 +46,14 @@ export const NameBox = (props) => {
     return (
       <>
         {/* charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, callback*/}
-        {createInputBox(220, 0.19, 1.7, 0.134, 0.55, 'Conjecture Name 1', width, height, handleBoxInput)}
-        {createInputBox(220, 0.19, 1.7, 0.134, 0.64, 'Conjecture Name 2', width, height, handleBoxInput)}
-        {createInputBox(220, 0.19, 1.7, 0.134, 0.73, 'Conjecture Name 3', width, height, handleBoxInput)}
-        {createInputBox(220, 0.19, 1.7, 0.134, 0.82, 'Conjecture Name 4', width, height, handleBoxInput)}
-        {createInputBox(20, 0.13, 1.05, 0.134, 0.105, 'Name', width, height, handleBoxInput)}
-        {createInputBox(220, 0.13, .3, 0.645, 0.105, 'authorName', width, height, handleBoxInput)}
-        {createInputBox(220, 0.30, 2.1645, 0.072, 0.175, 'conjectureDescription', width, height, handleBoxInput)}
-        {createInputBox(220, 0.10, 1.8815, 0.185, 0.3, 'conjectureKeywords', width, height, handleBoxInput)}
+        {createInputBox(220, 0.19, 1.7, 0.134, 0.55, 'Multiple Choice 1', width, height, handleBoxInput)}
+        {createInputBox(220, 0.19, 1.7, 0.134, 0.64, 'Multiple Choice 2', width, height, handleBoxInput)}
+        {createInputBox(220, 0.19, 1.7, 0.134, 0.73, 'Multiple Choice 3', width, height, handleBoxInput)}
+        {createInputBox(220, 0.19, 1.7, 0.134, 0.82, 'Multiple Choice 4', width, height, handleBoxInput)}
+        {createInputBox(20, 0.13, 1.05, 0.134, 0.105, 'Conjecture Name', width, height, handleBoxInput)}
+        {createInputBox(220, 0.13, .3, 0.645, 0.105, 'Author Name', width, height, handleBoxInput)}
+        {createInputBox(220, 0.30, 2.1645, 0.072, 0.175, 'Conjecture Description', width, height, handleBoxInput)}
+        {createInputBox(220, 0.10, 1.8815, 0.185, 0.3, 'Conjecture Keywords', width, height, handleBoxInput)}
 
         {/* text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight */}
         {createTextElement("KEYWORDS:", 0.1275, 0.322, 0.018, width, height)}
@@ -204,6 +206,19 @@ export const PINBox = (props) => {
         }
         fontWeight={800}
         callback={pinBoxInput} // Implement Popup
+      />
+      {/* Publish Button */}
+      <RectButton
+        height={height * 0.15}
+        width={width * 0.25}
+        x={width * 0.5}
+        y={height * 0.9}
+        color={red}
+        fontSize={width * 0.02}
+        fontColor={white}
+        text={"Publish"}
+        fontWeight={800}
+        callback={ () => writeToDatabaseConjecture() } // Exit Back To Home
       />
       </>
   )
