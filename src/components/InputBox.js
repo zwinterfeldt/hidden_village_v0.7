@@ -36,8 +36,8 @@ const InputBox = (props) => {
         text={text}
         style={
           new TextStyle({
-            align: "center",
-            fontFamily: "Futura",
+            align: "left",
+            fontFamily: "Arial (Bold)",
             fontSize: fontSize,
             fontWeight: fontWeight,
             fill: [fontColor],
