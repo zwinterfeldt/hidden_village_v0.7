@@ -2,8 +2,6 @@ import { Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { yellow, blue, green, white, red, black } from "../../utils/colors";
 import InputBox from "../InputBox";
-import { writeToDatabaseConjecture } from "../../firebase/database";
-import RectButton from "../RectButton";
 
 function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, callback) {
   const text = localStorage.getItem(textKey)?.slice(0, charLimit) +
@@ -136,19 +134,6 @@ export const PINBox = (props) => {
         }
         fontWeight={300}
         callback={pinBoxInput} // Implement Popup
-      />
-      {/* Publish Button */}
-      <RectButton
-        height={height * 0.13}
-        width={width * 0.23}
-        x={width * 0.5}
-        y={height * 0.93}
-        color={red}
-        fontSize={width * 0.015}
-        fontColor={white}
-        text={"Publish"}
-        fontWeight={800}
-        callback={ () => writeToDatabaseConjecture() } // Exit Back To Home
       />
       </>
   )

@@ -4,6 +4,7 @@ import Button from "../Button";
 import RectButton from "../RectButton";
 import { ConjectureBox, KeywordsBox, NameBox, PINBox } from "./ConjectureModuleBoxes";
 import { EndBox, IntermediateBox, StartBox } from "../PoseAuth/PoseAuthoringBoxes";
+import { writeToDatabaseConjecture } from "../../firebase/database";
 
 const ConjectureModule = (props) => {
   const { height, width, poseData, columnDimensions, rowDimensions, editCallback, mainCallback } = props;
@@ -52,6 +53,19 @@ const ConjectureModule = (props) => {
           text={"Cancel"}
           fontWeight={800}
           callback={mainCallback} // Exit Back To Home
+        />
+        {/* Publish Button */}
+        <RectButton
+          height={height * 0.13}
+          width={width * 0.23}
+          x={width * 0.5}
+          y={height * 0.93}
+          color={red}
+          fontSize={width * 0.015}
+          fontColor={white}
+          text={"Publish"}
+          fontWeight={800}
+          callback={ () => writeToDatabaseConjecture() } // publish to database
         />
       </>
     );
