@@ -67,7 +67,6 @@ export const writeToDatabasePoseAuth = async (poseData, state, tolerance) => {
   return promise;
 };
 
-// Export function for the publish button inside of the conjecture module 
 export const writeToDatabaseConjecture = async () => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
@@ -89,35 +88,62 @@ export const writeToDatabaseConjecture = async () => {
     "Multiple Choice 4",
   ];
 
-  // Fetch values from local storage for each key inside KeysToPush 
-  await Promise.all(keysToPush.map(async (key) => {
+  // Fetch values from local storage for each key inside keysToPush 
+  const isAnyKeyNullOrUndefined = keysToPush.some((key) => {
     const value = localStorage.getItem(key);
+    return value === null || value === undefined || value.trim() === '';
+  });
 
-    if (value) {
-      // uses helper function to create text objects
-      Object.assign(dataToPush, await createTextObjects(key, value));
-    }
-  }));
+  // if any text values are not there alert message and exit
+  if (isAnyKeyNullOrUndefined) {
+    alert("Some text value is null. Cannot publish conjecture to database.");
+    return;
+  }
 
-  // create pose objects
-  const startPoseData = await createPoseObjects(localStorage.getItem('start.json'), 'StartPose', localStorage.getItem('Start Tolerance'));
-  const intermediatePoseData = await createPoseObjects(localStorage.getItem('intermediate.json'), 'IntermediatePose', localStorage.getItem('Intermediate Tolerance'));
-  const endPoseData = await createPoseObjects(localStorage.getItem('end.json'), 'EndPose', localStorage.getItem('End Tolerance'));
+  // Check if any of the pose data is null before proceeding
+  const startJson = localStorage.getItem('start.json');
+  const intermediateJson = localStorage.getItem('intermediate.json');
+  const endJson = localStorage.getItem('end.json');
 
-  // Define the database path
-  const conjecturePath = `Final/Conjecture ${localStorage.getItem("Conjecture Name")}`;
+  if (
+    startJson !== null && startJson !== undefined &&
+    intermediateJson !== null && intermediateJson !== undefined &&
+    endJson !== null && endJson !== undefined
+  ) {
+    // create pose objects
+    const startPoseData = await createPoseObjects(startJson, 'StartPose', localStorage.getItem('Start Tolerance'));
+    const intermediatePoseData = await createPoseObjects(intermediateJson, 'IntermediatePose', localStorage.getItem('Intermediate Tolerance'));
+    const endPoseData = await createPoseObjects(endJson, 'EndPose', localStorage.getItem('End Tolerance'));
 
-  // creates promises to push all of the data to the database 
-  // uses set to overwrite the random firebaseKeys with easier to read key names
-  const promises = [
-    set(ref(db, `${conjecturePath}/Time`), timestamp),
-    set(ref(db, `${conjecturePath}/Start Pose`), startPoseData),
-    set(ref(db, `${conjecturePath}/Intermediate Pose`), intermediatePoseData),
-    set(ref(db, `${conjecturePath}/End Pose`), endPoseData),
-    set(ref(db, `${conjecturePath}/Text Boxes`), dataToPush),
-  ];
+    // Define the database path
+    const conjecturePath = `Final/Conjecture: ${localStorage.getItem("Conjecture Name")}`;
 
-  return promises;
+    // Fetch values from local storage for each key inside keysToPush 
+    await Promise.all(keysToPush.map(async (key) => {
+      const value = localStorage.getItem(key);
+
+      // Check if the value is not null, undefined, or an empty string
+      if (value !== null && value !== undefined && value.trim() !== '') {
+        // uses helper function to create text objects
+        Object.assign(dataToPush, await createTextObjects(key, value));
+      }
+    }));
+
+    // creates promises to push all of the data to the database 
+    // uses set to overwrite the random firebaseKeys with easier to read key names
+    const promises = [
+      set(ref(db, `${conjecturePath}/Time`), timestamp),
+      set(ref(db, `${conjecturePath}/Start Pose`), startPoseData),
+      set(ref(db, `${conjecturePath}/Intermediate Pose`), intermediatePoseData),
+      set(ref(db, `${conjecturePath}/End Pose`), endPoseData),
+      set(ref(db, `${conjecturePath}/Text Boxes`), dataToPush),
+    ];
+
+    return promises && alert("Published conjecture to databse.");
+  } else {
+    alert("Some pose is missing. Cannot publish conjecture to database.");
+    return;
+  }
 };
 
 // Helper function to create pose objects for the writeToDatabaseConjecture fucntion 
