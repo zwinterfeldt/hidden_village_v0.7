@@ -4,7 +4,7 @@ import Button from "../Button";
 import RectButton from "../RectButton";
 import { ConjectureBox, KeywordsBox, NameBox, PINBox } from "./ConjectureModuleBoxes";
 import { EndBox, IntermediateBox, StartBox } from "../PoseAuth/PoseAuthoringBoxes";
-import { writeToDatabaseConjecture } from "../../firebase/database";
+import { writeToDatabaseConjecture, writeToDatabaseDraft } from "../../firebase/database";
 
 const ConjectureModule = (props) => {
   const { height, width, poseData, columnDimensions, rowDimensions, editCallback, mainCallback } = props;
@@ -39,7 +39,7 @@ const ConjectureModule = (props) => {
           fontColor={white}
           text={"Save Draft"}
           fontWeight={800}
-          callback={null} // Implement Save feature
+          callback={ () => writeToDatabaseDraft() } // Implement Save feature
         />
         {/* Cancel Button */}
         <RectButton
