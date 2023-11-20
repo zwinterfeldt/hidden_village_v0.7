@@ -1,5 +1,5 @@
 import Background from "../Background";
-import { green, blue, white, pink, orange, red, transparent } from "../../utils/colors";
+import { green, neonGreen, blue, white, pink, orange, red, transparent } from "../../utils/colors";
 import Button from "../Button";
 import RectButton from "../RectButton";
 import { ConjectureBox, KeywordsBox, NameBox, PINBox } from "./ConjectureModuleBoxes";
@@ -12,8 +12,6 @@ const ConjectureModule = (props) => {
         <Background height={height * 1.1} width={width} />
         <NameBox height={height} width={width} />
         <PINBox height={height} width={width} />
-        {/* <ConjectureBox height={height} width={width} /> */}
-        {/* <KeywordsBox height={height} width={width} /> */}
         <StartBox height={height * 0.5} width={width * 0.5} x={5} y={4.6} boxState={null} similarityScores={null} inCE={true} />
         <IntermediateBox height={height * 0.5} width={width * 0.5} x={9} y={1.906} boxState={null} similarityScores={null} inCE={true} />
         <EndBox height={height * 0.5} width={width * 0.5} x={13} y={1.2035} boxState={null} similarityScores={null} inCE={true} />
@@ -31,12 +29,12 @@ const ConjectureModule = (props) => {
         />
         {/* Save Button */}
         <RectButton
-          height={height * 0.15}
-          width={width * 0.25}
+          height={height * 0.13}
+          width={width * 0.23}
           x={width * 0.65}
-          y={height * 0.9}
-          color={green}
-          fontSize={width * 0.02}
+          y={height * 0.93}
+          color={neonGreen}
+          fontSize={width * 0.015}
           fontColor={white}
           text={"Save Draft"}
           fontWeight={800}
@@ -44,12 +42,12 @@ const ConjectureModule = (props) => {
         />
         {/* Cancel Button */}
         <RectButton
-          height={height * 0.15}
-          width={width * 0.25}
+          height={height * 0.13}
+          width={width * 0.23}
           x={width * 0.80}
-          y={height * 0.9}
+          y={height * 0.93}
           color={red}
-          fontSize={width * 0.02}
+          fontSize={width * 0.015}
           fontColor={white}
           text={"Cancel"}
           fontWeight={800}

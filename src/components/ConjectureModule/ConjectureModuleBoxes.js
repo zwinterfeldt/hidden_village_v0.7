@@ -24,7 +24,7 @@ function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yM
       fontSize={totalWidth * 0.012}
       fontColor={black}
       text={text}
-      fontWeight={300}
+      fontWeight={500}
       outlineColor={black}
       callback={() => callback(textKey)}
     />
@@ -46,23 +46,23 @@ export const NameBox = (props) => {
     return (
       <>
         {/* charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, callback*/}
-        {createInputBox(220, 0.19, 1.7, 0.134, 0.55, 'Multiple Choice 1', width, height, handleBoxInput)}
-        {createInputBox(220, 0.19, 1.7, 0.134, 0.64, 'Multiple Choice 2', width, height, handleBoxInput)}
-        {createInputBox(220, 0.19, 1.7, 0.134, 0.73, 'Multiple Choice 3', width, height, handleBoxInput)}
-        {createInputBox(220, 0.19, 1.7, 0.134, 0.82, 'Multiple Choice 4', width, height, handleBoxInput)}
-        {createInputBox(20, 0.13, 1.05, 0.134, 0.105, 'Conjecture Name', width, height, handleBoxInput)}
-        {createInputBox(220, 0.13, .3, 0.645, 0.105, 'Author Name', width, height, handleBoxInput)}
-        {createInputBox(220, 0.30, 2.1645, 0.072, 0.175, 'Conjecture Description', width, height, handleBoxInput)}
-        {createInputBox(220, 0.10, 1.8815, 0.185, 0.3, 'Conjecture Keywords', width, height, handleBoxInput)}
+        {createInputBox(220, 0.19, 1.595, 0.134, 0.57, 'Multiple Choice 1', width, height, handleBoxInput)}
+        {createInputBox(220, 0.19, 1.595, 0.134, 0.66, 'Multiple Choice 2', width, height, handleBoxInput)}
+        {createInputBox(220, 0.19, 1.595, 0.134, 0.75, 'Multiple Choice 3', width, height, handleBoxInput)}
+        {createInputBox(220, 0.19, 1.595, 0.134, 0.84, 'Multiple Choice 4', width, height, handleBoxInput)}
+        {createInputBox(60, 0.10, 0.54, 0.143+ 0.062, 0.136-.050, 'Conjecture Name', width, height, handleBoxInput)}
+        {createInputBox(220, 0.10, .3, 0.46+ 0.062, 0.136-.050, 'Author Name', width, height, handleBoxInput)}
+        {createInputBox(220, 0.30, 1.595, 0.134, 0.175-.050, 'Conjecture Description', width, height, handleBoxInput)}
+        {createInputBox(220, 0.10, 1.268, 0.203 + 0.062, 0.295-.050, 'Conjecture Keywords', width, height, handleBoxInput)}
 
         {/* text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight */}
-        {createTextElement("KEYWORDS:", 0.1275, 0.322, 0.018, width, height)}
-        {createTextElement("PIN:", 0.797, 0.13, 0.018, width, height)}
-        {createTextElement("AUTHOR:", 0.6, 0.13, 0.018, width, height)}
-        {createTextElement("CURRENT M-CLIP:", 0.50, 0.37, 0.018, width, height)}
-        {createTextElement("MULTIPLE CHOICE", 0.50, 0.52, 0.018, width, height)}
+        {createTextElement("KEYWORDS:", 0.137+ 0.062, 0.315-0.05, 0.018, width, height)}
+        {createTextElement("PIN:", 0.605+ 0.062, 0.155-0.05, 0.018, width, height)}
+        {createTextElement("AUTHOR:", 0.41+ 0.062, 0.155-0.05, 0.018, width, height)}
+        {createTextElement("CURRENT M-CLIP:", 0.50, 0.305, 0.018, width, height)}
+        {createTextElement("MULTIPLE CHOICE", 0.50, 0.55, 0.018, width, height)}
         {createTextElement("Conjecture Editor", 0.5, 0.05, 0.025, width, height)}
-        {createTextElement("NAME:", 0.102, 0.13, 0.018, width, height)}
+        {createTextElement("NAME:", 0.108+ 0.062, 0.155-0.05, 0.018, width, height)}
 
       </>
     );
@@ -104,76 +104,6 @@ export const YourComponent = (props) => {
   );
 }
 
-// export const KeywordsBox = (props) => {
-//   const { height, width } = props;
-
-//   // Function to handle keywords input
-//   function keywordsBoxInput() {
-//     const existingKeywords = localStorage.getItem('Keywords');
-//     const newKeywords = prompt("Please Enter Keywords (comma-separated)", existingKeywords);
-
-//     if (newKeywords !== null) {
-//       localStorage.setItem('Keywords', newKeywords);
-//     }
-//   }
-
-//   return (
-//     <>
-//       {/* KeywordsBox InputBox */}
-//       <InputBox
-//         height={height * 0.10}
-//         width={width * 1.8815}
-//         x={width * 0.1855}
-//         y={height * 0.301}
-//         color={white}
-//         fontSize={width * 0.015}
-//         fontColor={black}
-//         text={
-//           localStorage.getItem('Keywords')?.slice(0, 100) +
-//           (localStorage.getItem('Keywords')?.length > 100 ? '...' : '')
-//         }
-//         fontWeight={800}
-//         outlineColor={black}
-//         callback={keywordsBoxInput} // Implement Popup for keywords input
-//       />
-//     </>
-//   )
-// }
-
-// export const ConjectureBox = (props) => {
-//   const { height, width } = props;
-
-//   // Function to handle conjecture input
-//   function conjectureBoxInput() {
-//     const existingConjecture = localStorage.getItem('Conjecture');
-//     const newConjecture = prompt("Please Enter Your Conjecture", existingConjecture);
-
-//     if (newConjecture !== null) {
-//       localStorage.setItem('Conjecture', newConjecture);
-//     }
-//   }
-
-//   return (
-//     <>
-//       {/* ConjectureBox InputBox */}
-//       <InputBox
-//         height={height * 0.30}
-//         width={width * 2.1645}
-//         x={width * 0.072}
-//         y={height * 0.1755}
-//         color={white}
-//         fontSize={width * 0.015}
-//         fontColor={black}
-//         text={
-//           localStorage.getItem('Conjecture')?.slice(0, 300) +
-//           (localStorage.getItem('Conjecture')?.length > 300 ? '...' : '')
-//         }
-//         fontWeight={800}
-//         callback={conjectureBoxInput} // Implement Popup for conjecture input
-//       />
-//     </>
-//   )
-// }
 
 export const PINBox = (props) => {
   const { height, width } = props;
@@ -195,26 +125,26 @@ export const PINBox = (props) => {
       {/* PINBox InputBox */}
       <InputBox
         height={height * 0.10}
-        width={width * 0.3}
-        x={width * 0.818}
-        y={height * 0.11}
+        width={width * 0.2}
+        x={width * 0.6910}
+        y={height * 0.136-0.05}
         color={white}
         fontSize={width * 0.015}
         fontColor={black}
         text={
           localStorage.getItem('PIN') || '' // Show existing PIN if available
         }
-        fontWeight={800}
+        fontWeight={300}
         callback={pinBoxInput} // Implement Popup
       />
       {/* Publish Button */}
       <RectButton
-        height={height * 0.15}
-        width={width * 0.25}
+        height={height * 0.13}
+        width={width * 0.23}
         x={width * 0.5}
-        y={height * 0.9}
+        y={height * 0.93}
         color={red}
-        fontSize={width * 0.02}
+        fontSize={width * 0.015}
         fontColor={white}
         text={"Publish"}
         fontWeight={800}

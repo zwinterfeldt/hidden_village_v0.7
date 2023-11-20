@@ -15,17 +15,20 @@ const RectButton = (props) => {
     fontWeight,
     callback,
   } = props;
-  
+
   const buttonWidth = width * 0.4; // Adjust the width scaling if needed
+  const cornerRadius = 50; // Adjust the corner radius as needed
+  
   const draw = useCallback(
     (g) => {
       g.clear();
       g.beginFill(color);
-      g.drawRect(x, y, buttonWidth, height * 0.4); // Draws a rectangular button
+      g.drawRoundedRect(x, y, buttonWidth, height * 0.4, cornerRadius); // Draws a rounded rectangular button
       g.endFill();
     },
-    [width, height, x, y, color, buttonWidth]
+    [width, height, x, y, color, buttonWidth, cornerRadius] // Added cornerRadius to the dependencies array
   );
+
   return (
     <Container>
       <Graphics draw={draw} interactive={true} pointerdown={callback} />
@@ -35,17 +38,17 @@ const RectButton = (props) => {
           new TextStyle({
             align: "center",                        // Center the text
             fontFamily: "Futura",                   // Set the font family
-            fontSize: fontSize,                      // Set the font size
-            fontWeight: fontWeight,                  // Set the font weight
-            fill: [fontColor],                       // Set the font color
-            wordWrap: true,                          // Wrap the text if it exceeds its container
-            wordWrapWidth: buttonWidth, // Setting the word wrap width
+            fontSize: fontSize,                     // Set the font size
+            fontWeight: fontWeight,                 // Set the font weight
+            fill: [fontColor],                      // Set the font color
+            wordWrap: true,                         // Wrap the text if it exceeds its container
+            wordWrapWidth: buttonWidth,             // Setting the word wrap width
           })
         }
         interactive={true}
         pointerdown={callback}
         x={x + buttonWidth / 2} // Centering text in the button
-        y={y + height * 0.2} // Adjusting the y-position for text
+        y={y + height * 0.2}    // Adjusting the y-position for text
         anchor={0.5}
       />
     </Container>
