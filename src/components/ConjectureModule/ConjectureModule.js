@@ -19,25 +19,73 @@ const ConjectureModule = (props) => {
         <Button
           height={height * 0.18}
           width={width * 0.08}
-          x={width * 0.12}
-          y={height * 0.47}
+          x={width * 0.17}
+          y={height * 0.42}
           color={blue}
-          fontSize={24}
+          fontSize={32}
           fontColor={white}
-          text={"Pose Editor"}
+          text={"POSE EDiTOR"}
           fontWeight={800}
           callback={editCallback}
+        />
+          <Button
+            height={height * 0.14}
+            width={width * 0.04}
+            x={width * 0.10}
+            y={height * 0.61}
+            color={blue}
+            fontSize={50}
+            fontColor={white}
+            text={"A"}
+            fontWeight={800}
+            callback={null}
+        />
+          <Button
+            height={height * 0.14}
+            width={width * 0.04}
+            x={width * 0.10}
+            y={height * 0.70}
+            color={blue}
+            fontSize={50}
+            fontColor={white}
+            text={"B"}
+            fontWeight={800}
+            callback={null}
+        />
+          <Button
+            height={height * 0.14}
+            width={width * 0.04}
+            x={width * 0.10}
+            y={height * 0.79}
+            color={blue}
+            fontSize={50}
+            fontColor={white}
+            text={"C"}
+            fontWeight={800}
+            callback={null}
+        />
+          <Button
+            height={height * 0.14}
+            width={width * 0.04}
+            x={width * 0.10}
+            y={height * 0.88}
+            color={blue}
+            fontSize={50}
+            fontColor={white}
+            text={"D"}
+            fontWeight={800}
+            callback={null}
         />
         {/* Save Button */}
         <RectButton
           height={height * 0.13}
           width={width * 0.23}
-          x={width * 0.65}
+          x={width * 0.58}
           y={height * 0.93}
           color={neonGreen}
-          fontSize={width * 0.015}
+          fontSize={width * 0.014}
           fontColor={white}
-          text={"Save Draft"}
+          text={"SAVE DRAFT"}
           fontWeight={800}
           callback={ () => writeToDatabaseDraft() } // Implement Save feature
         />
@@ -45,12 +93,12 @@ const ConjectureModule = (props) => {
         <RectButton
           height={height * 0.13}
           width={width * 0.23}
-          x={width * 0.80}
+          x={width * 0.69}
           y={height * 0.93}
           color={red}
           fontSize={width * 0.015}
           fontColor={white}
-          text={"Cancel"}
+          text={"CANCEL"}
           fontWeight={800}
           callback={mainCallback} // Exit Back To Home
         />
@@ -58,12 +106,12 @@ const ConjectureModule = (props) => {
         <RectButton
           height={height * 0.13}
           width={width * 0.23}
-          x={width * 0.5}
+          x={width * 0.47}
           y={height * 0.93}
           color={red}
           fontSize={width * 0.015}
           fontColor={white}
-          text={"Publish"}
+          text={"PUBLISH"}
           fontWeight={800}
           callback={ () => writeToDatabaseConjecture() } // publish to database
         />

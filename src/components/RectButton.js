@@ -37,7 +37,7 @@ const RectButton = (props) => {
         style={                                     // Define the text's style
           new TextStyle({
             align: "center",                        // Center the text
-            fontFamily: "Futura",                   // Set the font family
+            fontFamily: "Arial",                   // Set the font family
             fontSize: fontSize,                     // Set the font size
             fontWeight: fontWeight,                 // Set the font weight
             fill: [fontColor],                      // Set the font color
