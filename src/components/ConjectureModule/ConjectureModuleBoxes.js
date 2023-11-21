@@ -125,7 +125,7 @@ export const PINBox = (props) => {
         height={height * 0.10}
         width={width * 0.2}
         x={width * 0.6910}
-        y={height * 0.136-0.05}
+        y={height * 0.085}
         color={white}
         fontSize={width * 0.015}
         fontColor={black}
