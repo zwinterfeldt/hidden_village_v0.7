@@ -31,7 +31,7 @@ const Button = (props) => {
         style={
           new TextStyle({
             align: "center",
-            fontFamily: "Futura",
+            fontFamily: "Arial",
             fontSize: fontSize,
             fontWeight: fontWeight,
             fill: [fontColor],

@@ -56,5 +56,10 @@ export function saveConjecture() {
 
 // removes all poses stored in localStorage.
 export function resetConjecture() {
-   localStorage.clear();
+   localStorage.removeItem('start.json');
+   localStorage.removeItem('Start Tolerance');
+   localStorage.removeItem('intermediate.json');
+   localStorage.removeItem('Intermediate Tolerance');
+   localStorage.removeItem('end.json');
+   localStorage.removeItem('End Tolerance');
 }

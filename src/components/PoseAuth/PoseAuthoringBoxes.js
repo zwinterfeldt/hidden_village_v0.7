@@ -164,7 +164,7 @@ export const StartBox = (props) => {
               style={
                 new TextStyle({
                   align: "center",
-                  fontFamily: "Futura",
+                  fontFamily: "Arial",
                   fontSize: props.width * 0.02,
                   fontWeight: 800,
                   fill: [green],
@@ -196,7 +196,7 @@ export const StartBox = (props) => {
             style={
               new TextStyle({
                 align: "center",
-                fontFamily: "Futura",
+                fontFamily: "Arial",
                 fontSize: props.width * 0.016,
                 fontWeight: 800,
                 fill: [black],
@@ -326,7 +326,7 @@ export const IntermediateBox = (props) => {
             style={
               new TextStyle({
                 align: "center",
-                fontFamily: "Futura",
+                fontFamily: "Arial",
                 fontSize: props.width * 0.02,
                 fontWeight: 800,
                 fill: [white],
@@ -358,7 +358,7 @@ export const IntermediateBox = (props) => {
           style={
             new TextStyle({
               align: "center",
-              fontFamily: "Futura",
+              fontFamily: "Arial",
               fontSize: props.width * 0.016,
               fontWeight: 800,
               fill: [black],
@@ -488,7 +488,7 @@ export const EndBox = (props) => {
             style={
               new TextStyle({
                 align: "center",
-                fontFamily: "Futura",
+                fontFamily: "Arial",
                 fontSize: props.width * 0.02,
                 fontWeight: 800,
                 fill: [red],
@@ -520,7 +520,7 @@ export const EndBox = (props) => {
           style={
             new TextStyle({
               align: "center",
-              fontFamily: "Futura",
+              fontFamily: "Arial",
               fontSize: props.width * 0.016,
               fontWeight: 800,
               fill: [black],
@@ -545,7 +545,7 @@ export const EndBox = (props) => {
             style={
               new TextStyle({
                 align: "center",
-                fontFamily: "Futura",
+                fontFamily: "Arial",
                 fontSize: props.width * 0.02,
                 fontWeight: 800,
                 fill: [red],
@@ -577,7 +577,7 @@ export const EndBox = (props) => {
           style={
             new TextStyle({
               align: "center",
-              fontFamily: "Futura",
+              fontFamily: "Arial",
               fontSize: props.width * 0.016,
               fontWeight: 800,
               fill: [black],
