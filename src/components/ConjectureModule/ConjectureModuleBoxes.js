@@ -75,28 +75,28 @@ export const NameBox = (props) => {
 
         {intializeCheckmarkBoxes()}
         {props.boxState === "optiona" && (
-          localStorage.setItem("OptionA Checkmark", "X"),
+          localStorage.setItem("OptionA Checkmark", " X"),
           localStorage.setItem("OptionB Checkmark", " "),
           localStorage.setItem("OptionC Checkmark", " "),
           localStorage.setItem("OptionD Checkmark", " ")
         )}
         {props.boxState === "optionb" && (
           localStorage.setItem("OptionA Checkmark", " "),
-          localStorage.setItem("OptionB Checkmark", "X"),
+          localStorage.setItem("OptionB Checkmark", " X"),
           localStorage.setItem("OptionC Checkmark", " "),
           localStorage.setItem("OptionD Checkmark", " ")
         )}
         {props.boxState === "optionc" && (
           localStorage.setItem("OptionA Checkmark", " "),
           localStorage.setItem("OptionB Checkmark", " "),
-          localStorage.setItem("OptionC Checkmark", "X"),
+          localStorage.setItem("OptionC Checkmark", " X"),
           localStorage.setItem("OptionD Checkmark", " ")
         )}
         {props.boxState === "optiond" && (
           localStorage.setItem("OptionA Checkmark", " "),
           localStorage.setItem("OptionB Checkmark", " "),
           localStorage.setItem("OptionC Checkmark", " "),
-          localStorage.setItem("OptionD Checkmark", "X")
+          localStorage.setItem("OptionD Checkmark", " X")
         )}
       </>
     );
