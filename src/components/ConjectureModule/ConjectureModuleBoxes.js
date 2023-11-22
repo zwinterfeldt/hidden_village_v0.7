@@ -2,8 +2,6 @@ import { Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { yellow, blue, green, white, red, black } from "../../utils/colors";
 import InputBox from "../InputBox";
-import { writeToDatabaseConjecture } from "../../firebase/database";
-import RectButton from "../RectButton";
 
 function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, callback) {
   const text = localStorage.getItem(textKey)?.slice(0, charLimit) +
@@ -42,6 +40,17 @@ export const NameBox = (props) => {
       localStorage.setItem(key, newValue);
     }
   }
+
+  function intializeCheckmarkBoxes() {
+    startup = true
+    if (startup === true) {
+      startup = false
+      localStorage.setItem("OptionA Checkmark", " ")
+      localStorage.setItem("OptionB Checkmark", " ")
+      localStorage.setItem("OptionC Checkmark", " ")
+      localStorage.setItem("OptionD Checkmark", " ")
+    }
+  }
   
     return (
       <>
@@ -64,6 +73,31 @@ export const NameBox = (props) => {
         {createTextElement("Conjecture Editor", 0.5, 0.05, 0.025, width, height)}
         {createTextElement("NAME:", 0.108+ 0.062, 0.155-0.05, 0.018, width, height)}
 
+        {intializeCheckmarkBoxes()}
+        {props.boxState === "optiona" && (
+          localStorage.setItem("OptionA Checkmark", "X"),
+          localStorage.setItem("OptionB Checkmark", " "),
+          localStorage.setItem("OptionC Checkmark", " "),
+          localStorage.setItem("OptionD Checkmark", " ")
+        )}
+        {props.boxState === "optionb" && (
+          localStorage.setItem("OptionA Checkmark", " "),
+          localStorage.setItem("OptionB Checkmark", "X"),
+          localStorage.setItem("OptionC Checkmark", " "),
+          localStorage.setItem("OptionD Checkmark", " ")
+        )}
+        {props.boxState === "optionc" && (
+          localStorage.setItem("OptionA Checkmark", " "),
+          localStorage.setItem("OptionB Checkmark", " "),
+          localStorage.setItem("OptionC Checkmark", "X"),
+          localStorage.setItem("OptionD Checkmark", " ")
+        )}
+        {props.boxState === "optiond" && (
+          localStorage.setItem("OptionA Checkmark", " "),
+          localStorage.setItem("OptionB Checkmark", " "),
+          localStorage.setItem("OptionC Checkmark", " "),
+          localStorage.setItem("OptionD Checkmark", "X")
+        )}
       </>
     );
   }
@@ -127,7 +161,7 @@ export const PINBox = (props) => {
         height={height * 0.10}
         width={width * 0.2}
         x={width * 0.6910}
-        y={height * 0.136-0.05}
+        y={height * 0.085}
         color={white}
         fontSize={width * 0.015}
         fontColor={black}
@@ -136,19 +170,6 @@ export const PINBox = (props) => {
         }
         fontWeight={300}
         callback={pinBoxInput} // Implement Popup
-      />
-      {/* Publish Button */}
-      <RectButton
-        height={height * 0.13}
-        width={width * 0.23}
-        x={width * 0.5}
-        y={height * 0.93}
-        color={red}
-        fontSize={width * 0.015}
-        fontColor={white}
-        text={"Publish"}
-        fontWeight={800}
-        callback={ () => writeToDatabaseConjecture() } // Exit Back To Home
       />
       </>
   )

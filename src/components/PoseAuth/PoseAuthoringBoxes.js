@@ -152,7 +152,7 @@ export const StartBox = (props) => {
       g.lineTo(rectangleX, rectangleY);
     }
 
-    if (props.inCE === true) {
+    if (props.inCE === true) {  // positions the text, outline box, and tolerance text for the Conjecture Editor
       return (
         <Container>
           <Graphics draw={drawRectangle} />
@@ -209,7 +209,7 @@ export const StartBox = (props) => {
         </Container>
       );
     }
-    else {
+    else {  // positions the text, outline box, and tolerance text for the Pose Sequence Editor
       return (
         <Container>
           <Graphics draw={drawRectangle} />
@@ -314,7 +314,7 @@ export const IntermediateBox = (props) => {
     g.lineTo(rectangleX, rectangleY);
   }
 
-  if (props.inCE === true) {
+  if (props.inCE === true) {  // positions the text, outline box, and tolerance text for the Conjecture Editor
     return (
       <Container>
         <Graphics draw={drawRectangle} />
@@ -371,7 +371,7 @@ export const IntermediateBox = (props) => {
       </Container>
     );
   }
-  else {
+  else {  // positions the text, outline box, and tolerance text for the Pose Sequence Editor
     return (
       <Container>
         <Graphics draw={drawRectangle} />
@@ -476,7 +476,7 @@ export const EndBox = (props) => {
     g.lineTo(rectangleX, rectangleY);
   }
 
-  if (props.inCE === true) {
+  if (props.inCE === true) {  // positions the text, outline box, and tolerance text for the Conjecture Editor
     return (
       <Container>
         <Graphics draw={drawRectangle} />
@@ -533,7 +533,7 @@ export const EndBox = (props) => {
       </Container>
     );
   }
-  else {
+  else {  // positions the text, outline box, and tolerance text for the Pose Sequence Editor
     return (
       <Container>
         <Graphics draw={drawRectangle} />
