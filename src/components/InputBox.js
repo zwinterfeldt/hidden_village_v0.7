@@ -1,7 +1,6 @@
 import { Text, Graphics } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { useCallback } from "react";
-import { black } from "../utils/colors";
 
 const InputBox = (props) => {
   const {
@@ -16,15 +15,21 @@ const InputBox = (props) => {
     fontWeight,
     callback,
   } = props;
+
+  const buttonWidth = width * 0.4;
+  const cornerRadius = 10; // Adjust the corner radius as needed
+
   const draw = useCallback(
     (g) => {
       g.clear();
+      g.lineStyle(5, 0x000000, 1); // Setting border to black
       g.beginFill(color);
-      g.drawRect(x, y, width * 0.4, height * 0.4);  // Draws a rectangle
+      g.drawRoundedRect(x, y, buttonWidth, height * 0.4, cornerRadius); // Draws a rounded rectangle with curved corners
       g.endFill();
     },
-    [width]
+    [width, height, x, y, color, buttonWidth, cornerRadius]
   );
+
   return (
     <>
       <Graphics draw={draw} interactive={true} pointerdown={callback} />
@@ -32,18 +37,20 @@ const InputBox = (props) => {
         text={text}
         style={
           new TextStyle({
-            fontFamily: "Futura",
+            align: "left",
+            fontFamily: "Arial",
             fontSize: fontSize,
             fontWeight: fontWeight,
             fill: [fontColor],
-            wordWrap: false,
+            wordWrap: true,
+            wordWrapWidth: buttonWidth,
           })
         }
         interactive={true}
         pointerdown={callback}
-        x={x * 1.42}
-        y={y * 1.15}
-        anchor={0.5}
+        x={x} // Left alignment
+        y={y+6} // Adjusted to start at the top of the rectangle
+        anchor={-0.017} // Anchor set to 0 for left alignment
       />
     </>
   );

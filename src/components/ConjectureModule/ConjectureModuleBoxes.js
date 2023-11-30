@@ -3,215 +3,181 @@ import { TextStyle } from "@pixi/text";
 import { yellow, blue, green, white, red, black } from "../../utils/colors";
 import InputBox from "../InputBox";
 
-export const NameBox = (props) => {
-  const { height, width } = props;
-  // Creates a popup in which the user can enter a name for their conjecture
-  function nameBoxInput() {
-    let conjectureName = prompt("Please Enter Your Conjecture Name");
-    localStorage.setItem('Conjecture Name', conjectureName) 
-  }
-    return (
-        <>
-        <Text
-        text={"Conjecture Editor"}
-        x={props.width * 0.5}
-        y={props.height * 0.05}
-        style={
-          new TextStyle({
-            align: "center",
-            fontFamily: "Futura",
-            fontSize: 45,
-            fontWeight: 800,
-            fill: [blue],
-            letterSpacing: 0,
-          })
-        }
-        anchor={0.5}
-        />
-        <Text
-        text={"NAME:"}
-        x={props.width * 0.11}
-        y={props.height * 0.15}
-        style={
-          new TextStyle({
-            align: "center",
-            fontFamily: "Futura",
-            fontSize: 30,
-            fontWeight: 800,
-            fill: [blue],
-            letterSpacing: 0,
-          })
-        }
-        anchor={0.5}
-        />
-        {/* NameBox InputBox */}
-        <InputBox
-          height={height * 0.10}
-          width={width * 1.05}
-          x={width * 0.139}
-          y={height * 0.13}
-          color={white}
-          fontSize={width * 0.015}
-          fontColor={black}
-          text={localStorage.getItem('Conjecture Name')}
-          fontWeight={300}
-          outlineColor={black}
-          callback={nameBoxInput} // Implement Popup
-        />
-        <Text
-        text={"AUTHOR:"}
-        x={props.width * 0.6}
-        y={props.height * 0.15}
-        style={
-          new TextStyle({
-            align: "center",
-            fontFamily: "Futura",
-            fontSize: 30,
-            fontWeight: 800,
-            fill: [blue],
-            letterSpacing: 0,
-          })
-        }
-        anchor={0.5}
-        />
-        <Text
-        text={"CURRENT M-CLIP:"}
-        x={props.width * 0.50}
-        y={props.height * 0.37}
-        style={
-          new TextStyle({
-            align: "center",
-            fontFamily: "Futura",
-            fontSize: 30,
-            fontWeight: 800,
-            fill: [blue],
-            letterSpacing: 0,
-          })
-        }
-        anchor={0.5}
-        />
-        <Text
-        text={"MULTIPLE CHOICE"}
-        x={props.width * 0.50}
-        y={props.height * 0.57}
-        style={
-          new TextStyle({
-            align: "center",
-            fontFamily: "Futura",
-            fontSize: 30,
-            fontWeight: 800,
-            fill: [blue],
-            letterSpacing: 0,
-          })
-        }
-        anchor={0.5}
-        />
-        </>
-    )
+function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, callback) {
+  const text = localStorage.getItem(textKey)?.slice(0, charLimit) +
+               (localStorage.getItem(textKey)?.length > charLimit ? '...' : '');
+
+  const height = totalHeight * scaleFactor;
+  const width = totalWidth * widthMultiplier;
+  const x = totalWidth * xMultiplier;
+  const y = totalHeight * yMultiplier;
+
+  return (
+    <InputBox
+      height={height}
+      width={width}
+      x={x}
+      y={y}
+      color={white}
+      fontSize={totalWidth * 0.012}
+      fontColor={black}
+      text={text}
+      fontWeight={500}
+      outlineColor={black}
+      callback={() => callback(textKey)}
+    />
+  );
 }
 
-export const PINBox = (props) => {
+export const NameBox = (props) => {
   const { height, width } = props;
-  // Creates a popup in which the user can set a pin for their conjecture
-  function pinBoxInput() {
-    let pin = prompt("Please Enter Your PIN");
-    if (!isNaN(pin)) {
-      localStorage.setItem('PIN', pin) }
-    else {
-      // Implement error message saying that pin must be numeric
+
+  function handleBoxInput(key) {
+    const existingValue = localStorage.getItem(key);
+    const newValue = prompt(`Please Enter Your Value for ${key}`, existingValue);
+
+    if (newValue !== null) {
+      localStorage.setItem(key, newValue);
     }
   }
 
-  return (
+  // Makes sure that on startup, the checkmark boxes start empty
+  function intializeCheckmarkBoxes() {
+    startup = true
+    if (startup === true) {
+      startup = false
+      localStorage.setItem("OptionA Checkmark", " ")
+      localStorage.setItem("OptionB Checkmark", " ")
+      localStorage.setItem("OptionC Checkmark", " ")
+      localStorage.setItem("OptionD Checkmark", " ")
+    }
+  }
+  
+    return (
       <>
-      <Text
-      text={"PIN:"}
-      x={props.width * 0.8}
-      y={props.height * 0.15}
+        {/* charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, callback*/}
+        {createInputBox(220, 0.19, 1.595, 0.134, 0.57, 'Multiple Choice 1', width, height, handleBoxInput)}
+        {createInputBox(220, 0.19, 1.595, 0.134, 0.66, 'Multiple Choice 2', width, height, handleBoxInput)}
+        {createInputBox(220, 0.19, 1.595, 0.134, 0.75, 'Multiple Choice 3', width, height, handleBoxInput)}
+        {createInputBox(220, 0.19, 1.595, 0.134, 0.84, 'Multiple Choice 4', width, height, handleBoxInput)}
+        {createInputBox(60, 0.10, 0.54, 0.143+ 0.062, 0.136-.050, 'Conjecture Name', width, height, handleBoxInput)}
+        {createInputBox(220, 0.10, .3, 0.46+ 0.062, 0.136-.050, 'Author Name', width, height, handleBoxInput)}
+        {createInputBox(220, 0.30, 1.595, 0.134, 0.175-.050, 'Conjecture Description', width, height, handleBoxInput)}
+        {createInputBox(220, 0.10, 1.268, 0.203 + 0.062, 0.295-.050, 'Conjecture Keywords', width, height, handleBoxInput)}
+
+        {/* text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight */}
+        {createTextElement("KEYWORDS:", 0.137+ 0.062, 0.315-0.05, 0.018, width, height)}
+        {createTextElement("PIN:", 0.605+ 0.062, 0.155-0.05, 0.018, width, height)}
+        {createTextElement("AUTHOR:", 0.41+ 0.062, 0.155-0.05, 0.018, width, height)}
+        {createTextElement("CURRENT M-CLIP:", 0.45, 0.305, 0.018, width, height)}
+        {createTextElement("MULTIPLE CHOICE", 0.45, 0.55, 0.018, width, height)}
+        {createTextElement("Conjecture Editor", 0.45, 0.05, 0.025, width, height)}
+        {createTextElement("NAME:", 0.108+ 0.062, 0.155-0.05, 0.018, width, height)}
+
+        {intializeCheckmarkBoxes()}
+        {/* If the user clicks multiple choice button A, then only A is marked and the rest are empty */}
+        {props.boxState === "optiona" && (
+          localStorage.setItem("OptionA Checkmark", " X"),
+          localStorage.setItem("OptionB Checkmark", " "),
+          localStorage.setItem("OptionC Checkmark", " "),
+          localStorage.setItem("OptionD Checkmark", " ")
+        )}
+        {/* If the user clicks multiple choice button B, then only B is marked and the rest are empty */}
+        {props.boxState === "optionb" && (
+          localStorage.setItem("OptionA Checkmark", " "),
+          localStorage.setItem("OptionB Checkmark", " X"),
+          localStorage.setItem("OptionC Checkmark", " "),
+          localStorage.setItem("OptionD Checkmark", " ")
+        )}
+        {/* If the user clicks multiple choice button C, then only C is marked and the rest are empty */}
+        {props.boxState === "optionc" && (
+          localStorage.setItem("OptionA Checkmark", " "),
+          localStorage.setItem("OptionB Checkmark", " "),
+          localStorage.setItem("OptionC Checkmark", " X"),
+          localStorage.setItem("OptionD Checkmark", " ")
+        )}
+        {/* If the user clicks multiple choice button D, then only D is marked and the rest are empty */}
+        {props.boxState === "optiond" && (
+          localStorage.setItem("OptionA Checkmark", " "),
+          localStorage.setItem("OptionB Checkmark", " "),
+          localStorage.setItem("OptionC Checkmark", " "),
+          localStorage.setItem("OptionD Checkmark", " X")
+        )}
+      </>
+    );
+  }
+
+function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) {
+  return (
+    <Text
+      text={text}
+      x={totalWidth * xMultiplier}
+      y={totalHeight * yMultiplier}
       style={
         new TextStyle({
-          align: "center",
-          fontFamily: "Futura",
-          fontSize: 30,
+          align: "left",
+          fontFamily: "Arial",
+          fontSize: totalWidth * fontSizeMultiplier,
           fontWeight: 800,
           fill: [blue],
           letterSpacing: 0,
         })
       }
       anchor={0.5}
+    />
+  );
+}
+
+export const YourComponent = (props) => {
+  return (
+    <>
+      {createTextElement("KEYWORDS:", 0.1275, 0.322, 0.018, width, height)}
+      {createTextElement("PIN:", 0.797, 0.13, 0.018, width, height)}
+      {createTextElement("AUTHOR:", 0.6, 0.13, 0.018, width, height)}
+      {createTextElement("CURRENT M-CLIP:", 0.50, 0.37, 0.018, width, height)}
+      {createTextElement("MULTIPLE CHOICE", 0.50, 0.52, 0.018, width, height)}
+      {createTextElement("Conjecture Editor", 0.5, 0.05, 0.025, width, height)}
+      {createTextElement("NAME:", 0.102, 0.13, 0.018, width, height)}
+      {/* ... other Text elements ... */}
+    </>
+  );
+}
+
+
+export const PINBox = (props) => {
+  const { height, width } = props;
+
+  // Creates a popup in which the user can set a pin for their conjecture
+  function pinBoxInput() {
+    const existingPin = localStorage.getItem('PIN');
+    let pin = prompt("Please Enter Your PIN", existingPin);
+
+    if (!isNaN(pin) && pin !== null) {
+      localStorage.setItem('PIN', pin);
+    } else if (pin !== null) {
+      alert('PIN must be numeric');
+    }
+  }
+
+  return (
+      <>
+      {/* PINBox InputBox */}
+      <InputBox
+        height={height * 0.10}
+        width={width * 0.2}
+        x={width * 0.6910}
+        y={height * 0.085}
+        color={white}
+        fontSize={width * 0.015}
+        fontColor={black}
+        text={
+          localStorage.getItem('PIN') || ' ' // Show existing PIN if available
+        }
+        fontWeight={300}
+        callback={pinBoxInput} // Implement Popup
       />
-        {/* PINBox InputBox */}
-        <InputBox
-          height={height * 0.10}
-          width={width * 0.3}
-          x={width * 0.818}
-          y={height * 0.13}
-          color={white}
-          fontSize={width * 0.015}
-          fontColor={black}
-          text={localStorage.getItem('PIN')}
-          fontWeight={300}
-          callback={pinBoxInput} // Implement Popup
-        />
       </>
   )
 }
 
-export const ConjectureBox = (props) => {
-  const { height, width } = props;
-  return (
-      <>
-        {/* ConjextureBox InputBox */}
-        <InputBox
-          height={height * 0.30}
-          width={width * 2.1335}
-          x={props.width * 0.085}
-          y={height * 0.175}
-          color={white}
-          fontSize={width * 0.02}
-          fontColor={black}
-          text={null}
-          fontWeight={800}
-          callback={null} // Implement Popup
-        />
-      </>
-  )
-}
-
-export const KeywordsBox = (props) => {
-  const { height, width } = props;
-  return (
-      <>
-        <Text
-          text={"KEYWORDS:"}
-          x={props.width * 0.1345}
-          y={props.height * 0.322}
-          style={
-            new TextStyle({
-              align: "center",
-              fontFamily: "Futura",
-              fontSize: 30,
-              fontWeight: 800,
-              fill: [blue],
-              letterSpacing: 0,
-            })
-          }
-          anchor={0.5}
-        />
-        {/* KeywordsBox InputBox */}
-        <InputBox
-          height={height * 0.10}
-          width={width * 1.883}
-          x={width * 0.1855}
-          y={props.height * 0.301}
-          color={white}
-          fontSize={width * 0.02}
-          fontColor={black}
-          text={null}
-          fontWeight={800}
-          outlineColor={black}
-          callback={null} // Implement Popup
-        />
-      </>
-  )
-}
+// localStorage.clear();
