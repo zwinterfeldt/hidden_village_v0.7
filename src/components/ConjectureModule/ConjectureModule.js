@@ -20,6 +20,7 @@ const ConjectureModule = (props) => {
         <StartBox height={height * 0.5} width={width * 0.5} x={5} y={4.6} boxState={null} similarityScores={null} inCE={true} />
         <IntermediateBox height={height * 0.5} width={width * 0.5} x={9} y={1.906} boxState={null} similarityScores={null} inCE={true} />
         <EndBox height={height * 0.5} width={width * 0.5} x={13} y={1.2035} boxState={null} similarityScores={null} inCE={true} />
+        {/* Button to Pose Editor */}
         <Button
           height={height * 0.18}
           width={width * 0.08}

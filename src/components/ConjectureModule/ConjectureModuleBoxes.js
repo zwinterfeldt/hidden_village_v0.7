@@ -174,10 +174,8 @@ export const PINBox = (props) => {
           localStorage.getItem('PIN') || ' ' // Show existing PIN if available
         }
         fontWeight={300}
-        callback={pinBoxInput} // Implement Popup
+        callback={pinBoxInput} // Create Popup
       />
       </>
   )
 }
-
-// localStorage.clear();
