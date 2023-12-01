@@ -38,6 +38,7 @@ export const MainBox = (props) => {
     <Container>
       <Graphics draw={drawRectangle} />
       <Graphics draw={drawTextBox} />
+      {/* Main text on page */}
       <Text
           text={"Pose Sequence Editor"}
           x={props.width * 0.5}
@@ -70,6 +71,7 @@ export const MainBox = (props) => {
           }
           anchor={0.5}
         />
+        {/* Displayed if user is too close to screen */}
         {localStorage.getItem("user_depth") !== null && (
           <>
             <Text
@@ -173,9 +175,11 @@ export const StartBox = (props) => {
               }
               anchor={0.5}
             />
+            {/* Draw green outline if box is EDIT is clicked */}
             {props.boxState === "start" && (
             <Graphics draw={drawBoxOutline} />
           )}
+          {/* Pose is displayed if user captures start pose */}
           {localStorage.getItem('start.json') !== null && (
             <Pose
               poseData={JSON.parse(localStorage.getItem('start.json'))}
@@ -188,6 +192,7 @@ export const StartBox = (props) => {
               similarityScores={props.similarityScores}
             />
             )}
+          {/* Display tolerance when entered */}
           {localStorage.getItem('Start Tolerance') !== null && (
             <Text
             text={localStorage.getItem('Start Tolerance')}
@@ -230,9 +235,11 @@ export const StartBox = (props) => {
               }
               anchor={0.5}
             />
+            {/* Draw green outline if box is EDIT is clicked */}
             {props.boxState === "start" && (
             <Graphics draw={drawBoxOutline} />
           )}
+          {/* Pose is displayed if user captures start pose */}
           {localStorage.getItem('start.json') !== null && (
             <Pose
               poseData={JSON.parse(localStorage.getItem('start.json'))}
@@ -245,6 +252,7 @@ export const StartBox = (props) => {
               similarityScores={props.similarityScores}
             />
             )}
+          {/* Display tolerance when entered */}
           {localStorage.getItem('Start Tolerance') !== null && (
             <Text
             text={localStorage.getItem('Start Tolerance')}
@@ -335,9 +343,11 @@ export const IntermediateBox = (props) => {
             }
             anchor={0.5}
           />
+          {/* Draw green outline if box is EDIT is clicked */}
           {props.boxState === "intermediate" && (
           <Graphics draw={drawBoxOutline} />
         )}
+        {/* Pose is displayed if user captures intermidiate pose */}
         {localStorage.getItem('intermediate.json') !== null && (
           <Pose
             poseData={JSON.parse(localStorage.getItem('intermediate.json'))}
@@ -350,6 +360,7 @@ export const IntermediateBox = (props) => {
             similarityScores={props.similarityScores}
           />
           )}
+        {/* Display tolerance when entered */}
         {localStorage.getItem('Intermediate Tolerance') !== null && (
           <Text
           text={localStorage.getItem('Intermediate Tolerance')}
@@ -392,9 +403,11 @@ export const IntermediateBox = (props) => {
             }
             anchor={0.5}
           />
+          {/* Draw green outline if box is EDIT is clicked */}
           {props.boxState === "intermediate" && (
           <Graphics draw={drawBoxOutline} />
         )}
+        {/* Pose is displayed if user captures intermidiate pose */}
         {localStorage.getItem('intermediate.json') !== null && (
           <Pose
             poseData={JSON.parse(localStorage.getItem('intermediate.json'))}
@@ -407,6 +420,7 @@ export const IntermediateBox = (props) => {
             similarityScores={props.similarityScores}
           />
           )}
+        {/* Display tolerance when entered */}
         {localStorage.getItem('Intermediate Tolerance') !== null && (
           <Text
           text={localStorage.getItem('Intermediate Tolerance')}
@@ -497,9 +511,11 @@ export const EndBox = (props) => {
             }
             anchor={0.5}
           />
+          {/* Draw green outline if box is EDIT is clicked */}
           {props.boxState === "end" && (
           <Graphics draw={drawBoxOutline} />
         )}
+        {/* Pose is displayed if user captures end pose */}
         {localStorage.getItem('end.json') !== null && (
           <Pose
             poseData={JSON.parse(localStorage.getItem('end.json'))}
@@ -512,6 +528,7 @@ export const EndBox = (props) => {
             similarityScores={props.similarityScores}
           />
           )}
+        {/* Display tolerance when entered */}
         {localStorage.getItem('End Tolerance') !== null && (
           <Text
           text={localStorage.getItem('End Tolerance')}
@@ -554,9 +571,11 @@ export const EndBox = (props) => {
             }
             anchor={0.5}
           />
+          {/* Draw green outline if box is EDIT is clicked */}
           {props.boxState === "end" && (
           <Graphics draw={drawBoxOutline} />
         )}
+        {/* Pose is displayed if user captures end pose */}
         {localStorage.getItem('end.json') !== null && (
           <Pose
             poseData={JSON.parse(localStorage.getItem('end.json'))}
@@ -569,6 +588,7 @@ export const EndBox = (props) => {
             similarityScores={props.similarityScores}
           />
           )}
+        {/* Display tolerance when entered */}
         {localStorage.getItem('End Tolerance') !== null && (
           <Text
           text={localStorage.getItem('End Tolerance')}
