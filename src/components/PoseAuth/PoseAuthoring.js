@@ -1,6 +1,5 @@
 import Background from "../Background";
 import Pose from "../Pose";
-// Importing the useState hook from React to manage component state
 import { useState, useEffect } from "react";
 import { MainBox, StartBox, IntermediateBox, EndBox } from "./PoseAuthoringBoxes";
 import { black, green, blue, white, pink, orange } from "../../utils/colors";
@@ -9,10 +8,9 @@ import { useMachine } from "@xstate/react";
 import { PoseAuthMachine } from "../../machines/poseauthMachine";
 import { capturePose, saveConjecture, resetConjecture } from "./ButtonFunctions";
 import { calculateFaceDepth } from "../Pose/landmark_utilities";
-// Importing Text and Graphics components from @inlet/react-pixi for rendering text and shapes in Pixi
 import { Text, Graphics } from '@inlet/react-pixi';
 
-// Defining a NotificationBox component using Pixi components
+// Defining a NotificationBox component using Pixi components, used for all notification pop-ups
 const NotificationBox = ({ message, textSize }) => {
   return (
     <Graphics
@@ -54,6 +52,10 @@ const PoseAuthoring = (props) => {
     // State to indicate whether we should capture the pose
     const [shouldCapture, setShouldCapture] = useState(false);
 
+    // *********************************
+    // Handler functions
+    // *********************************
+
     // function to start the on screen timer once the capture button is pressed
     const startTimer = () => {
       setTimer(10);
@@ -86,87 +88,44 @@ const PoseAuthoring = (props) => {
       }, 1000);
     };
 
-    const handleSave = () => {
-      if (localStorage.length === 0) {
-        console.log("Local Storage is empty. Nothing to save.");
-        return;
-      }
-  
-      saveConjecture();
-      setNotificationMessage("Saved Successfully!");
-      setBoxVisible(true);
-      setTimeout(() => setBoxVisible(false), 3000);
-    };
-
-    const handleDone = () => {
-      console.log("Done button clicked");
-    
-      // Check if local storage is empty
-      if (localStorage.length === 0) {
-        exitPoseAuthoring();
-      } else {
-        setShowConfirmExit(true);
-      
-        // Set a timeout to hide the confirmation button after 3 seconds
-        const timeoutId = setTimeout(() => {
-          setShowConfirmExit(false);
-        }, 3000);
-      
-        // Save the timeout ID in the component's state
-        setTimeoutId(timeoutId);
-      }
-    };
-    
-    const handleCaptureError = () => {
-      setNotificationMessage("Error caturing pose\nToo close to the camera \nPlease try again");
-      setBoxVisible(true);
-      setTimeout(() => setBoxVisible(false), 3000);
-    }
-      
-    const exitPoseAuthoring = () => {
-      setNotificationMessage("Done, exiting Pose Authoring");
-      setBoxVisible(true);
-      setTimeout(() => {
-        setBoxVisible(false);
-        props.mainCallback();
-      }, 2000);
-    };
-
-    const handleConfirmExit = () => {
-      // Clear the timeout
-      clearTimeout(timeoutId);
-
-      // Clear local storage
-      localStorage.clear();
-    
-      // Hide the confirmation button
-      setShowConfirmExit(false);
-    
-      // Exit Pose Authoring
-      exitPoseAuthoring();
-    };
-    
-    // UseEffect to capture pose data when the flag is set and poseData changes
-    useEffect(() => {
-      if (shouldCapture) {
-        handleCapture();
-        setShouldCapture(false); // Reset the flag after capturing
-      }
-    }, [props.poseData, shouldCapture]); // Only re-run if props.poseData or shouldCapture changes
-
+    // Function that handles capture phase when timer turns to zero.
     const handleCapture = () => {
       setNotificationMessage("Captured pose.");
       setBoxVisible(true);
       capturePose(props.poseData, state.value); // Implement Pose-Capturing
       setTimeout(() => setBoxVisible(false), 1000);
     };
-    
+
+    // Function that handles error massage is user is to close to screen during capture.
+    const handleCaptureError = () => {
+      setNotificationMessage("Error caturing pose\nToo close to the camera \nPlease try again");
+      setBoxVisible(true);
+      setTimeout(() => setBoxVisible(false), 3000);
+    }
+
+    // Function that handles saving poses when 'Save Draft' button is clicked
+    const handleSave = () => {
+      if (localStorage.length === 0) {
+        console.log("Local Storage is empty. Nothing to save.");
+        return;
+      }
+      saveConjecture();
+      setNotificationMessage("Saved Successfully!");
+      setBoxVisible(true);
+      setTimeout(() => setBoxVisible(false), 3000);
+    };
+
+    // Function that handles reseting all poses and tolerance when clicked
     const handleReset = () => {
       setNotificationMessage("Clearing poses.");
       setBoxVisible(true);
       resetConjecture()
       setTimeout(() => setBoxVisible(false), 1000);
     };
+
+    // *********************************
+    // Tolerance functions
+    // *********************************
 
     // Creates a popup in which the user can enter a tolerance amount for the Start Pose
     function startTolerance() {
@@ -213,6 +172,11 @@ const PoseAuthoring = (props) => {
       }
     }
 
+    // *********************************
+    // Active use effects
+    // *********************************
+
+    // UseEffect to monitor facedepth and determine wether the user is too close to the screen
     useEffect(() => {
       if (props.poseData && props.poseData.poseLandmarks) {
         const depth = calculateFaceDepth(props.poseData.poseLandmarks);
@@ -228,87 +192,104 @@ const PoseAuthoring = (props) => {
       }
     }, [props.poseData])
 
+    // UseEffect to capture pose data when the flag is set and poseData changes
+    useEffect(() => {
+      if (shouldCapture) {
+        handleCapture();
+        setShouldCapture(false); // Reset the flag after capturing
+      }
+    }, [props.poseData, shouldCapture]); // Only re-run if props.poseData or shouldCapture changes
+
+    // *********************************
+    // Returned objects
+    // *********************************
+
     return (
       <>
         <Background height={height} width={width} />
         <MainBox height={height} width={width} />
         <StartBox height={height} width={width} x={1} y={1} boxState={state.value} similarityScores={poseSimilarity} inCE={false} />
+        {/* Start box edit button build */}
         <RectButton
-          // Start Pose button
           height={height * 0.05}  
           width={width * 0.10}    
-          x={width * 0.25}  // width * 0.25
+          x={width * 0.25}
           y={height * .19}
           color={white}
-          fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
+          fontSize={width * 0.014}
           fontColor={black}
           text={"EDIT"}
           fontWeight={800}
-          callback={() => send("START")}
+          callback={() => send("START")}  // Send START state to poseauthMachine
         />
+        {/* Start box tolerance button build */}
         <RectButton
-          // Start Pose button
           height={height * 0.05}  
           width={width * 0.10}    
           x={width * 0.25}
           y={height * 0.33}
           color={white}
-          fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
+          fontSize={width * 0.014}
           fontColor={black}
           text={"TOL%"}          
           fontWeight={800}
-          callback={() => startTolerance()}
+          callback={() => startTolerance()}   // Enter tolerance for start box
         />
         <IntermediateBox height={height} width={width}  x={1} y={1} boxState={state.value} similarityScores={poseSimilarity} inCE={false} />
+        {/* Intermidiate box edit button build */}
         <RectButton
           height={height * 0.05}
           width={width * 0.10}
           x={width * 0.25}
           y={height * 0.43}
           color={white}
-          fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
+          fontSize={width * 0.014}
           fontColor={black}
           text={"EDIT"}
           fontWeight={800}
-          callback={() => send("INTERMEDIATE")}
+          callback={() => send("INTERMEDIATE")}   // Send INTERMIDIATE state to poseauthMachine
         />
+        {/* Intermidiate tolerance button build */}
         <RectButton
           height={height * 0.05}
           width={width * 0.10}
           x={width * 0.25}
           y={height * 0.57}
           color={white}
-          fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
+          fontSize={width * 0.014}
           fontColor={black}
           text={"TOL%"}
           fontWeight={800}
-          callback={() => intermediateTolerance()}
+          callback={() => intermediateTolerance()}    // Enter tolerance for intermidiate box
         />
         <EndBox height={height} width={width}  x={1} y={1} boxState={state.value} similarityScores={poseSimilarity} inCE={false} />
+        {/* End box edit button build */}
         <RectButton
           height={height * 0.05}
           width={width * 0.10}
           x={width * 0.25}
           y={height * 0.67}
           color={white}
-          fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
+          fontSize={width * 0.014}
           fontColor={black}
           text={"EDIT"}
           fontWeight={800}
-          callback={() => send("END")}
+          callback={() => send("END")}    // Send END state to poseauthMachine
         />
+        {/* End box tolerance button build */}
         <RectButton
           height={height * 0.05}
           width={width * 0.10}
           x={width * 0.25}
           y={height * 0.81}
           color={white}
-          fontSize={width * 0.014}  //  Dynamically modify font size based on screen width
+          fontSize={width * 0.014}
           fontColor={black}
           text={"TOL%"}
           fontWeight={800}
-          callback={() => endTolerance()}
+          callback={() => endTolerance()}   // Enter tolerance for end box
         />
+        {/* Active user pose build */}
         <Pose
           poseData={props.poseData}
           colAttr={{
@@ -319,6 +300,7 @@ const PoseAuthoring = (props) => {
           }}
           similarityScores={poseSimilarity}
         />
+        {/* Timer build */}
         {showTimer && (
           <Graphics
             draw={graphics => {
@@ -340,30 +322,33 @@ const PoseAuthoring = (props) => {
             />
           </Graphics>
         )}
+        {/* Capture Button build */}
         <RectButton
           height={height * 0.12}
           width={width * 0.20}
           x={width * 0.41}
           y={height * 0.83}
           color={white}
-          fontSize={width * 0.021}  //  Dynamically modify font size based on screen width
+          fontSize={width * 0.021}
           fontColor={pink}
           text={"Capture"}
           fontWeight={800}
-          callback={() => startTimer()} // Implement Pose-Capturing
+          callback={() => startTimer()} // Start timer to capture pose
         />
+        {/* Save Button build */}
         <RectButton
           height={height * 0.12}
           width={width * 0.20}
           x={width * 0.52}
           y={height * 0.83}
           color={white}
-          fontSize={width * 0.021}  //  Dynamically modify font size based on screen width
+          fontSize={width * 0.021}
           fontColor={green}
           text={"Save"}
           fontWeight={800}
-          callback={handleSave} // Implement Save Feature
+          callback={handleSave} // Handle saving current poses to database
         />
+        {/* Done Button build */}
         <RectButton
         height={height * 0.12}
         width={width * 0.20}
@@ -376,34 +361,21 @@ const PoseAuthoring = (props) => {
         fontWeight={800}
         callback={props.conjectureCallback} // Exit Back To Conjecture Module
       />
+        {/* Reset Button build */}
         <RectButton
           height={height * 0.12}
           width={width * 0.20}
           x={width * 0.78}
           y={height * 0.83}
           color={white}
-          fontSize={width * 0.021}  //  Dynamically modify font size based on screen width
+          fontSize={width * 0.021}
           fontColor={orange}
           text={"Reset"}
           fontWeight={800}
-          callback={handleReset} // Implement Reset??
+          callback={handleReset}  // Clear all poses and tolerance from pose auth
         />
         {/* Conditionally rendering the NotificationBox based on the isBoxVisible state */}
         {isBoxVisible && <NotificationBox message={notificationMessage} textSize={30} />}
-        {showConfirmExit && (
-          <RectButton
-            height={props.height * 0.98}
-            width={props.width * .35}
-            x={props.width * 0.40}
-            y={props.height * 0.30}
-            color={white}
-            fontSize={props.width * 0.021}
-            fontColor={blue}
-            text={"Exit Pose Authoring?\n(Click to exit)"}
-            fontWeight={800}
-            callback={handleConfirmExit}
-          />
-        )}
       </>
     );
 };
