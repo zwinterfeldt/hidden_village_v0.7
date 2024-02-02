@@ -22,12 +22,12 @@ const ConjectureModule = (props) => {
         <EndBox height={height * 0.5} width={width * 0.5} x={13} y={1.2035} boxState={null} similarityScores={null} inCE={true} />
         {/* Button to Pose Editor */}
         <Button
-          height={height * 0.18}
-          width={width * 0.08}
+          height={height * 0.12}
+          width={width * 0.0950}
           x={width * 0.17}
           y={height * 0.42}
           color={blue}
-          fontSize={32}
+          fontSize={21}
           fontColor={white}
           text={"POSE EDITOR"}
           fontWeight={800}
@@ -39,7 +39,7 @@ const ConjectureModule = (props) => {
             x={width * 0.10}
             y={height * 0.61}
             color={blue}
-            fontSize={50}
+            fontSize={40}
             fontColor={white}
             text={"A"}
             fontWeight={800}
@@ -51,7 +51,7 @@ const ConjectureModule = (props) => {
             x={width * 0.10}
             y={height * 0.70}
             color={blue}
-            fontSize={50}
+            fontSize={40}
             fontColor={white}
             text={"B"}
             fontWeight={800}
@@ -63,7 +63,7 @@ const ConjectureModule = (props) => {
             x={width * 0.10}
             y={height * 0.79}
             color={blue}
-            fontSize={50}
+            fontSize={40}
             fontColor={white}
             text={"C"}
             fontWeight={800}
@@ -75,7 +75,7 @@ const ConjectureModule = (props) => {
             x={width * 0.10}
             y={height * 0.88}
             color={blue}
-            fontSize={50}
+            fontSize={40}
             fontColor={white}
             text={"D"}
             fontWeight={800}
@@ -119,6 +119,19 @@ const ConjectureModule = (props) => {
           text={"PUBLISH"}
           fontWeight={800}
           callback={ () => writeToDatabaseConjecture() } // publish to database
+        />
+        {/* Back Button */}
+        <Button
+          height={height * 0.32}
+          width={width * 0.07}
+          x={width * 0.06}
+          y={height * 0.15}
+          color={red}
+          fontSize={width * 0.015}
+          fontColor={white}
+          text={"BACK"}
+          fontWeight={800}
+          callback={mainCallback} // Exit Back To Home
         />
         {/* 'X' Buttons for the mutliple choice boxes */}
         <InputBox
