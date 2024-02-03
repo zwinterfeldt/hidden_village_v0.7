@@ -5,7 +5,7 @@ Classes: [ADDED, FIXED, CHANGED, UPDATED, REMOVED]
 ### Interface Enhancements
 - [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/5): a logout button from the homescreen to allow the user to sign into a different account.
 - [FIXED](https://github.com/T0rt13/hidden_village_v0.5/pull/5): the autocomplete error for email in the Sign on Screen.
-- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/5): mouse cursor will now change to a pointer when hovering a button.
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/5): mouse cursor will now change to a pointer when hovering a button/reactbutton.
   
 ## Update: 2/2/2024 - v0.5.1.1
 ### Authentication Changes
