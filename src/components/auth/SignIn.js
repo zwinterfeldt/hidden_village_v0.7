@@ -59,7 +59,8 @@ const SignInScreen = ({ firebaseApp }) => {
                 onChange={handleEmailChange}
                 id="email"
                 className="login-input-input"
-                type="text"
+                type="email"
+                autoComplete="on"
               />
               <label htmlFor="password" className="login-input-label">
                 Password
