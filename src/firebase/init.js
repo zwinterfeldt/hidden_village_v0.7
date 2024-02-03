@@ -1,6 +1,8 @@
 // Firebase Init
 import firebase from "firebase/compat/app";
 
+import { getAuth, setPersistence, browserSessionPersistence } from 'firebase/auth';
+
 // Firebase config
 const firebaseConfig = {
   apiKey: process.env.apiKey,
@@ -13,4 +15,21 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-export const app = firebase.initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Set session persistence
+setPersistence(auth, browserSessionPersistence)
+  .then(() => {
+    // Existing and future Auth states are now persisted in the current
+    // session only. Closing the window would clear any existing state even
+    // if a user forgets to sign out.
+    // TL;DR CLOSE WINDOW = SIGN IN AGAIN
+  })
+  .catch((error) => {
+    // Handle errors
+    console.error('Error setting session persistence:', error);
+  });
+
+export { app, auth };
+

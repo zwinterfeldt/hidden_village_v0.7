@@ -325,7 +325,7 @@ const PoseAuthoring = (props) => {
         {/* Capture Button build */}
         <RectButton
           height={height * 0.12}
-          width={width * 0.20}
+          width={width * 0.25}
           x={width * 0.41}
           y={height * 0.83}
           color={white}
@@ -339,7 +339,7 @@ const PoseAuthoring = (props) => {
         <RectButton
           height={height * 0.12}
           width={width * 0.20}
-          x={width * 0.52}
+          x={width * 0.54}
           y={height * 0.83}
           color={white}
           fontSize={width * 0.021}
@@ -352,7 +352,7 @@ const PoseAuthoring = (props) => {
         <RectButton
         height={height * 0.12}
         width={width * 0.20}
-        x={width * 0.67}
+        x={width * 0.66}
         y={height * 0.83}
         color={white}
         fontSize={width * 0.021}

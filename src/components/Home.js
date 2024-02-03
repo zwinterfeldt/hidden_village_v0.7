@@ -22,12 +22,12 @@ const Home = (props) => {
         callback={startCallback}
       />
       <Button
-        height={height * 0.2}
-        width={width * 0.1}
+        height={height * 0.205}
+        width={width * 0.105}
         x={width * 0.85}
-        y={height * 0.1}
+        y={height * 0.105}
         color={red}
-        fontSize={24}
+        fontSize={18}
         fontColor={white}
         text={"Conjecture Editor"}
         fontWeight={800}
