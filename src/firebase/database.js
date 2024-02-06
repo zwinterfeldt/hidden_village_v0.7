@@ -2,6 +2,10 @@
 import { ref, push, getDatabase, set } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+
+// Import the uuid library
+const { v4: uuidv4 } = require('uuid');
+
 const db = getDatabase();
 
 // User Id functionality will be added in a different PR
@@ -26,7 +30,7 @@ export const writeToDatabase = async (poseData, conjectureId, frameRate) => {
   const dbRef = ref(db, "/Experimental_Data");
 
   // Create an object to send to the database
-  // This object includes the userId, poseData, conjectureId, frameRate, and timestamp
+  // This object includes the userId, poseData, conjectureId, frameRate, and timestamp and
   const dataToSend = {
     userId,
     poseData: JSON.stringify(poseData),
@@ -71,6 +75,9 @@ export const writeToDatabaseConjecture = async () => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
+
+  const conjectureID = uuidv4();
+  console.log('Conjecture UUID:', conjectureID);
 
   // Initialize empty object to store the data inside
   const dataToPush = {};
@@ -132,6 +139,7 @@ export const writeToDatabaseConjecture = async () => {
     // uses set to overwrite the random firebaseKeys with easier to read key names
     const promises = [
       set(ref(db, `${conjecturePath}/Time`), timestamp),
+      set(ref(db, `${conjecturePath}/UUID`),conjectureID),
       set(ref(db, `${conjecturePath}/Start Pose`), startPoseData),
       set(ref(db, `${conjecturePath}/Intermediate Pose`), intermediatePoseData),
       set(ref(db, `${conjecturePath}/End Pose`), endPoseData),
