@@ -33,6 +33,13 @@ const Story = () => {
   const [height, setHeight] = useState(window.innerHeight);
   const [width, setWidth] = useState(window.innerWidth);
   const [state, send] = useMachine(StoryMachine);
+
+  firebase.auth().onAuthStateChanged(async (user) => {
+    if (!user) {
+      window.location.href = "/signin";
+    }
+  });
+
   let [rowDimensions, columnDimensions] = generateRowAndColumnFunctions(
     width,
     height,
@@ -43,12 +50,6 @@ const Story = () => {
     columnGutter,
     rowGutter
   );
-
-  firebase.auth().onAuthStateChanged(async (user) => {
-    if (!user) {
-      window.location.href = "/signin";
-    }
-  });
 
   useEffect(() => {
     window.addEventListener("resize", () => {
@@ -119,6 +120,7 @@ const Story = () => {
             height={height}
             startCallback={() => send("TOGGLE")}  // goes to the game
             conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
+            logoutCallback={() => firebase.auth().signOut()} // logs the user out
           />
         )}
         {state.value === "conjecture" && (

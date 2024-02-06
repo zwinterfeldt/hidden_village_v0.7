@@ -31,7 +31,12 @@ const RectButton = (props) => {
 
   return (
     <Container>
-      <Graphics draw={draw} interactive={true} pointerdown={callback} />
+      <Graphics 
+        draw={draw} 
+        interactive={true} 
+        pointerdown={callback}
+        cursor="pointer"
+      />
       <Text
         text={text}                                 // The text to display
         style={                                     // Define the text's style
@@ -47,6 +52,7 @@ const RectButton = (props) => {
         }
         interactive={true}
         pointerdown={callback}
+        cursor="pointer"
         x={x + buttonWidth / 2} // Centering text in the button
         y={y + height * 0.2}    // Adjusting the y-position for text
         anchor={0.5}

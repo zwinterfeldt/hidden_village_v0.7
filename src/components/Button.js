@@ -25,7 +25,12 @@ const Button = (props) => {
   );
   return (
     <>
-      <Graphics draw={draw} interactive={true} pointerdown={callback} />
+      <Graphics 
+        draw={draw} 
+        interactive={true} 
+        pointerdown={callback}
+        cursor="pointer"
+        />
       <Text
         text={text}
         style={
@@ -40,6 +45,7 @@ const Button = (props) => {
         }
         interactive={true}
         pointerdown={callback}
+        cursor="pointer"
         x={x}
         y={y}
         anchor={0.5}
