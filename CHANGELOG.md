@@ -5,6 +5,7 @@ Classes: [ADDED, FIXED, CHANGED, UPDATED, REMOVED]
 ## Update: 2/?/2024 -v0.5.2.?
 ### Conjecture Database Objects
 - [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/6): a UUID to conjectures.
+- [ADDED](): getConjectureDataByUUID(conjectureID) returns conjecture ID based on UUID.
 
 ### Interface Enhancements
 - [CHANGED](https://github.com/T0rt13/hidden_village_v0.5/pull/6): the time to capture pose from 10 seconds to 2 seconds. For ease of use. Might change back later

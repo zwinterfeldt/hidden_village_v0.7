@@ -311,7 +311,7 @@ export const getConjectureDataByUUID = async (conjectureID) => {
     // check the snapshot
     if (querySnapshot.exists()) {
       const data = querySnapshot.val();
-      return data;
+      return data; // return the data if its good
     } else {
       return null; // This will happen if data not found
     }
