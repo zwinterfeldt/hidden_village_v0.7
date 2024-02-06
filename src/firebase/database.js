@@ -298,6 +298,35 @@ const countRejectedPromises = async (promises) => {
 };
 
 // Define a function to retrieve a conjecture based on UUID
-export const getConjectureData = async (conjectureID) => {
+const getConjectureDataByUUID = async (conjectureID) => {
+  // basically a try catch for data retrieval
+  return new Promise((resolve,reject) =>{
+    // set a refrence to the collection to query
+    const dbRef = db.collection('Final')
 
+    // Query based on the given conjectureID
+    const query = dbRef.where('UUID', '==', conjectureID)
+
+    // return all of the information from the query
+    query.get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const conjectureData = {
+          Conjecture: doc.data().Conjecture,
+          EndPose: doc.data()['End Pose'],
+          IntermediatePose: doc.data()['Intermediate Pose'],
+          StartPose: doc.data()['Start Pose'],
+          TextBoxes: doc.data()['Text Boxes'],
+          Time: doc.data().Time,
+          UUID: doc.data().UUID,
+        };
+        // 
+        resolve(conjectureData);
+      });
+    }) 
+    .catch((error) => {
+      // Reject the promise with the error
+      reject(error);
+    });
+  });
 };
