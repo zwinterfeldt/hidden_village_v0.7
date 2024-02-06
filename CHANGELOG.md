@@ -6,8 +6,8 @@ Classes: [ADDED, FIXED, CHANGED, UPDATED, REMOVED]
 ### Conjecture Database Objects
 #### Database Values
 - [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/6): a UUID to conjectures.
-- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/6): a AuthorID to conjectures.
-- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/6): the PIN to conjectures.
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/7): a AuthorID to conjectures.
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/7): the PIN to conjectures.
 #### Database Functions
 - [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/7): getConjectureDataByUUID(conjectureID) returns conjecture based on UUID.
 - [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/7): getConjectureDataByAuthorID(AuthorID) returns conjecture based on the user authentication ID (NOTE: It is not the ID that the user writes into the conjecture. That information is not saved for some reason).
