@@ -5,7 +5,7 @@ import RectButton from "../RectButton";
 import InputBox from "../InputBox";
 import { ConjectureBox, KeywordsBox, NameBox, PINBox } from "./ConjectureModuleBoxes";
 import { EndBox, IntermediateBox, StartBox } from "../PoseAuth/PoseAuthoringBoxes";
-import { writeToDatabaseConjecture, writeToDatabaseDraft } from "../../firebase/database";
+import { writeToDatabaseConjecture, writeToDatabaseDraft, getConjectureDataByUUID } from "../../firebase/database";
 import { useMachine } from "@xstate/react";
 import { ConjectureEditorMachine } from "../../machines/conjectureEditorMachine";
 
@@ -120,6 +120,31 @@ const ConjectureModule = (props) => {
           fontWeight={800}
           callback={ () => writeToDatabaseConjecture() } // publish to database
         />
+
+        {/* TEST RETRIEVE Button */}
+        <RectButton
+          height={height * 0.13}
+          width={width * 0.26}
+          x={width * 0.15}
+          y={height * 0.93}
+          color={black}
+          fontSize={width * 0.015}
+          fontColor={white}
+          text={"TEST BUTTON"}
+          fontWeight={800}
+          callback={() => {
+            const targetUUID = "3922e862-a36c-445b-a186-ccf170c6b967"; // a UUID I created earlier
+            getConjectureDataByUUID(targetUUID)
+              .then((conjectureData) => {
+                console.log('Conjecture Data:', conjectureData);
+              })
+              .catch((error) => {
+                console.error('Error getting conjecture data: ', error);
+              });
+          }}
+        />
+
+
         {/* Back Button */}
         <Button
           height={height * 0.32}

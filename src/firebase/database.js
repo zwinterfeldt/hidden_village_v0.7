@@ -1,5 +1,5 @@
 // Firebase Init
-import { ref, push, getDatabase, set } from "firebase/database";
+import { ref, push, getDatabase, set, query, equalTo, get, orderByChild } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 
@@ -298,35 +298,24 @@ const countRejectedPromises = async (promises) => {
 };
 
 // Define a function to retrieve a conjecture based on UUID
-const getConjectureDataByUUID = async (conjectureID) => {
-  // basically a try catch for data retrieval
-  return new Promise((resolve,reject) =>{
-    // set a refrence to the collection to query
-    const dbRef = db.collection('Final')
+export const getConjectureDataByUUID = async (conjectureID) => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Final');
+    // query to find data with the UUID
+    const q = query(dbRef, orderByChild('UUID'), equalTo(conjectureID));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
 
-    // Query based on the given conjectureID
-    const query = dbRef.where('UUID', '==', conjectureID)
-
-    // return all of the information from the query
-    query.get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const conjectureData = {
-          Conjecture: doc.data().Conjecture,
-          EndPose: doc.data()['End Pose'],
-          IntermediatePose: doc.data()['Intermediate Pose'],
-          StartPose: doc.data()['Start Pose'],
-          TextBoxes: doc.data()['Text Boxes'],
-          Time: doc.data().Time,
-          UUID: doc.data().UUID,
-        };
-        // 
-        resolve(conjectureData);
-      });
-    }) 
-    .catch((error) => {
-      // Reject the promise with the error
-      reject(error);
-    });
-  });
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      const data = querySnapshot.val();
+      return data;
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
 };
