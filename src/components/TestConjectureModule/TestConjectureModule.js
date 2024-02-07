@@ -8,13 +8,26 @@ import RectButton from "../RectButton";
 
 
 const TestConjectureModule = (props) => {
-    console.log("I AM THE WINNER");
     const { height, width, columnDimensions, rowDimensions, editCallback, mainCallback } = props;
     // const [state, send] = useMachine(TestConjectureMachine);
 
     return(
     <>
         < Background height={height * 1.1} width={width} />
+
+        {/* TEST Back Button */}
+        <RectButton
+            height={height * 0.13}
+            width={width * 0.26}
+            x={width * 0.15}
+            y={height * 0.93}
+            color={black}
+            fontSize={width * 0.015}
+            fontColor={white}
+            text={"Back Button"}
+            fontWeight={800}
+            callback={mainCallback}
+        />
 
     </>
     );
