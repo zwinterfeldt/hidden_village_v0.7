@@ -1,5 +1,5 @@
 // Firebase Init
-import { ref, push, getDatabase, set } from "firebase/database";
+import { ref, push, getDatabase, set, query, equalTo, get, orderByChild } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 
@@ -139,7 +139,9 @@ export const writeToDatabaseConjecture = async () => {
     // uses set to overwrite the random firebaseKeys with easier to read key names
     const promises = [
       set(ref(db, `${conjecturePath}/Time`), timestamp),
+      set(ref(db, `${conjecturePath}/AuthorID`), userId),
       set(ref(db, `${conjecturePath}/UUID`),conjectureID),
+      set(ref(db, `${conjecturePath}/PIN`), localStorage.getItem("PIN")),
       set(ref(db, `${conjecturePath}/Start Pose`), startPoseData),
       set(ref(db, `${conjecturePath}/Intermediate Pose`), intermediatePoseData),
       set(ref(db, `${conjecturePath}/End Pose`), endPoseData),
@@ -295,4 +297,81 @@ const countRejectedPromises = async (promises) => {
 
   // Return the total number of rejected promises
   return rejectedCount;
+};
+
+// Define a function to retrieve a conjecture based on UUID
+export const getConjectureDataByUUID = async (conjectureID) => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Final');
+    // query to find data with the UUID
+    const q = query(dbRef, orderByChild('UUID'), equalTo(conjectureID));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      const data = querySnapshot.val();
+      return data; // return the data if its good
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
+
+// Define a function to retrieve an array of conjectures based on AuthorID
+export const getConjectureDataByAuthorID = async (authorID) => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Final');
+    // query to find data with the AuthorID
+    const q = query(dbRef, orderByChild('AuthorID'), equalTo(authorID));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      // get all the conjectures in an array
+      const conjectures = [];
+      querySnapshot.forEach((conjectureSnapshot) => {
+        conjectures.push(conjectureSnapshot.val());
+      });
+      return conjectures; // return the data if its good
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
+
+// Define a function to retrieve an array of conjectures based on PIN
+export const getConjectureDataByPIN = async (PIN) => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Final');
+    // query to find data with the PIN
+    const q = query(dbRef, orderByChild('PIN'), equalTo(PIN));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      // get all the conjectures in an array
+      const conjectures = [];
+      querySnapshot.forEach((conjectureSnapshot) => {
+        conjectures.push(conjectureSnapshot.val());
+      });
+      return conjectures; // return the data if its good
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
 };
