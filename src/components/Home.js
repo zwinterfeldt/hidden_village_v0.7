@@ -45,6 +45,18 @@ const Home = (props) => {
         fontWeight={800}
         callback={logoutCallback}
       />
+      <Button
+        height={height * 0.2}
+        width={width * 0.1}
+        x={width *0.85}
+        y={height *0.9}
+        color={red}
+        fontSize={24}
+        fontColor={white}
+        text={"Curricular Content Editor"}
+        fontWeight={800}
+        callback={logoutCallback}
+      />
       <Text
         text={"Hidden Village"}
         x={width * 0.5}
