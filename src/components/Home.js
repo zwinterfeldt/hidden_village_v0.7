@@ -24,7 +24,7 @@ const Home = (props) => {
       <Button
         height={height * 0.205}
         width={width * 0.105}
-        x={width * 0.15}
+        x={width * 0.35}
         y={height * 0.75}
         color={green}
         fontSize={18}
