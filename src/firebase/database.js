@@ -375,19 +375,3 @@ export const getConjectureDataByPIN = async (PIN) => {
     throw error; // this is an actual bad thing
   }
 };
-
-export const getPoseDataByConjUUID = async (UUID) => {
-  try {
-    const conjectureData = await getConjectureDataByUUID(UUID);
-    let conjectureKey;
-    for (const key in conjectureData) {
-      if (key.startsWith('Conjecture')) {
-        conjectureKey = key;
-        break;
-      }
-    }
-    return conjectureData[conjectureKey]['Start Pose']['poseData'];
-  } catch (error) {
-    throw error;
-  }
-};

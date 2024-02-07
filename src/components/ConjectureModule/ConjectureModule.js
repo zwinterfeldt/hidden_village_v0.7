@@ -165,27 +165,6 @@ const ConjectureModule = (props) => {
               });
           }}
         />
-        <RectButton
-          height={height * 0.13}
-          width={width * 0.26}
-          x={width * 0.35}
-          y={height * 0.93}
-          color={black}
-          fontSize={width * 0.015}
-          fontColor={white}
-          text={"TEST Pose UUID"}
-          fontWeight={800}
-          callback={() => {
-            const UUID = "15ff9cc4-f39d-4db9-be04-bcad5907f876"; // nates user id
-            getPoseDataByConjUUID(UUID).then((poseData) => {
-              console.log('Pose Data:', poseData);
-            }).catch((error) => {
-              console.error('Error getting pose data: ', error);
-            }
-            );
-          }}
-        />
-
         {/* TEST PIN Button */}
         <RectButton
           height={height * 0.13}
