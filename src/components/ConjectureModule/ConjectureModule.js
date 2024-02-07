@@ -5,7 +5,7 @@ import RectButton from "../RectButton";
 import InputBox from "../InputBox";
 import { ConjectureBox, KeywordsBox, NameBox, PINBox } from "./ConjectureModuleBoxes";
 import { EndBox, IntermediateBox, StartBox } from "../PoseAuth/PoseAuthoringBoxes";
-import { writeToDatabaseConjecture, writeToDatabaseDraft, getConjectureDataByUUID,getConjectureDataByAuthorID, getConjectureDataByPIN } from "../../firebase/database";
+import { writeToDatabaseConjecture, writeToDatabaseDraft, getConjectureDataByUUID,getConjectureDataByAuthorID, getConjectureDataByPIN, getPoseDataByConjUUID } from "../../firebase/database";
 import { useMachine } from "@xstate/react";
 import { ConjectureEditorMachine } from "../../machines/conjectureEditorMachine";
 
@@ -163,6 +163,26 @@ const ConjectureModule = (props) => {
               .catch((error) => {
                 console.error('Error getting conjecture data: ', error);
               });
+          }}
+        />
+        <RectButton
+          height={height * 0.13}
+          width={width * 0.26}
+          x={width * 0.35}
+          y={height * 0.93}
+          color={black}
+          fontSize={width * 0.015}
+          fontColor={white}
+          text={"TEST Pose UUID"}
+          fontWeight={800}
+          callback={() => {
+            const UUID = "15ff9cc4-f39d-4db9-be04-bcad5907f876"; // nates user id
+            getPoseDataByConjUUID(UUID).then((poseData) => {
+              console.log('Pose Data:', poseData);
+            }).catch((error) => {
+              console.error('Error getting pose data: ', error);
+            }
+            );
           }}
         />
 
