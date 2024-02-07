@@ -5,7 +5,7 @@ import { TextStyle } from "@pixi/text";
 import { yellow, blue, green, white, red } from "../utils/colors";
 
 const Home = (props) => {
-  const { height, width, startCallback, editCallback, conjectureCallback, logoutCallback } = props;
+  const { height, width, startCallback, editCallback, conjectureCallback, logoutCallback, curricularCallback } = props;
   return (
     <>
       <Background height={height} width={width} />
@@ -55,7 +55,7 @@ const Home = (props) => {
         fontColor={white}
         text={"Curricular Content Editor"}
         fontWeight={800}
-        callback={logoutCallback}
+        callback={curricularCallback}
       />
       <Text
         text={"Hidden Village"}
