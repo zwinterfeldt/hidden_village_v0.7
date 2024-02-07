@@ -11,7 +11,13 @@ export const StoryMachine = createMachine({
         TOGGLE: "playing",  // move to game
         CONJECT: "conjecture", // move to conjecture editor
         AUTHOR: "edit", // move to poseauthoring
+        TEST: "test", // move to test
       },
+    },
+    test: {
+      on: {
+        HOME: "ready", // move to home
+      }
     },
     playing: {},
     conjecture: {
