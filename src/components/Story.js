@@ -128,7 +128,6 @@ const Story = () => {
           <TestModule
             width={width}
             height={height}
-            poseData={poseData}
             columnDimensions={columnDimensions}
             rowDimensions={rowDimensions}
             mainCallback={() => send("HOME")}  // goes to the Conjecture Module
