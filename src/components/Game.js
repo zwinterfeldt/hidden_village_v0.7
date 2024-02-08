@@ -9,10 +9,7 @@ import { useMachine, useSelector } from "@xstate/react";
 import GameMachine from "../machines/gameMachine.js";
 import Intervention from "./Intervention.js";
 
-console.log("cheese");
 const reorder = (array, indices) => {
-  console.log("fartsniffer");
-
   return indices.map((idx) => array[idx - 1]);
 };
 
@@ -29,7 +26,6 @@ const selectCurrentConjectureIdx = (state) =>
   state.context.currentConjectureIdx;
 
 const Game = (props) => {
-  console.log("fart");
 
   const { columnDimensions, rowDimensions, poseData, height, width } = props;
   const [chapterConjecture, setChapterConjecture] = useState([]);
@@ -41,8 +37,6 @@ const Game = (props) => {
   const currentConjectureIdx = useSelector(service, selectCurrentConjectureIdx);
 
   useEffect(() => {
-  console.log("faasdasdasdasdasdasdrt");
-
     const numConjectures = conjectures.length;
     const latinSquare = new Latin(numConjectures);
     const queryParams = new URLSearchParams(window.location.search);
@@ -67,8 +61,6 @@ const Game = (props) => {
   }, []);
 
   useEffect(() => {
-  console.log("faasdasdasdasdassdafasdfasddasdrt");
-
     setChapterConjecture(allConjectures[currentConjectureIdx]);
     // since allConjectures is also set asyncronously, monitor
     // allConjectures and currentConjectureIdx to update chapterConjecture
