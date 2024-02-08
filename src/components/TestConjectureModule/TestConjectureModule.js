@@ -8,8 +8,10 @@ import RectButton from "../RectButton";
 import { getConjectureDataByUUID } from "../../firebase/database";
 
 import React, { useState, useEffect } from 'react';
+import { Container } from "postcss";
 
 // import { TestConjectureMachine } from "../../machines/TestConjectureMachine";
+
 
 
 export const getPoseDataByConjectureUUID = async (UUID) => {
@@ -38,10 +40,10 @@ export const getPoseDataByConjectureUUID = async (UUID) => {
 };
 
 // HELPER FUNCTION: return the conjecture key
-export const getConjectureKeyByConjectureData = async (conjectureData) => {
+export const getConjectureKeyByConjectureData = (conjectureData) => {
     try {
         let conjectureKey;
-
+        console.log(conjectureData);
         for (const key in conjectureData) {
             if (key.startsWith('Conjecture')) {
                 conjectureKey = key;
@@ -58,42 +60,49 @@ export const getConjectureKeyByConjectureData = async (conjectureData) => {
 
 
 
-
-
 const TestConjectureModule = (props) => {
     const { height, width, columnDimensions, rowDimensions, editCallback, mainCallback } = props;
     // const [state, send] = useMachine(TestConjectureMachine);
+    const [titleText, setTitleText] = useState("Loading");
 
-    // const [conjectureData, setConjectureData] = useState(null);
-    // const [conjectureKey, setConjectureKey] = useState(null);
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //     const UUID = "15ff9cc4-f39d-4db9-be04-bcad5907f876";
+    const [conjectureData, setConjectureData] = useState(null);
+    const [conjectureKey, setConjectureKey] = useState(null);
+    useEffect(() => {
+        const fetchData = async () => {
+        const UUID = "15ff9cc4-f39d-4db9-be04-bcad5907f876";
 
-    //     try {
-    //         const data = await getConjectureDataByUUID(UUID);
-    //         const key = getConjectureKeyByConjectureData(data);
+        try {
+            const data = await getConjectureDataByUUID(UUID);
+            const key = getConjectureKeyByConjectureData(data);
+            console.log(data)
+            console.log(key)
+            setConjectureData(data);
+            setConjectureKey(key);
+        } catch (error) {
+            console.error('Error getting data: ', error);
+            // Handle the error appropriately
+        }
+        };
 
-    //         setConjectureData(data);
-    //         setConjectureKey(key);
-    //     } catch (error) {
-    //         console.error('Error getting data: ', error);
-    //         // Handle the error appropriately
-    //     }
-    //     };
+        fetchData();
+    }, []); // ONLY RUNS ONCE WHEN THE OBJECT IS ACTIVATED??? That would have been nice to know about 3 hours ago: Okay but it Actually FREKIN RUNNS Multiple times...
 
-    //     fetchData();
-    // }, []); // ONLY RUNS ONCE WHEN THE OBJECT IS ACTIVATED??? That would have been nice to know about 3 hours ago: Okay but it Actually FREKIN RUNNS Multiple times...
-
-
+    useEffect(() => {
+        // This block will run whenever conjectureData or conjectureKey changes
+        console.log("Updated Conjecture Data:", conjectureData);
+        console.log("Updated Conjecture Key:", conjectureKey);
+        if (conjectureKey !== null && conjectureData !== null) {
+            const newText = conjectureData[conjectureKey]["Text Boxes"]["Conjecture Name"];
+            setTitleText(newText);
+        }
+    }, [conjectureData, conjectureKey]);
 
     return(
     <>
         {/* Only render when Conjecture Data and Key are loaded */}
-        {conjectureData && conjectureKey && (
+        {/* {conjectureData && conjectureKey && ( */}
         <Text
-            // text={conjectureData[conjectureKey]["Text Boxes"]["Conjecture Name"]}
-            text = "cheese"
+            text={titleText}
             x={width * 0.5}
             y={height * 0.25}
             style={
@@ -107,7 +116,7 @@ const TestConjectureModule = (props) => {
             })
             }
         />
-        )}
+        {/* )} */}
 
         < Background height={height * 1.1} width={width} />
 
