@@ -134,7 +134,10 @@ const Story = () => {
             height={height}
             columnDimensions={columnDimensions}
             rowDimensions={rowDimensions}
-            mainCallback={() => send("HOME")}  // goes to the Conjecture Module
+            mainCallback={() => {
+              setTestConjectureActivated(false);
+              send("HOME")} 
+            } // goes to the Conjecture Module
           />
         )}
         {state.value === "conjecture" && (
