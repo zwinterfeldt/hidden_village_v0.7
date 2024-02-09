@@ -133,7 +133,7 @@ const TestConjectureModule = (props) => {
             const endPose = conjectureData[conjectureKey]["End Pose"];
             setEndPoseData(endPose);
 
-            setCurrentPoseData(startPose)
+            setCurrentPoseData(endPose)
 
         }
     }, [conjectureData, conjectureKey]); // runs only when conjectureData and ConjectureKey are updated
