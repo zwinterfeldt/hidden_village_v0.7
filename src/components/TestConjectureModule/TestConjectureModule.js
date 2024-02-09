@@ -60,7 +60,6 @@ export const getConjectureKeyByConjectureData = (conjectureData) => {
 };
 
 
-
 const TestConjectureModule = (props) => {
     const { height, width, columnDimensions, rowDimensions, editCallback, mainCallback } = props;
     // const [state, send] = useMachine(TestConjectureMachine);
@@ -73,6 +72,28 @@ const TestConjectureModule = (props) => {
 
     const [conjectureData, setConjectureData] = useState(null);
     const [conjectureKey, setConjectureKey] = useState(null);
+
+    // helper functions
+    const [poseStates, setPoseStates] = useState(["startPose", "intermediatePose", "endPose"]);
+    const [currentPoseStateIndex, setCurrentPoseStateIndex] = useState(0);
+
+    const handleNewPoseButtonClick = () => {
+        // current pose
+        setCurrentPoseStateIndex((prevIndex) => (prevIndex + 1) % poseStates.length);
+
+        // get the enxt pose state. Jankyyyyy
+        const nextPoseState = poseStates[currentPoseStateIndex];
+
+        // Update pose to the next one
+        if (nextPoseState === "startPose") {
+            setCurrentPoseData(startPoseData);
+        } else if (nextPoseState === "intermediatePose") {
+            setCurrentPoseData(intermediatePoseData);
+        } else if (nextPoseState === "endPose") {
+            setCurrentPoseData(endPoseData);
+        }
+    };
+
     useEffect(() => {
         const fetchData = async () => {
         const UUID = "15ff9cc4-f39d-4db9-be04-bcad5907f876";
@@ -199,6 +220,22 @@ const TestConjectureModule = (props) => {
                 );
             }}
         />
+
+        {/* NEXT POSE*/}
+        <RectButton
+            height={height * 0.13}
+            width={width * 0.26}
+            x={width * 0.55}
+            y={height * 0.93}
+            color={black}
+            fontSize={width * 0.015}
+            fontColor={white}
+            text={"NEXT POSE"}
+            fontWeight={800}
+            callback={() => handleNewPoseButtonClick()}
+        />
+
+        
 
     </>
     );
