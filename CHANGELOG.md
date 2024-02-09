@@ -5,12 +5,14 @@ Classes: [ADDED, FIXED, CHANGED, UPDATED, REMOVED]
 ## Update: 2/9/2024 -v0.5.2.2
 ### Test Conjecture Module
 #### Helper Functions 
-- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/8): Get Conjecture Key by Conjecture Data. Give the data, and it will find the key value for the conjecture. This is needed because there is a dynamic name being exported with "Conjecture: " into the database.
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/9): Get Conjecture Key by Conjecture Data. Give the data, and it will find the key value for the conjecture. This is needed because there is a dynamic name being exported with "Conjecture: " into the database.
 #### Functions
-- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/8): TestConjectureModule(), this function is called when the module is opened. It renders the screen, and returns data based on the selected Conjecture. Module's conjecture is currently hardcoded by UUID. TODO - change it so you can send a UUID, to select a pose.
-- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/8): handleNewPoseButtonClick() handles when the user presses the button. Cycles through the start, intermediate, end poses of the conjecture data.
-#### Home Screen Update
-- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/8): a button to go to the test module.
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/9): TestConjectureModule(), this function is called when the module is opened. It renders the screen, and returns data based on the selected Conjecture. Module's conjecture is currently hardcoded by UUID. TODO - change it so you can send a UUID, to select a pose.
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/9): handleNewPoseButtonClick() handles when the user presses the button. Cycles through the start, intermediate, end poses of the conjecture data.
+#### Buttons
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/9): added back button, test pose data retreival and next pose button handler. (To be removed in a later patch)
+#### Home Screen Update For Module
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/9): a button to go to the test module.
 ### Conjecture Database Objects
 #### Database Values
 - [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/6): a UUID to conjectures.
