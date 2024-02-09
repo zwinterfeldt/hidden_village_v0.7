@@ -9,6 +9,7 @@ import { getConjectureDataByUUID } from "../../firebase/database";
 
 import React, { useState, useEffect } from 'react';
 import { Container } from "postcss";
+import { PoseBox } from "./PoseDisplayBox";
 
 // import { TestConjectureMachine } from "../../machines/TestConjectureMachine";
 
@@ -65,6 +66,11 @@ const TestConjectureModule = (props) => {
     // const [state, send] = useMachine(TestConjectureMachine);
     const [titleText, setTitleText] = useState("Loading");
 
+    const [startPoseData, setStartPoseData] = useState(null); // this will probably error out
+    const [intermediatePoseData, setIntermediatePoseData] = useState(null); // this will probably error out
+    const [endPoseData, setEndPoseData] = useState(null); // this will probably error out
+    const [currentPoseData, setCurrentPoseData] = useState(null); // 
+
     const [conjectureData, setConjectureData] = useState(null);
     const [conjectureKey, setConjectureKey] = useState(null);
     useEffect(() => {
@@ -85,40 +91,79 @@ const TestConjectureModule = (props) => {
         };
 
         fetchData();
-    }, []); // ONLY RUNS ONCE WHEN THE OBJECT IS ACTIVATED??? That would have been nice to know about 3 hours ago: Okay but it Actually FREKIN RUNNS Multiple times...
+    }, []); // ONLY RUNS ONCE WHEN THE OBJECT IS ACTIVATED
 
     useEffect(() => {
-        // This block will run whenever conjectureData or conjectureKey changes
+        // Updates the title text of the module
         console.log("Updated Conjecture Data:", conjectureData);
         console.log("Updated Conjecture Key:", conjectureKey);
         if (conjectureKey !== null && conjectureData !== null) {
+            // update the title text
             const newText = conjectureData[conjectureKey]["Text Boxes"]["Conjecture Name"];
             setTitleText(newText);
+
+            // update the start pose
+            const startPose = conjectureData[conjectureKey]["Start Pose"];
+            setStartPoseData(startPose);
+
+            const intermediatePose = conjectureData[conjectureKey]["Intermediate Pose"];
+            setIntermediatePoseData(intermediatePose);
+
+            const endPose = conjectureData[conjectureKey]["End Pose"];
+            setEndPoseData(endPose);
+
+            setCurrentPoseData(startPose)
+
         }
-    }, [conjectureData, conjectureKey]);
+    }, [conjectureData, conjectureKey]); // runs only when conjectureData and ConjectureKey are updated
+
+    const [currentPose, setCurrentPose] = useState(null);
+    const [currentPoseTolerence, setCurrentPoseTolerance] = useState(null);
+    const [currentPoseText, setCurrentPoseText] = useState(null); // used for saying what the pose is? Start..
+    useEffect(() => {
+        // when current pose is updated
+        if (currentPoseData != null) {
+            setCurrentPose(currentPoseData["poseData"]);
+            setCurrentPoseTolerance(currentPoseData["tolerance"]);
+            setCurrentPoseText(currentPoseData["state"]);
+        }
+
+    }, [currentPoseData]);
+
 
     return(
     <>
+        < Background height={height * 1.1} width={width} />
         {/* Only render when Conjecture Data and Key are loaded */}
+        {currentPose != null && (
+            <PoseBox 
+                height={height * 0.5} 
+                width={width * 0.5} 
+                x={5} 
+                y={4.6}
+                text={currentPoseText}
+                pose={currentPose}
+                tolerance={currentPoseTolerence}
+                similarityScores={null} // for now because we just want to display the image
+            />
+        )}
         {/* {conjectureData && conjectureKey && ( */}
         <Text
-            text={titleText}
-            x={width * 0.5}
-            y={height * 0.25}
+            text={`Conjecture: ${titleText}`}
+            x={width * .12}
+            y={height * 0.01}
             style={
             new TextStyle({
                 align: "center",
                 fontFamily: "Futura",
-                fontSize: 146,
+                fontSize: 100,
                 fontWeight: 800,
-                fill: [blue],
+                fill: [orange],
                 letterSpacing: -5,
             })
             }
         />
         {/* )} */}
-
-        < Background height={height * 1.1} width={width} />
 
         {/* Back Button */}
         <RectButton
