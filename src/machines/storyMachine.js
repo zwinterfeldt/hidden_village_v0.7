@@ -11,6 +11,7 @@ export const StoryMachine = createMachine({
         TOGGLE: "playing",  // move to game
         CONJECT: "conjecture", // move to conjecture editor
         AUTHOR: "edit", // move to poseauthoring
+        CURRICULAR: "curricular", // move to the curricular content editor
       },
     },
     playing: {},
@@ -23,6 +24,12 @@ export const StoryMachine = createMachine({
     edit: {
       on: {
         CONJECT: "conjecture", // move to conjecture editor
+      }
+    },
+    curricular: {
+      on: {
+        AUTHOR: "edit", // move to poseauthoring
+        HOME: "ready", // move to home
       }
     },
   },
