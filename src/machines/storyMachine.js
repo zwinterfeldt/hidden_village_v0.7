@@ -28,7 +28,7 @@ export const StoryMachine = createMachine({
     },
     curricular: {
       on: {
-        AUTHOR: "edit", // move to poseauthoring
+        CONJECT: "conjecture", // move to conjecture editor
         HOME: "ready", // move to home
       }
     },

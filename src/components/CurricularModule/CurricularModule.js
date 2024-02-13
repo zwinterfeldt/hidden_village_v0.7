@@ -3,7 +3,7 @@ import { green, neonGreen, black, blue, white, pink, orange, red, transparent, t
 import Button from "../Button";
 import RectButton from "../RectButton";
 import InputBox from "../InputBox";
-import { ConjectureBox, KeywordsBox, NameBox, PINBox } from "../ConjectureModule/ConjectureModuleBoxes";
+import { ConjectureBox, KeywordsBox, NameBox, PINBox } from "../CurricularModule/CurricularModuleBoxes";
 import { EndBox, IntermediateBox, StartBox } from "../PoseAuth/PoseAuthoringBoxes";
 //import { writeToDatabaseConjecture, writeToDatabaseDraft } from "../../firebase/database";
 import { useMachine } from "@xstate/react";
@@ -24,10 +24,10 @@ const CurricularModule = (props) => {
         <Button
           height={height * 0.12}
           width={width * 0.0950}
-          x={width * 0.17}
-          y={height * 0.42}
+          x={width * 0.85}
+          y={height * 0.15}
           color={blue}
-          fontSize={21}
+          fontSize={18}
           fontColor={white}
           text={"Conjecture Editor"}
           fontWeight={800}
