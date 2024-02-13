@@ -16,6 +16,7 @@ import PoseAuthoring from "./PoseAuth/PoseAuthoring.js";
 import ConjectureModule from "./ConjectureModule/ConjectureModule.js";
 import CurricularModule from "./CurricularModule/CurricularModule.js";
 import TestConjectureModule from "./TestConjectureModule/TestConjectureModule.js";
+import UserManagementModule from "./AdminHomeModule/UserManagementModule.js";
 
 const [
   numRows,
@@ -128,6 +129,10 @@ const Story = () => {
               send("TEST");
               console.log("LOL");}
               } // goes to the Test Module
+            UserManagementCallback={() => {
+              send("userManagementSettings");
+              console.log("User Management");}
+              } // goes to userManagement
           />
         )}
         {state.value === "curricular" && (
@@ -181,6 +186,20 @@ const Story = () => {
             width={width}
           />
         )}
+
+
+
+        {state.value === "userManagementSettings" && (
+          <UserManagementModule
+            width={width}
+            height={height}
+            mainCallback={() => send("HOME")} // goes to Home
+        />
+        )}
+
+
+
+
       </Stage>
     </>
   );
