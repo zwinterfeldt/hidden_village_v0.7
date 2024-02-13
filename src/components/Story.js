@@ -132,6 +132,10 @@ const Story = () => {
         )}
         {state.value === "curricular" && (
           <CurricularModule
+            width={width}
+            height={height}
+            columnDimensions={columnDimensions}
+            rowDimensions={rowDimensions}
             conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
             mainCallback={() => send("HOME")} // goes to Home
           />
