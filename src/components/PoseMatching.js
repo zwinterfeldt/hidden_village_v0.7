@@ -25,7 +25,12 @@ const PoseMatching = (props) => {
   const [poseMatchData, setPoseMatchData] = useState({});
   const [poseSimilarity, setPoseSimilarity] = useState([]);
   const textColor = white;
-
+  const matchConfig = [
+    {"segment": "RIGHT_BICEP", "data": "poseLandmarks"}, 
+    {"segment": "RIGHT_FOREARM", "data": "poseLandmarks"},
+    {"segment": "LEFT_BICEP", "data": "poseLandmarks"}, 
+    {"segment": "LEFT_FOREARM", "data": "poseLandmarks"}
+  ]
   // on mount, create an array of the poses that will be used in the tutorial
   useEffect(() => {
     setPoses(posesToMatch);
@@ -41,17 +46,17 @@ const PoseMatching = (props) => {
         setFirstPose(false);
       }
       const currentPoseData = poses.shift();
-      const matchData = currentPoseData.matchingConfig.map((config) => {
+      const matchData = matchConfig.map((config) => {
         return {
           ...config,
           landmarks: matchSegmentToLandmarks(
             config,
-            currentPoseData.landmarks,
+            currentPoseData,
             modelColumn
           ),
         };
       });
-      setCurrentPose(enrichLandmarks(currentPoseData.landmarks));
+      setCurrentPose(enrichLandmarks(currentPoseData));
       setPoseMatchData(matchData);
       setPoses(poses);
     }
@@ -158,7 +163,7 @@ const PoseMatching = (props) => {
         <Pose
           poseData={props.poseData}
           colAttr={playerColumn}
-          similarityScores={poseSimilarity}
+          similarityScores={poseSimilarity}   
         />
       </ErrorBoundary>
     </Container>

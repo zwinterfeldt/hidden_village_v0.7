@@ -12,9 +12,15 @@ export const StoryMachine = createMachine({
         CONJECT: "conjecture", // move to conjecture editor
         AUTHOR: "edit", // move to poseauthoring
         TEST: "test", // move to test
+        POSE: "pose", // move to pose
       },
     },
     test: {
+      on: {
+        HOME: "ready", // move to home
+      }
+    },
+    pose: {
       on: {
         HOME: "ready", // move to home
       }

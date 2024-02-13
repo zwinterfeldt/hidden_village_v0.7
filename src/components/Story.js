@@ -15,6 +15,7 @@ import "firebase/compat/auth";
 import PoseAuthoring from "./PoseAuth/PoseAuthoring.js";
 import ConjectureModule from "./ConjectureModule/ConjectureModule.js";
 import TestConjectureModule from "./TestConjectureModule/TestConjectureModule.js";
+import ConjecturePoseMatch from "./TestConjectureModule/ConjecturePoseMatch.js";
 
 const [
   numRows,
@@ -124,14 +125,29 @@ const Story = () => {
             logoutCallback={() => firebase.auth().signOut()} // logs the user out
             testCallback={() => {
               send("TEST");
-              console.log("LOL");
             }} // goes to the Test Module
+            poseCallback={() => send("POSE")} // goes to the Pose tester
           />
         )}
+        {state.value === "pose" && (
+          <ConjecturePoseMatch
+          
+            height={height}
+            width={width}
+            columnDimensions={columnDimensions}
+            rowDimensions={rowDimensions}
+            editCallback={() => send("AUTHOR")} // goes to the Pose Sequence Editor
+            mainCallback={() => send("HOME")} // goes to Home
+            poseData={poseData}
+            UUID={"b56e115e-2efa-40e0-9c37-72b079907653"}
+          />
+        )
+        }
         {state.value === "test" && (
           <TestConjectureModule
             width={width}
             height={height}
+            poseData={poseData}
             columnDimensions={columnDimensions}
             rowDimensions={rowDimensions}
             mainCallback={() => {
