@@ -12,7 +12,14 @@ export const StoryMachine = createMachine({
         CONJECT: "conjecture", // move to conjecture editor
         AUTHOR: "edit", // move to poseauthoring
         CURRICULAR: "curricular", // move to the curricular content editor
+        TEST: "test", // move to test
+
       },
+    },
+    test: {
+      on: {
+        HOME: "ready", // move to home
+      }
     },
     playing: {},
     conjecture: {
