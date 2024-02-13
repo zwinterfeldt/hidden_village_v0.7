@@ -116,7 +116,10 @@ const PoseMatching = (props) => {
   // next state. If not, stay in the same state
   useEffect(() => {
     if (!firstPose) {
-      const similarityThreshold = 45;
+      let similarityThreshold = 45;
+      if (currentPose.tolerance != null) {
+        similarityThreshold = currentPose.tolerance;
+      }
       const similarityScore = poseSimilarity.reduce(
         (previousValue, currentValue) => {
           // all segments need to be over the threshold -- will only return true if

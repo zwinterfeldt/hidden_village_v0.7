@@ -34,6 +34,14 @@ const ConjecturePoseMatch = (props) => {
   const [conjectureData, setConjectureData] = useState(null);
   const [conjectureKey, setConjectureKey] = useState(null);
   const [poses, setPoses] = useState(null);
+
+  const getTolerance = (poseData) => {  
+    const tolerance = poseData['tolerance'] || null;
+    if (tolerance != null){
+      return parseInt(tolerance.replace('%', ''));
+    }
+    return null;
+  }
   useEffect(() => {
     const fetchData = async () => {
     try {
@@ -52,10 +60,19 @@ const ConjecturePoseMatch = (props) => {
 
 useEffect(() => {
   if (conjectureData != null && conjectureKey != null) {
-    const startPose = conjectureData[conjectureKey]['Start Pose']['poseData'];
-    const intermediatePose = conjectureData[conjectureKey]['Intermediate Pose']['poseData'];
-    const endPose = conjectureData[conjectureKey]['End Pose']['poseData'];
-    const arr = [JSON.parse(startPose), JSON.parse(intermediatePose), JSON.parse(endPose)];
+    const startPose = JSON.parse(conjectureData[conjectureKey]['Start Pose']['poseData']);
+    const intermediatePose = JSON.parse(conjectureData[conjectureKey]['Intermediate Pose']['poseData']);
+    const endPose = JSON.parse(conjectureData[conjectureKey]['End Pose']['poseData']);
+
+    const startTolerance = getTolerance(conjectureData[conjectureKey]['Start Pose']);
+    const intermediateTolerance = getTolerance(conjectureData[conjectureKey]['Intermediate Pose']);
+    const endTolerance = getTolerance(conjectureData[conjectureKey]['End Pose']);
+
+    startPose["tolerance"] = startTolerance;
+    intermediatePose["tolerance"] = intermediateTolerance;
+    endPose["tolerance"] = endTolerance;
+
+    const arr = [startPose, intermediatePose, endPose];
     setPoses(arr);
   }
 
