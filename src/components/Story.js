@@ -14,6 +14,7 @@ import firebase from "firebase/compat";
 import "firebase/compat/auth";
 import PoseAuthoring from "./PoseAuth/PoseAuthoring.js";
 import ConjectureModule from "./ConjectureModule/ConjectureModule.js";
+import TestConjectureModule from "./TestConjectureModule/TestConjectureModule.js";
 
 const [
   numRows,
@@ -121,6 +122,22 @@ const Story = () => {
             startCallback={() => send("TOGGLE")}  // goes to the game
             conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
             logoutCallback={() => firebase.auth().signOut()} // logs the user out
+            testCallback={() => {
+              send("TEST");
+              console.log("LOL");
+            }} // goes to the Test Module
+          />
+        )}
+        {state.value === "test" && (
+          <TestConjectureModule
+            width={width}
+            height={height}
+            columnDimensions={columnDimensions}
+            rowDimensions={rowDimensions}
+            mainCallback={() => {
+              // setTestConjectureActivated(false);
+              send("HOME")} 
+            } // goes to the Conjecture Module
           />
         )}
         {state.value === "conjecture" && (

@@ -5,7 +5,7 @@ import { TextStyle } from "@pixi/text";
 import { yellow, blue, green, white, red } from "../utils/colors";
 
 const Home = (props) => {
-  const { height, width, startCallback, editCallback, conjectureCallback, logoutCallback } = props;
+  const { height, width, startCallback, editCallback, conjectureCallback, logoutCallback, testCallback } = props;
   return (
     <>
       <Background height={height} width={width} />
@@ -20,6 +20,18 @@ const Home = (props) => {
         text={"Start"}
         fontWeight={800}
         callback={startCallback}
+      />
+      <Button
+        height={height * 0.205}
+        width={width * 0.105}
+        x={width * 0.15}
+        y={height * 0.75}
+        color={green}
+        fontSize={18}
+        fontColor={white}
+        text={"Test"}
+        fontWeight={800}
+        callback={testCallback}
       />
       <Button
         height={height * 0.205}
