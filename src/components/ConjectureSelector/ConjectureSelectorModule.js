@@ -45,7 +45,6 @@ function drawConjectureList(xMultiplier, yMultiplier, fontSizeMultiplier, totalW
           fontColor={blue}
           text={"Conjecture: " + conjecture["Text Boxes"]["Conjecture Name"]}
           fontWeight="bold"
-          //callback={() => conjectureCallback(conjecture["Text Boxes"]["Conjecture Name"])}
           callback = {conjectureCallback}
         />
       ))}

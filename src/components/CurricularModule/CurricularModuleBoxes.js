@@ -87,44 +87,6 @@ function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, t
   );
 }
 
-
-// function conjectureComponent(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) {
-//   const [textValue, setTextValue] = useState(null);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const result = await getConjectureList();
-//         setTextValue(result[2]["Text Boxes"]["Conjecture Name"]);
-//       } catch (error) {
-//         console.error('Error fetching data:', error);
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-//   return (
-//     <Text
-//       key={textValue}
-//       text={textValue}
-//       x={totalWidth * xMultiplier}
-//       y={totalHeight * yMultiplier}
-//       style={
-//         new TextStyle({
-//           align: "left",
-//           fontFamily: "Arial",
-//           fontSize: totalWidth * fontSizeMultiplier,
-//           fontWeight: "bold",
-//           fill: [black],
-//         })
-//       }
-//     />
-//   );
-// }
-
-
-  
 export const CurricularContentEditor = (props) => {
   const { height, width } = props;
 
@@ -140,7 +102,6 @@ export const CurricularContentEditor = (props) => {
       {createTextElement("Pin:", 0.690, 0.105, 0.018, width, height)}
       {createTextElement("AuthorId:", 0.480, 0.105, 0.018, width, height)}
       {createTextElement("CurricularName:",0.110, 0.100, 0.018, width, height)}
-      {/* {conjectureComponent(0.5, 0.5, 0.018, width, height)} */}
     </>
   );
 };
