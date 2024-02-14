@@ -375,3 +375,31 @@ export const getConjectureDataByPIN = async (PIN) => {
     throw error; // this is an actual bad thing
   }
 };
+
+// get a list of all the conjecture UUIDs
+export const getConjectureList = async () => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Final');
+    // query to find data
+    const q = query(dbRef, orderByChild('AuthorID'));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      // get all the conjectures in an array
+      const conjectures = [];
+      querySnapshot.forEach((conjectureSnapshot) => {
+        conjectures.push(conjectureSnapshot.val());
+      });
+      console.log(conjectures);
+      return conjectures; // return the data if its good
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
