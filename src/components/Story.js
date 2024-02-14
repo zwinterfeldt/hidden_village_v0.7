@@ -17,6 +17,7 @@ import ConjectureModule from "./ConjectureModule/ConjectureModule.js";
 import CurricularModule from "./CurricularModule/CurricularModule.js";
 import TestConjectureModule from "./TestConjectureModule/TestConjectureModule.js";
 import UserManagementModule from "./AdminHomeModule/UserManagementModule.js";
+import NewUserModule from "./AdminHomeModule/NewUserModule.js";
 
 const [
   numRows,
@@ -189,14 +190,25 @@ const Story = () => {
 
 
 
+      {state.value === "ADDNEWUSER" && (
+          <NewUserModule
+            width={width}
+            height={height}
+            UserManagementCallback={() => {
+              send("userManagementSettings");
+              console.log("User Management");}
+              }// goes to user management
+        />
+        )}
+
         {state.value === "userManagementSettings" && (
           <UserManagementModule
             width={width}
             height={height}
             mainCallback={() => send("HOME")} // goes to Home
+            addNewUserCallback={() => send("ADDNEWUSER")} // goes to add new user section
         />
         )}
-
 
 
 

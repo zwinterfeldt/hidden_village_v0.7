@@ -124,20 +124,6 @@ const ConjectureModule = (props) => {
           callback={ () => writeToDatabaseConjecture() } // publish to database
         />
 
-        {/* // remove when commiting // */}
-        <RectButton
-          height={height * 0.13}
-          width={width * 0.26}
-          x={width * 0.85}
-          y={height * 0.93}
-          color={blue}
-          fontSize={width * 0.015}
-          fontColor={white}
-          text={"NEW USER"}
-          fontWeight={800}
-          callback={ () => writeToDatabaseNewUser() } // publish to database
-        />
-
         {/* // REMOVE the get user role*/}
         <RectButton
           height={height * 0.13}

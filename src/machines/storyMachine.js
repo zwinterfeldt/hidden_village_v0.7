@@ -13,7 +13,8 @@ export const StoryMachine = createMachine({
         AUTHOR: "edit", // move to poseauthoring
         CURRICULAR: "curricular", // move to the curricular content editor
         TEST: "test", // move to test
-        userManagementSettings : "userManagementSettings"
+        userManagementSettings : "userManagementSettings",
+        ADDNEWUSER: "ADDNEWUSER"
 
       },
     },
@@ -42,7 +43,13 @@ export const StoryMachine = createMachine({
     },
     userManagementSettings:{
       on:{
-        HOME: "ready", // move to home
+        HOME: "ready",
+        ADDNEWUSER: "ADDNEWUSER" // move to addnewuser screen
+      }
+    },
+    ADDNEWUSER:{
+      on:{
+        userManagementSettings : "userManagementSettings" // go back to user settings screen
       }
     }
   },

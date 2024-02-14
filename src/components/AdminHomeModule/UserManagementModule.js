@@ -6,16 +6,17 @@ import { green, neonGreen, black, blue, white, pink, orange, red, transparent, t
 import Button from "../Button";
 import RectButton from "../RectButton";
 import { getConjectureDataByUUID } from "../../firebase/database";
-import {getUsersByOrganizationFromDatabase} from "../../firebase/userDatabase";
+import {getUsersByOrganizationFromDatabase, writeToDatabaseNewUser} from "../../firebase/userDatabase";
 
 import UserList from './UserList';
 
 
 import React, { useState, useEffect } from 'react';
+import NewUserModule from "./NewUserModule";
 
 
 const UserManagementModule = (props) => {
-    const { height, width, mainCallback } = props;
+    const { height, width, mainCallback, addNewUserCallback } = props;
     const [usersList, setUsersList] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -69,9 +70,9 @@ const UserManagementModule = (props) => {
             width={width * 0.26}
             x={width * 0.4}
             y={height * 0.93}
-            color={["green"]}  // Replace with your color definition
+            color={["green"]} 
             fontSize={width * 0.015}
-            fontColor={["white"]}  // Replace with your color definition
+            fontColor={["white"]} 
             text={loading ? "Refreshing..." : "Refresh Users"}
             fontWeight={800}
             callback={refreshUserList}
@@ -99,6 +100,20 @@ const UserManagementModule = (props) => {
             text={"Back Button"}
             fontWeight={800}
             callback={mainCallback}
+        />
+
+        {/* // new user // */}
+        <RectButton
+            height={height * 0.13}
+            width={width * 0.26}
+            x={width * 0.85}
+            y={height * 0.93}
+            color={blue}
+            fontSize={width * 0.015}
+            fontColor={white}
+            text={"NEW USER"}
+            fontWeight={800}
+            callback={addNewUserCallback}
         />
     </>
     );
