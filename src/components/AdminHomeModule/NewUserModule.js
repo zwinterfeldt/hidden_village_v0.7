@@ -1,37 +1,84 @@
 import React, { useState } from 'react';
 import { Container, Text, TextInput, Select, Graphics, lineStyle, beginFill, drawRect, endFill } from "@inlet/react-pixi"
 import Background from "../Background";
+import RectButton from '../RectButton';
+import { green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
+import {writeNewUserToDatabase} from "../../firebase/userDatabase"
+
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword } from "firebase/auth";
+
+
 
 const NewUserModule = (props) => {
     const {height, width, UserManagementCallback} = props
     console.log("New User Module Activated")
-    const [email, setEmail] = useState('');
-    const [selectedRole, setSelectedRole] = useState('Teacher'); // Default selection
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
 
-        // Perform form validation (optional)
-        // Example:
-        if (!email.trim()) {
-            alert('Please enter an email address.');
-            return;
-        }
+    const SubmitUser = (props) => {
 
-        // Process user input (e.g., send to server)
-        console.log('Submitted form data:', { email, selectedRole });
-
-        // Clear form or reset state as needed
-    };
+    }
 
     return (
         <>
         <Background height={height * 1.1} width={width} />
         
         <Container>
-            <Text text="Add New User">{/* Add styling */}</Text>
+            <Text text="Add New User" />
 
         </Container>
+
+        {/* // Submit Button // */}
+        <RectButton
+            height={height * 0.13}
+            width={width * 0.26}
+            x={width * 0.15}
+            y={height * 0.93}
+            color={black}
+            fontSize={width * 0.015}
+            fontColor={white}
+            text={"Back"}
+            fontWeight={800}
+            callback={UserManagementCallback}
+        />
+        {/* // Back Button // */}
+        <RectButton
+            height={height * 0.13}
+            width={width * 0.26}
+            x={width * 0.15}
+            y={height * 0.93}
+            color={black}
+            fontSize={width * 0.015}
+            fontColor={white}
+            text={"Back"}
+            fontWeight={800}
+            callback={UserManagementCallback}
+        />
+
+        {/* // TEST Button // */}
+        <RectButton
+            height={height * 0.13}
+            width={width * 0.26}
+            x={width * 0.35}
+            y={height * 0.93}
+            color={black}
+            fontSize={width * 0.015}
+            fontColor={white}
+            text={"Test New User"}
+            fontWeight={800}
+            callback={
+                console.log("adding User")
+                createUserWithEmailAndPassword("nate4228@hotmail.com", "welcome")
+                .then((userCredential) => {
+                    console.log("User created succsefully")
+            
+                    // User created successfully
+                    const user = userCredential.user;
+                })
+                .catch((error) => {
+                    // Handle errors (e.g., invalid email, weak password)
+                });
+            }
+        />
     </>
     );
 };

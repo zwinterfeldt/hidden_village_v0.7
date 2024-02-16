@@ -1,5 +1,5 @@
 import { ref, push, getDatabase, set, query, equalTo, get, orderByChild } from "firebase/database";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword } from "firebase/auth";
 const db = getDatabase();
 
 // User Id functionality will be added in a different PR
@@ -21,7 +21,27 @@ const UserPermissions = {
     Student: 'Student',
 };
 
-export const writeToDatabaseNewUser = async () => {
+export const writeNewUserToDatabase = async (props) => {
+    // Create a new date object to get a timestamp
+    const dateObj = new Date();
+    const timestamp = dateObj.toISOString();
+
+    // const { userEmailTest } = props;
+    // console.log("adding User")
+    // createUserWithEmailAndPassword("nate4228@hotmail.com", "welcome")
+    // .then((userCredential) => {
+    //     console.log("User created succsefully")
+
+    //     // User created successfully
+    //     const user = userCredential.user;
+    // })
+    // .catch((error) => {
+    //     // Handle errors (e.g., invalid email, weak password)
+    // });
+
+};
+
+export const writeCurrentUserToDatabaseNewUser = async () => {
     // Create a new date object to get a timestamp
     const dateObj = new Date();
     const timestamp = dateObj.toISOString();

@@ -6,7 +6,7 @@ import { green, neonGreen, black, blue, white, pink, orange, red, transparent, t
 import Button from "../Button";
 import RectButton from "../RectButton";
 import { getConjectureDataByUUID } from "../../firebase/database";
-import {getUsersByOrganizationFromDatabase, writeToDatabaseNewUser} from "../../firebase/userDatabase";
+import {getUsersByOrganizationFromDatabase, writeCurrentUserToDatabaseNewUser} from "../../firebase/userDatabase";
 
 import UserList from './UserList';
 
