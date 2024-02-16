@@ -8,7 +8,7 @@ import { green, neonGreen, black, blue, white, pink, orange, red, transparent, t
 
 const UserObject = (props) => {
     const { width, height, x, y, username,key,index,role} = props;
-    console.log(role)
+    // console.log(role)
     return (
         <Container>
             <Text

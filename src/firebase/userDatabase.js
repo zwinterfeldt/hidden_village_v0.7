@@ -22,7 +22,7 @@ const UserPermissions = {
     Student: 'Student',
 };
 
-export const writeNewUserToDatabase = async (props) => {
+export const writeNewUserToDatabase = async (userEmail, userRole) => {
     // Create a new date object to get a timestamp
     const dateObj = new Date();
     const timestamp = dateObj.toISOString();
@@ -35,67 +35,50 @@ export const writeNewUserToDatabase = async (props) => {
     // Log information about the current user, if one exists
     const currentUser = auth.currentUser;
 
-    if (currentUser) {
-        console.log("Current User UID:", currentUser.uid);
-        console.log("Current User email:", currentUser.email);
-        console.log("Current User display name:", currentUser.displayName);
-    } else {
-        console.log("No current user");
-    };
 
-    console.log("New User");
+    await createUserWithEmailAndPassword(auth, userEmail, "welcome")
+    .then((userCredential) => {
 
-    // await createUserWithEmailAndPassword(auth,"nate4228@hotmail.com", "welcome")
-    // .then((userCredential) => {
+        console.log("User created successfully:", userCredential.user);
 
-    //     console.log("User created successfully:", userCredential.user);
+        // Additional user information
+        const user = userCredential.user;
+        console.log("New User UID:", user.uid);
+        console.log("New User email:", user.email);
+        console.log("New User display name:", user.displayName);
 
-    //     // Additional user information
-    //     const user = userCredential.user;
-    //     console.log("New User UID:", user.uid);
-    //     console.log("New User email:", user.email);
-    //     console.log("New User display name:", user.displayName);
+        const newID = user.uid;
+        const newEmail = user.email;
+        const newRole = userRole;
+        // lets addd user to the realtime database now
+    
+        writeCurrentUserToDatabaseNewUser(newID, newEmail, newRole);
+        alert("User Created")
 
-    //     alert("User Created")
-    // })
-    // .catch((error) => {
-    //     console.error("Error creating auth user", error);
-    //     // Handle errors (e.g., invalid email, weak password)
-    //     alert("Email already in the database")
-    // });
 
-    await importUsers
+    })
+    .catch((error) => {
+        console.error("Error creating auth user", error);
+        // Handle errors (e.g., invalid email, weak password)
+        alert("Error Creating the User")
+    });
 
-    console.log("Current User 2");
-
-    // Get the Firebase authentication instance
-    const auth_2 = getAuth();
-
-    // Log information about the current user, if one exists
-    const currentUser_2 = auth_2.currentUser;
-
-    if (currentUser_2) {
-        console.log("Current User UID:", currentUser_2.uid);
-        console.log("Current User email:", currentUser_2.email);
-        console.log("Current User display name:", currentUser_2.displayName);
-    } else {
-        console.log("No current user");
-    };
 
 
 };
 
-export const writeCurrentUserToDatabaseNewUser = async () => {
+export const writeCurrentUserToDatabaseNewUser = async (newID,newEmail,newRole) => {
     // Create a new date object to get a timestamp
     const dateObj = new Date();
     const timestamp = dateObj.toISOString();
 
+    userId = newID;
     console.log('User ID:', userId);
 
-    const userEmail = auth.currentUser.email;
+    const userEmail = newEmail;
     console.log(`User Email: ${userEmail}`)
 
-    const userRole = UserPermissions.Teacher
+    const userRole = newRole;
     console.log(`User Role: ${userRole}`)
 
     const userOrg = "Minnesota State University, Mankato"
@@ -114,7 +97,7 @@ export const writeCurrentUserToDatabaseNewUser = async () => {
 
     if (userSnapshot.val() !== null) {
         // User already exists, do not add again
-        alert("User already exists in the database.");
+        // alert("User already exists in the database.");
         return false;
     }
 
@@ -130,7 +113,7 @@ export const writeCurrentUserToDatabaseNewUser = async () => {
     ];
     return Promise.all(promises)
     .then(() => {
-        alert("User successfully published to database.");
+        // alert("User successfully published to database.");
         return true;
     })
     .catch(() => {

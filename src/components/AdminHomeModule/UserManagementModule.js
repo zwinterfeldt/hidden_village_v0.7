@@ -35,6 +35,10 @@ const UserManagementModule = (props) => {
         }
     }
 
+    useEffect(() => {
+        refreshUserList();
+    }, []);
+
     const handleEdit = (user) => {
         // Handle edit action for the user
         console.log('Editing user:', user);

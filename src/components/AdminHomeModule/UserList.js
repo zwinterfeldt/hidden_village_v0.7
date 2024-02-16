@@ -8,7 +8,7 @@ import { green, neonGreen, black, blue, white, pink, orange, red, transparent, t
 
 const UserList = (props) => {
     const { width, height, x, y, users} = props;
-    console.log(users)
+    // console.log(users)
     return (
         <Container 
             x={x*.3} 

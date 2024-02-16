@@ -25,7 +25,8 @@ const Home = (props) => {
           setUserName(name);
           console.log('User found. Set user name.');
         } else if (name === "USER NOT FOUND") {
-          console.log('User not found. Stop trying.');
+          console.log('User not found. Stop trying but we will continue.');
+          fetchData();  // Retry the fetch
         } else {
           console.log('User name is null. Retrying...');
           fetchData();  // Retry the fetch
