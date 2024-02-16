@@ -16,6 +16,7 @@ import PoseAuthoring from "./PoseAuth/PoseAuthoring.js";
 import ConjectureModule from "./ConjectureModule/ConjectureModule.js";
 import CurricularModule from "./CurricularModule/CurricularModule.js";
 import TestConjectureModule from "./TestConjectureModule/TestConjectureModule.js";
+import ConjecturePoseMatch from "./TestConjectureModule/ConjecturePoseMatch.js";
 
 const [
   numRows,
@@ -123,6 +124,7 @@ const Story = () => {
             startCallback={() => send("TOGGLE")}  // goes to the game
             conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
             logoutCallback={() => firebase.auth().signOut()} // logs the user out
+            poseCallback={() => send("POSE")} // goes to the Pose tester
             curricularCallback={() => send("CURRICULAR")}
             testCallback={() => {
               send("TEST");
@@ -140,18 +142,21 @@ const Story = () => {
             mainCallback={() => send("HOME")} // goes to Home
           />
         )}
-        {state.value === "test" && (
-          <TestConjectureModule
-            width={width}
+        {state.value === "pose" && (
+          <ConjecturePoseMatch
+          
             height={height}
+            width={width}
             columnDimensions={columnDimensions}
             rowDimensions={rowDimensions}
-            mainCallback={() => {
-              // setTestConjectureActivated(false);
-              send("HOME")} 
-            } // goes to the Conjecture Module
+            editCallback={() => send("AUTHOR")} // goes to the Pose Sequence Editor
+            mainCallback={() => send("HOME")} // goes to Home
+            poseData={poseData}
+            UUID={"15ff9cc4-f39d-4db9-be04-bcad5907f876"}
           />
-        )}
+        )
+        }
+        
         {state.value === "conjecture" && (
           <ConjectureModule
             width={width}
