@@ -61,9 +61,9 @@ const UserManagementModule = (props) => {
             new TextStyle({
                 align: "center",
                 fontFamily: "Futura",
-                fontSize: 100,
+                fontSize: 80,
                 fontWeight: 800,
-                fill: [red],
+                fill: [blue],
                 letterSpacing: -5,
             })
             }
@@ -106,16 +106,16 @@ const UserManagementModule = (props) => {
             callback={mainCallback}
         />
 
-        {/* // new user // */}
+        {/* // new user module // */}
         <RectButton
             height={height * 0.13}
             width={width * 0.26}
-            x={width * 0.85}
-            y={height * 0.93}
-            color={blue}
+            x={550}
+            y={150}
+            color={green}
             fontSize={width * 0.015}
             fontColor={white}
-            text={"NEW USER"}
+            text={"ADD USER"}
             fontWeight={800}
             callback={addNewUserCallback}
         />

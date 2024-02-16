@@ -1,5 +1,6 @@
 import { ref, push, getDatabase, set, query, equalTo, get, orderByChild } from "firebase/database";
 import { getAuth, onAuthStateChanged, importUsers, createUserWithEmailAndPassword, setPersistence, browserSessionPersistence  } from "firebase/auth";
+import { async } from "regenerator-runtime";
 
 const db = getDatabase();
 
@@ -164,6 +165,35 @@ export const getUserNameFromDatabase = async (props) => {
         // User does not exist in the database
         return "USER NOT FOUND";
     }
+};
+
+export const changeUserRoleInDatabase = async (userId, newRole) => {
+    console.log(userId)
+    const userPath = `Users/${userId}`;
+
+    // Get the user snapshot from the database
+    const userSnapshot = await get(ref(db, userPath));
+
+    if (userSnapshot.val() === null) {
+        // User does not exist, handle accordingly
+        alert("User does not exist in the database.");
+        return false;
+    }
+
+    const promises = [
+        set(ref(db, `${userPath}/userRole`), newRole),
+    ];
+
+    return Promise.all(promises)
+        .then(() => {
+            // alert("User role successfully changed in the database.");
+            return true;
+        })
+        .catch((error) => {
+            console.error("Error changing user role:", error);
+            alert("OOPSIE POOPSIE. Cannot change user role.");
+            return false;
+        });
 };
 
 // return a list of users by organization

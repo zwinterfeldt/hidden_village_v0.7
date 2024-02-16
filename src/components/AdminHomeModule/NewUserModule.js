@@ -62,12 +62,16 @@ const NewUserModule = (props) => {
         <Background height={height * 1.1} width={width} />
         
         <Container>
-            <Text text="Add New User" />
+            <Text 
+                text="Add New User" 
+                x={width * .1}
+                y={height * .2}
+            />
             <InputBox
-                height={height * 0.10}
+                height={height * 0.15}
                 width={width * 0.8}
-                x={width * 0.5}
-                y={height * 0.5}
+                x={width * 0.1}
+                y={height * 0.3}
                 color={white}
                 fontSize={width * 0.015}
                 fontColor={black}
@@ -76,10 +80,10 @@ const NewUserModule = (props) => {
                 callback={sendEmailPrompt} // Create Popup
             />
             <InputBox
-                height={height * 0.10}
+                height={height * 0.15}
                 width={width * 0.8}
-                x={width * 0.5}
-                y={height * 0.6}
+                x={width * 0.1}
+                y={height * 0.4}
                 color={white}
                 fontSize={width * 0.015}
                 fontColor={black}
@@ -89,27 +93,13 @@ const NewUserModule = (props) => {
             />
 
         </Container>
-
-        {/* // Submit Button // */}
-        <RectButton
-            height={height * 0.13}
-            width={width * 0.26}
-            x={width * 0.15}
-            y={height * 0.93}
-            color={black}
-            fontSize={width * 0.015}
-            fontColor={white}
-            text={"Back"}
-            fontWeight={800}
-            callback={UserManagementCallback}
-        />
         {/* // Back Button // */}
         <RectButton
             height={height * 0.13}
             width={width * 0.26}
-            x={width * 0.15}
+            x={width * 0.1}
             y={height * 0.93}
-            color={black}
+            color={red}
             fontSize={width * 0.015}
             fontColor={white}
             text={"Back"}
@@ -117,13 +107,13 @@ const NewUserModule = (props) => {
             callback={UserManagementCallback}
         />
 
-        {/* // TEST Button // */}
+        {/* // Submite new User Button // */}
         <RectButton
             height={height * 0.13}
             width={width * 0.26}
-            x={width * 0.35}
-            y={height * 0.93}
-            color={black}
+            x={width * 0.1}
+            y={height * 0.5}
+            color={green}
             fontSize={width * 0.015}
             fontColor={white}
             text={"Test New User"}
