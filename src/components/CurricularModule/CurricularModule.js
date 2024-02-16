@@ -23,6 +23,28 @@ export const Curriculum = {
 const CurricularModule = (props) => {
   const { height, width, conjectureCallback, mainCallback, conjectureSelectCallback } = props;
   const [state, send] = useMachine(CurricularContentEditorMachine);
+  
+
+  // Reset Function
+  const resetCurricularValues = () => {
+    localStorage.removeItem('CurricularName');
+    localStorage.removeItem('CurricularAuthorID');
+    localStorage.removeItem('CurricularKeywords');
+    localStorage.removeItem('CurricularPIN');
+  };
+
+
+  // Reset Function
+  const enhancedMainCallback = () => {
+    resetCurricularValues(); // Reset values before going back
+    mainCallback(); //use the callbackfunction
+  };
+
+  // Publish function that includes reset
+  const publishAndReset = () => {
+    writeToDatabaseConjecture(); // publish to database
+    resetCurricularValues(); // Reset values after publishing
+  };
 
   return (
     <>
@@ -37,7 +59,7 @@ const CurricularModule = (props) => {
         fontColor={white}
         text={"BACK"}
         fontWeight={800}
-        callback={mainCallback} // Exit Back To Home
+        callback={enhancedMainCallback} //this will reset everything once you leave the page
       />
 
       <Button
@@ -88,7 +110,7 @@ const CurricularModule = (props) => {
         fontColor={white}
         text={"PUBLISH"}
         fontWeight={800}
-        callback={() => writeToDatabaseConjecture()} // publish to database
+        callback={publishAndReset} // Enhanced to include reset
       />
       <CurricularContentEditor height={height} width={width} />
     </>
