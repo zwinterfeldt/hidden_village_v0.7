@@ -8,6 +8,17 @@ import { CurricularContentEditor } from "../CurricularModule/CurricularModuleBox
 import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
 
+export const Curriculum = {
+  CurrentConjectures: [],
+
+  addConjecture(conjectureUUID) {
+    this.CurrentConjectures.push(conjectureUUID);
+  },
+
+  getCurrentConjectures() {
+    return this.CurrentConjectures;
+  },
+};
 
 const CurricularModule = (props) => {
   const { height, width, conjectureCallback, mainCallback, conjectureSelectCallback } = props;

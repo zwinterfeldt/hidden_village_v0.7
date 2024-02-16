@@ -394,7 +394,6 @@ export const getConjectureList = async () => {
       querySnapshot.forEach((conjectureSnapshot) => {
         conjectures.push(conjectureSnapshot.val());
       });
-      console.log(conjectures);
       return conjectures; // return the data if its good
     } else {
       return null; // This will happen if data not found
