@@ -16,6 +16,11 @@ export const StoryMachine = createMachine({
         TEST: "test", // move to test
       },
     },
+    test: {
+      on: {
+        HOME: "ready", // move to home
+      }
+    },
     pose: {
       on: {
         HOME: "ready", // move to home
