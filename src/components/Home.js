@@ -29,11 +29,11 @@ const Home = (props) => {
         color={green}
         fontSize={18}
         fontColor={white}
-        text={"Test"}
+        text={"Pose Test"}
         fontWeight={800}
-        callback={testCallback}
+        callback={poseCallback}
       />
-      <Button
+      {/* <Button
         height={height * 0.205}
         width={width * 0.105}
         x={width * 0.85}
@@ -44,7 +44,7 @@ const Home = (props) => {
         text={"Pose Matching"}
         fontWeight={800}
         callback={poseCallback}
-      />
+      /> */}
       <Button
         height={height * 0.205}
         width={width * 0.105}

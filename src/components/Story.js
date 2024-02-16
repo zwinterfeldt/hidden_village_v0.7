@@ -123,9 +123,7 @@ const Story = () => {
             startCallback={() => send("TOGGLE")}  // goes to the game
             conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
             logoutCallback={() => firebase.auth().signOut()} // logs the user out
-            testCallback={() => {
-              send("TEST");
-            }} // goes to the Test Module
+          // goes to the Test Module
             poseCallback={() => send("POSE")} // goes to the Pose tester
           />
         )}
@@ -143,19 +141,7 @@ const Story = () => {
           />
         )
         }
-        {state.value === "test" && (
-          <TestConjectureModule
-            width={width}
-            height={height}
-            poseData={poseData}
-            columnDimensions={columnDimensions}
-            rowDimensions={rowDimensions}
-            mainCallback={() => {
-              // setTestConjectureActivated(false);
-              send("HOME")} 
-            } // goes to the Conjecture Module
-          />
-        )}
+        
         {state.value === "conjecture" && (
           <ConjectureModule
             width={width}
