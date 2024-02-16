@@ -1,5 +1,6 @@
 import { ref, push, getDatabase, set, query, equalTo, get, orderByChild } from "firebase/database";
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, onAuthStateChanged, importUsers, createUserWithEmailAndPassword, setPersistence, browserSessionPersistence  } from "firebase/auth";
+
 const db = getDatabase();
 
 // User Id functionality will be added in a different PR
@@ -26,18 +27,61 @@ export const writeNewUserToDatabase = async (props) => {
     const dateObj = new Date();
     const timestamp = dateObj.toISOString();
 
-    // const { userEmailTest } = props;
-    // console.log("adding User")
-    // createUserWithEmailAndPassword("nate4228@hotmail.com", "welcome")
-    // .then((userCredential) => {
-    //     console.log("User created succsefully")
+    console.log("Current User");
 
-    //     // User created successfully
+    // Get the Firebase authentication instance
+    const auth = getAuth();
+
+    // Log information about the current user, if one exists
+    const currentUser = auth.currentUser;
+
+    if (currentUser) {
+        console.log("Current User UID:", currentUser.uid);
+        console.log("Current User email:", currentUser.email);
+        console.log("Current User display name:", currentUser.displayName);
+    } else {
+        console.log("No current user");
+    };
+
+    console.log("New User");
+
+    // await createUserWithEmailAndPassword(auth,"nate4228@hotmail.com", "welcome")
+    // .then((userCredential) => {
+
+    //     console.log("User created successfully:", userCredential.user);
+
+    //     // Additional user information
     //     const user = userCredential.user;
+    //     console.log("New User UID:", user.uid);
+    //     console.log("New User email:", user.email);
+    //     console.log("New User display name:", user.displayName);
+
+    //     alert("User Created")
     // })
     // .catch((error) => {
+    //     console.error("Error creating auth user", error);
     //     // Handle errors (e.g., invalid email, weak password)
+    //     alert("Email already in the database")
     // });
+
+    await importUsers
+
+    console.log("Current User 2");
+
+    // Get the Firebase authentication instance
+    const auth_2 = getAuth();
+
+    // Log information about the current user, if one exists
+    const currentUser_2 = auth_2.currentUser;
+
+    if (currentUser_2) {
+        console.log("Current User UID:", currentUser_2.uid);
+        console.log("Current User email:", currentUser_2.email);
+        console.log("Current User display name:", currentUser_2.displayName);
+    } else {
+        console.log("No current user");
+    };
+
 
 };
 

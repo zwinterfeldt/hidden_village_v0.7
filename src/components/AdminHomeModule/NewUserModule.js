@@ -4,6 +4,7 @@ import Background from "../Background";
 import RectButton from '../RectButton';
 import { green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
 import {writeNewUserToDatabase} from "../../firebase/userDatabase"
+// import {writeNewUserToDatabase_ADMIN} from "../../firebase/adminUserDatabase"
 
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -65,19 +66,7 @@ const NewUserModule = (props) => {
             fontColor={white}
             text={"Test New User"}
             fontWeight={800}
-            callback={
-                console.log("adding User")
-                createUserWithEmailAndPassword("nate4228@hotmail.com", "welcome")
-                .then((userCredential) => {
-                    console.log("User created succsefully")
-            
-                    // User created successfully
-                    const user = userCredential.user;
-                })
-                .catch((error) => {
-                    // Handle errors (e.g., invalid email, weak password)
-                });
-            }
+            callback={writeNewUserToDatabase}
         />
     </>
     );
