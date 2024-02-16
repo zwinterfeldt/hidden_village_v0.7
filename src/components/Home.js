@@ -5,7 +5,9 @@ import { TextStyle } from "@pixi/text";
 import { yellow, blue, green, white, red } from "../utils/colors";
 
 const Home = (props) => {
-  const { height, width, startCallback, poseCallback, conjectureCallback, logoutCallback, testCallback } = props;
+
+const { height, width, startCallback, poseCallback, editCallback, conjectureCallback, logoutCallback, testCallback, curricularCallback } = props;
+
   return (
     <>
       <Background height={height} width={width} />
@@ -68,6 +70,18 @@ const Home = (props) => {
         text={"Log Out"}
         fontWeight={800}
         callback={logoutCallback}
+      />
+      <Button
+        height={height * 0.2}
+        width={width * 0.1}
+        x={width *0.85}
+        y={height *0.9}
+        color={red}
+        fontSize={24}
+        fontColor={white}
+        text={"Curricular Content Editor"}
+        fontWeight={800}
+        callback={curricularCallback}
       />
       <Text
         text={"Hidden Village"}

@@ -14,6 +14,7 @@ import firebase from "firebase/compat";
 import "firebase/compat/auth";
 import PoseAuthoring from "./PoseAuth/PoseAuthoring.js";
 import ConjectureModule from "./ConjectureModule/ConjectureModule.js";
+import CurricularModule from "./CurricularModule/CurricularModule.js";
 import TestConjectureModule from "./TestConjectureModule/TestConjectureModule.js";
 import ConjecturePoseMatch from "./TestConjectureModule/ConjecturePoseMatch.js";
 
@@ -123,8 +124,22 @@ const Story = () => {
             startCallback={() => send("TOGGLE")}  // goes to the game
             conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
             logoutCallback={() => firebase.auth().signOut()} // logs the user out
-          // goes to the Test Module
             poseCallback={() => send("POSE")} // goes to the Pose tester
+            curricularCallback={() => send("CURRICULAR")}
+            testCallback={() => {
+              send("TEST");
+              console.log("LOL");}
+              } // goes to the Test Module
+          />
+        )}
+        {state.value === "curricular" && (
+          <CurricularModule
+            width={width}
+            height={height}
+            columnDimensions={columnDimensions}
+            rowDimensions={rowDimensions}
+            conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
+            mainCallback={() => send("HOME")} // goes to Home
           />
         )}
         {state.value === "pose" && (
