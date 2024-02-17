@@ -6,8 +6,11 @@ import { green, neonGreen, black, blue, white, pink, orange, red, transparent, t
 import {writeNewUserToDatabase} from "../../firebase/userDatabase"
 
 
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
 import InputBox from '../InputBox';
+import { getSavedPassword, getSavedUsername } from '../auth/UserSaver';
+
+
 
 const UserPermissions = {
     Admin: 'Admin',
@@ -18,7 +21,6 @@ const UserPermissions = {
 
 const NewUserModule = (props) => {
     const {height, width, UserManagementCallback} = props
-    console.log("New User Module Activated")
 
     const [email, setEmail] = useState("example@email.com");
     const [userRole, setUserRole] = useState(UserPermissions.Student); 
@@ -104,7 +106,22 @@ const NewUserModule = (props) => {
             fontColor={white}
             text={"Back"}
             fontWeight={800}
-            callback={UserManagementCallback}
+            callback={() => {
+                const currentUserEmail = getSavedUsername();
+                const currentUserPassword = getSavedPassword();
+                const auth = getAuth();
+
+                signInWithEmailAndPassword(auth, currentUserEmail, currentUserPassword)
+                    .then((userCredential) => {
+                        // Handle successful sign-in if needed
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        // Handle sign-in error if needed
+                    });
+
+                UserManagementCallback(); // Make sure to call the function
+            }}
         />
 
         {/* // Submite new User Button // */}

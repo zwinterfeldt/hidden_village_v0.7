@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Sprite, Text } from "@inlet/react-pixi";
+import {Container, Sprite, Text,Graphics } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import RectButton from '../RectButton';  // Replace with your actual UI library
 import UserObject from './UserObject'
@@ -10,13 +10,24 @@ import { green, neonGreen, black, blue, white, pink, orange, red, transparent, t
 const UserList = (props) => {
     const { width, height, x, y, users, refreshUserListCallback } = props;
 
-    console.log("Useer listsssss")
+    // console.log("Useer listsssss")
      // Display up to three users
     const displayedUsers = users.slice(0, users.length);
 
 
     return (
         <>
+            <Graphics
+                draw={(g) => {
+                    // rectangle
+                    g.beginFill(0xe0c755);
+                    g.drawRect(120, 195, 420, 300);
+                    g.endFill();
+                    // border
+                    g.lineStyle(4, 0x000000, 1);
+                    g.drawRect(120, 195, 420, 300);
+                }}
+            />
             <Text
                 x={x * 0.35}
                 y={y * 0.2}
@@ -34,7 +45,7 @@ const UserList = (props) => {
             />
             <Text
                 x={400}
-                y={y * 0.2}  // Adjust the y position for proper alignment
+                y={y * 0.2}
                 text={`Role`}
                 style={
                     new TextStyle({
@@ -51,7 +62,7 @@ const UserList = (props) => {
             {/* <ScrollView style={{ flex: 1 }}> */}
             {displayedUsers.map((user, index) => (
                 <UserObject
-                    key={index}  // Add a unique key to each UserObject
+                    key={index} 
                     width={width}
                     height={height}
                     x={x}

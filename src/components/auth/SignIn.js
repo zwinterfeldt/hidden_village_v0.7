@@ -3,6 +3,7 @@ import circle_sprite from "../../assets/circle_sprite.png";
 import scaleneTriangle_sprite from "../../assets/scaleneTriangle_sprite.png";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
+import { saveUsername, savePassword} from './UserSaver';
 
 const SignInScreen = ({ firebaseApp }) => {
   // takes the entered email and password and logs in the user
@@ -37,6 +38,8 @@ const SignInScreen = ({ firebaseApp }) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
+        saveUsername(email);
+        savePassword(password);
         window.location.href = "/";
       })
       .catch((error) => {
