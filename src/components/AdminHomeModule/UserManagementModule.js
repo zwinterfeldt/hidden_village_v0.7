@@ -15,6 +15,7 @@ import React, { useState, useEffect } from 'react';
 import NewUserModule from "./NewUserModule";
 
 
+
 const UserManagementModule = (props) => {
     const { height, width, mainCallback, addNewUserCallback } = props;
     const [usersList, setUsersList] = useState([]);
@@ -89,6 +90,7 @@ const UserManagementModule = (props) => {
                 width={width * 0.26}
                 x={width * 0.4}
                 y={height * 0.93}
+                refreshUserListCallback = {refreshUserList}
             />
         )}
 

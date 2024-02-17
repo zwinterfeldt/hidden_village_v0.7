@@ -7,7 +7,7 @@ import { green, neonGreen, black, blue, white, pink, orange, red, transparent, t
 
 
 const UserList = (props) => {
-    const { width, height, x, y, users } = props;
+    const { width, height, x, y, users, refreshUserListCallback } = props;
 
     return (
         <>
@@ -53,6 +53,7 @@ const UserList = (props) => {
                     username={user.userName}
                     role={user.userRole}
                     userId = {user.userId}
+                    refreshUserListCallback = {refreshUserListCallback}
                 />              
             ))}
             {/* Display User Names */}
