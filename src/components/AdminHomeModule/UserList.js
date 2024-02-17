@@ -5,9 +5,15 @@ import RectButton from '../RectButton';  // Replace with your actual UI library
 import UserObject from './UserObject'
 import { green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
 
+// import { ScrollView } from '@react-native';
 
 const UserList = (props) => {
     const { width, height, x, y, users, refreshUserListCallback } = props;
+
+    console.log("Useer listsssss")
+     // Display up to three users
+    const displayedUsers = users.slice(0, users.length);
+
 
     return (
         <>
@@ -42,7 +48,8 @@ const UserList = (props) => {
                 }
             />
             {/* Display User Names */}
-            {users.map((user, index) => (
+            {/* <ScrollView style={{ flex: 1 }}> */}
+            {displayedUsers.map((user, index) => (
                 <UserObject
                     key={index}  // Add a unique key to each UserObject
                     width={width}
@@ -56,6 +63,7 @@ const UserList = (props) => {
                     refreshUserListCallback = {refreshUserListCallback}
                 />              
             ))}
+            {/* </ScrollView> */}
             {/* Display User Names */}
             {/* {users.map((user, index) => (
                 <RectButton
