@@ -163,6 +163,22 @@ export const getUserNameFromDatabase = async (props) => {
         return userSnapshot.val().userName;
     } else {
         // User does not exist in the database
+        // we should put the user in the database if they are not found
+        try{
+            console.log("User Not Found - Entering user into database")
+            // Get the Firebase authentication instance
+            const auth = getAuth();
+
+            // Log information about the current user, if one exists
+            const currentUser = auth.currentUser;
+
+            // make this user a dev - they were probably created directly in firebase.
+            await writeCurrentUserToDatabaseNewUser(currentUser.id,currentUser.email,UserPermissions.Developer)
+
+        }catch(error){
+            console.log("User not found")
+            return "USER NOT FOUND";
+        }
         return "USER NOT FOUND";
     }
 };
