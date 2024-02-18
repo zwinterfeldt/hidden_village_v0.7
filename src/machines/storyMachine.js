@@ -10,15 +10,20 @@ export const StoryMachine = createMachine({
       on: {
         TOGGLE: "playing",  // move to game
         CONJECT: "conjecture", // move to conjecture editor
+        POSE: "pose", // move to pose
         AUTHOR: "edit", // move to poseauthoring
         CURRICULAR: "curricular", // move to the curricular content editor
         TEST: "test", // move to test
         userManagementSettings : "userManagementSettings",
         ADDNEWUSER: "ADDNEWUSER"
-
       },
     },
     test: {
+      on: {
+        HOME: "ready", // move to home
+      }
+    },
+    pose: {
       on: {
         HOME: "ready", // move to home
       }
