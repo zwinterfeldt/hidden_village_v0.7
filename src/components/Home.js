@@ -2,7 +2,7 @@ import Background from "./Background";
 import Button from "./Button";
 import { Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
-import { yellow, blue, green, white, red } from "../utils/colors";
+import { yellow, blue, green, white, red,turquoise } from "../utils/colors";
 
 import React, { useState, useEffect } from 'react';
 import {writeToDatabaseNewUser, getUserRoleFromDatabase, getUserNameFromDatabase} from "../firebase/userDatabase";
@@ -146,15 +146,16 @@ const Home = (props) => {
         }
         anchor={0.5}
       />
+      {/*Admin Button */}
       <Button
         height={height * 0.2}
         width={width * 0.1}
-        x={width *0.5}
+        x={width *0.3}
         y={height *0.09}
-        color={red}
-        fontSize={10}
-        fontColor={white}
-        text={"Admin Create User Module"}
+        color={0x471aa1}
+        fontSize={40}
+        fontColor={yellow}
+        text={"ADMIN"}
         fontWeight={800}
         callback={UserManagementCallback}
       />
