@@ -12,7 +12,7 @@ export const Curriculum = {
   CurrentConjectures: [],
 
   addConjecture(conjectureUUID) {
-    this.CurrentConjectures.push(conjectureUUID);
+    this.CurrentConjectures.push({conjectureUUID});
   },
 
   getCurrentConjectures() {
@@ -21,7 +21,7 @@ export const Curriculum = {
 };
 
 const CurricularModule = (props) => {
-  const { height, width, conjectureCallback, mainCallback, conjectureSelectCallback } = props;
+  const { height, width, mainCallback, conjectureSelectCallback } = props;
   const [state, send] = useMachine(CurricularContentEditorMachine);
   
 
@@ -49,11 +49,11 @@ const CurricularModule = (props) => {
   return (
     <>
       <Background height={height * 1.1} width={width} />
-      <Button
-        height={height * 0.12}
-        width={width * 0.095}
-        x={width * 0.06}
-        y={height * 0.90}
+      <RectButton
+        height={height * 0.13}
+        width={width * 0.26}
+        x={width * 0.71}
+        y={height * 0.93}
         color={red}
         fontSize={width * 0.015}
         fontColor={white}
@@ -62,29 +62,18 @@ const CurricularModule = (props) => {
         callback={enhancedMainCallback} //this will reset everything once you leave the page
       />
 
-      <Button
-        height={height * 0.12}
-        width={width * 0.0950}
-        x={width * 0.15}
-        y={height * 0.52}
+     
+      <RectButton
+        height={height * 0.13}
+        width={width * 0.50}
+        x={width *0.58}
+        y={height *0.60}
         color={blue}
-        fontSize={21}
+        fontSize={width * 0.014}
         fontColor={white}
-        text={"Select Conjectures"}
+        text={"+Add Conjecture"}
         fontWeight={800}
         callback={conjectureSelectCallback}
-      />
-      <Button
-        height={height * 0.2}
-        width={width * 0.1}
-        x={width *0.90}
-        y={height *0.52}
-        color={blue}
-        fontSize={24}
-        fontColor={white}
-        text={"New Conjecture"}
-        fontWeight={800}
-        callback={conjectureCallback}
       />
 
       <RectButton

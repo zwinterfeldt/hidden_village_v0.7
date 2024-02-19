@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Background from "../Background";
-import { blue, white, red, neonGreen } from "../../utils/colors";
+import { blue, white, red, neonGreen,green } from "../../utils/colors";
 import Button from "../Button";
 import RectButton from "../RectButton";
 import { getConjectureList } from "../../firebase/database";
@@ -38,25 +38,59 @@ function drawConjectureList(xMultiplier, yMultiplier, fontSizeMultiplier, totalW
         <RectButton
           key={index}
           height={totalHeight /2 * yMultiplier}
-          width={totalWidth * 2}
-          x={totalWidth * xMultiplier}
+          width={totalWidth * 0.8}
+          x={totalWidth * (xMultiplier-0.08)}
           y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
           color={white}
-          fontSize={totalWidth * fontSizeMultiplier}
+          fontSize={totalWidth * fontSizeMultiplier/1.3}
           fontColor={blue}
-          text={"Conjecture: " + conjecture["Text Boxes"]["Conjecture Name"]}
+          text={conjecture["Text Boxes"]["Conjecture Name"]}
           fontWeight="bold"
           callback = {() => {
             conjectureCallback();
           }}
         />
       ))}
+
+      {conjectureList.map((conjecture, index) => (
+        <RectButton
+          key={'author' + index}
+          height={totalHeight / 2 * yMultiplier}
+          width={totalWidth * 0.6}
+          x={totalWidth * (xMultiplier + 0.25)} //  x position
+          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier} // y position 
+          color={white}
+          fontSize={totalWidth * fontSizeMultiplier / 1.3} 
+          fontColor={blue}
+          text={conjecture["Text Boxes"]["Author Name"]}
+          fontWeight="bold"
+          callback={null}
+        />
+      
+      ))}
+
+      {conjectureList.map((conjecture, index) => (
+        <RectButton
+          key={'keywords' + index}
+          height={totalHeight / 2 * yMultiplier}
+          width={totalWidth * 0.8}
+          x={totalWidth * (xMultiplier +0.50)} 
+          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
+          color={white}
+          fontSize={totalWidth * fontSizeMultiplier / 1.3}
+          fontColor={blue}
+          text={conjecture["Text Boxes"]["Conjecture Keywords"]}
+          fontWeight="bold"
+          callback={null}
+        />
+      
+      ))}
       {conjectureList.map((conjecture, index) => (
         <RectButton
           key={index}
           height={0.01}
           width={0.01}
-          x={totalWidth * xMultiplier - totalWidth * xMultiplier *0.1}
+          x={totalWidth * xMultiplier - totalWidth * xMultiplier *0.8}
           y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier + totalHeight * yMultiplier *0.1 }
           color={white}
           fontSize={totalWidth * fontSizeMultiplier * 2}
@@ -81,17 +115,29 @@ const CurricularModule = (props) => {
   return (
     <>
       <Background height={height * 1.1} width={width} />
-      <Button
-        height={height * 0.12}
-        width={width * 0.095}
-        x={width * 0.06}
-        y={height * 0.90}
+      <RectButton
+        height={height * 0.13}
+        width={width * 0.26}
+        x={width * 0.80}
+        y={height * 0.93}
         color={red}
         fontSize={width * 0.015}
         fontColor={white}
         text={"BACK"}
         fontWeight={800}
         callback={curricularCallback}
+      />
+      <RectButton
+        height={height * 0.13}
+        width={width * 0.26}
+        x={width * 0.68}
+        y={height * 0.93}
+        color={green}
+        fontSize={width * 0.014}
+        fontColor={white}
+        text={"OK"}
+        fontWeight={800}
+        callback={null}
       />
       <ConjectureSelectorBoxes height={height} width={width} />
       {drawConjectureList(0.15, 0.3, 0.018, width, height, conjectureCallback, curricularCallback)}

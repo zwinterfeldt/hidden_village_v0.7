@@ -1,3 +1,4 @@
+
 // Firebase Init
 import { ref, push, getDatabase, set, query, equalTo, get, orderByChild } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";

@@ -4,11 +4,12 @@ import { TextStyle } from "@pixi/text";
 import { white, black } from "../../utils/colors";
 import InputBox from "../InputBox";
 import { getConjectureList,getConjectureDataByAuthorID } from "../../firebase/database";
+import { blue } from "../../utils/colors";
 
 // Handler functions
 function handleCurricularName(key) {
   const existingValue = localStorage.getItem(key);
-  const newValue = prompt("Please name your curricular content:", existingValue);
+  const newValue = prompt("Please name your Game:", existingValue);
   if (newValue !== null) {
     localStorage.setItem(key, newValue);
   }
@@ -24,7 +25,7 @@ function handleCurricularKeywords(key) {
 
 function handleCurricularAuthorID(key) {
   const existingValue = localStorage.getItem(key);
-  const newValue = prompt("Please create an AuthorId:", existingValue);
+  const newValue = prompt("Please add an Author name:", existingValue);
   if (newValue !== null) {
     localStorage.setItem(key, newValue);
   }
@@ -80,7 +81,7 @@ function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, t
           fontFamily: "Arial",
           fontSize: totalWidth * fontSizeMultiplier,
           fontWeight: "bold",
-          fill: [black],
+          fill: [blue],
         })
       }
     />
@@ -92,16 +93,16 @@ export const CurricularContentEditor = (props) => {
 
   return (
     <>
-      {createInputBox(60, 0.10, 0.55, 0.123+ 0.13, 0.136-.030, 'CurricularName', width, height, handleCurricularName)}
-      {createInputBox(220, 0.10, 1.268, 0.303, 0.17, 'CurricularKeywords', width, height, handleCurricularKeywords)}
-      {createInputBox(220, 0.10, .3, 0.46+ 0.105, 0.136-.030, 'CurricularAuthorID', width, height, handleCurricularAuthorID)}
-      {createInputBox(4, 0.10, .2, 0.730, 0.105, 'CurricularPIN', width, height, handlePinInput)}
+      {createInputBox(60, 0.10, 0.55, 0.123+ 0.10, 0.136-.030, 'CurricularName', width, height, handleCurricularName)}
+      {createInputBox(180, 0.10, 1, 0.210, 0.17, 'CurricularKeywords', width, height, handleCurricularKeywords)}
+      {createInputBox(220, 0.10, .8, 0.46+ 0.09, 0.136-.030, 'CurricularAuthorID', width, height, handleCurricularAuthorID)}
+      {createInputBox(4, 0.10, .3, 0.730, 0.175, 'CurricularPIN', width, height, handlePinInput)}
 
-      {createTextElement("Curricular Content Editor", 0.35, 0.030, 0.025, width, height)}
-      {createTextElement("Keywords:", 0.195, 0.17, 0.018, width, height)}
-      {createTextElement("Pin:", 0.690, 0.105, 0.018, width, height)}
-      {createTextElement("AuthorId:", 0.480, 0.105, 0.018, width, height)}
-      {createTextElement("CurricularName:",0.110, 0.100, 0.018, width, height)}
+      {createTextElement("Game Editor", 0.43, 0.030, 0.025, width, height)}
+      {createTextElement("Keywords:", 0.110, 0.17, 0.018, width, height)}
+      {createTextElement("Pin:", 0.690, 0.17, 0.018, width, height)}
+      {createTextElement("Author:", 0.480, 0.105, 0.018, width, height)}
+      {createTextElement("Game Name:",0.110, 0.100, 0.018, width, height)}
     </>
   );
 };
