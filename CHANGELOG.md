@@ -1,6 +1,19 @@
 # Hidden Village Project Changelog - Version 0.5
 Classes: [ADDED, FIXED, CHANGED, UPDATED, REMOVED]
 
+## Update: 2/24/2024 - v0.5.7.1 (Week #7)
+### User Management Feature
+#### User Information Database
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/12): User information into the database. User is now stored in a sperate location from the database. User information is, date created, last accessed, email, username, organization, and role.
+
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/12): Functions to retrieve user data. User role, username, user organization. Functions to also store data.
+
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/12): a UI improvement to show what user is currently logged in.
+
+#### User Managment Module
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/12): The ability to create a new authenticated user directly from the program.
+
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/12): A User Management Module. This is where you can change user's roles. Add a new user. See all users in current user's organization.
 
 ## Update: 2/9/2024 -v0.5.2.2
 ### Test Conjecture Module
