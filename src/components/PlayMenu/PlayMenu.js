@@ -30,8 +30,8 @@ const PlayMenu = (props) => {
         //get user role
         if(true){ //userRole === "Teacher" || userRole === "Admin" || userRole === "Developer"
             setButtonList([
-                //{text: "Admin", callback: () => console.log("Admin")},
-                //{text: "New Game", callback: () => console.log("New Game")},
+                {text: "Admin", callback: () => console.log("Admin")},
+                {text: "New Game", callback: () => console.log("New Game")},
                 {text: "Edit Game", callback: () => console.log("Edit Game")},
                 {text: "Play", callback: () => console.log("Play")},
                 {text: "New Level", callback: () => console.log("New Level")},
