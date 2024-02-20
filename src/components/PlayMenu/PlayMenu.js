@@ -7,11 +7,11 @@ import RectButton from "../RectButton";
 
 const PlayMenu = (props) => {
     const {width, height, poseData, columnDimensions, rowDimensions} = props;
-    const [buttonList, setButtonList] = useState([{text: "Play", callback: () => console.log("Play")}, {text: "Home", callback: () => console.log("Home")}]);
+    const [buttonList, setButtonList] = useState([{text: "Play", callback: () => console.log("Play")}, {text: "Settings", callback: () => console.log("Settings")}]);
     const [userRole, setUserRole] = useState("Student");
     const [distanceBetweenButtons, setDistanceBetweenButtons] = useState();
     const [startingX, setStartingX] = useState();
-
+    const[multiplier, setMultiplier] = useState(1);
     
 
     useEffect(() => {
@@ -21,14 +21,17 @@ const PlayMenu = (props) => {
         setStartingX(startingX);
         const spaceInBetween = totalAvailableWidth / (buttonList.length-1);
         setDistanceBetweenButtons(spaceInBetween);
-    }, [buttonList]);
+        const totalArea = width * height;
+        setMultiplier(totalArea/765440);
+
+    }, [buttonList, width, height]);
     
     useEffect(() => {
         //get user role
         if(true){ //userRole === "Teacher" || userRole === "Admin" || userRole === "Developer"
             setButtonList([
-                {text: "Admin", callback: () => console.log("Admin")},
-                {text: "New Game", callback: () => console.log("New Game")},
+                //{text: "Admin", callback: () => console.log("Admin")},
+                //{text: "New Game", callback: () => console.log("New Game")},
                 {text: "Edit Game", callback: () => console.log("Edit Game")},
                 {text: "Play", callback: () => console.log("Play")},
                 {text: "New Level", callback: () => console.log("New Level")},
@@ -43,15 +46,15 @@ const PlayMenu = (props) => {
         <Background height={height} width= {width}/>
         {distanceBetweenButtons !== undefined && buttonList.map((button, idx) => (
             <Button
-                height = {height * 0.2}
-                width = {width * 0.13}
+                key = {idx}
+                width = {width * 0.145*multiplier}
                 color = {blue}
-                fontSize = {50}
-                fontWeight = {800}
+                fontSize = {40*multiplier}
+                fontWeight = {600}
                 text={button.text}
                 x={startingX + (idx * distanceBetweenButtons)}
                 y={height * 0.5}
-                callback={console.log(distanceBetweenButtons)}
+                callback={button.callback}
             />
         ))}
         </>
