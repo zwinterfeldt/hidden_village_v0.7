@@ -18,8 +18,8 @@ const UserList = (props) => {
     return (
         <>
             <Graphics
-                x = {x*.04}
-                y = {y*.05}
+                x = {0}
+                y = {40}
                 draw={(g) => {
                     // rectangle
                     g.beginFill(0xe0c755);
@@ -31,8 +31,8 @@ const UserList = (props) => {
                 }}
             />
             <Text
-                x={x * 0.35}
-                y={y * 0.2}
+                x={120}
+                y={170}
                 text={`User`}
                 style={
                     new TextStyle({
@@ -47,7 +47,7 @@ const UserList = (props) => {
             />
             <Text
                 x={400}
-                y={y * 0.2}
+                y={170}
                 text={`Role`}
                 style={
                     new TextStyle({
