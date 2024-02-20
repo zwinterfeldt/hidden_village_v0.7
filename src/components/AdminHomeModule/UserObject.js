@@ -80,8 +80,6 @@ const UserObject = (props) => {
                         // update the list of users
                         await refreshUserListCallback();
                         console.log("User role changed successfully.");
-                        
-                        console.log("Bite Me")
                     } else {
                         // Failure
                         console.log("Failed to change user role.");

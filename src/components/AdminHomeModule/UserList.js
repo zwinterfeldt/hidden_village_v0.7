@@ -10,22 +10,24 @@ import { green, neonGreen, black, blue, white, pink, orange, red, transparent, t
 const UserList = (props) => {
     const { width, height, x, y, users, refreshUserListCallback } = props;
 
-    // console.log("Useer listsssss")
-     // Display up to three users
     const displayedUsers = users.slice(0, users.length);
+
+
 
 
     return (
         <>
             <Graphics
+                x = {x*.04}
+                y = {y*.05}
                 draw={(g) => {
                     // rectangle
                     g.beginFill(0xe0c755);
-                    g.drawRect(120, 195, 420, 300);
+                    g.drawRect(120, 195, 420, ( users.length * 25) + 10);
                     g.endFill();
                     // border
                     g.lineStyle(4, 0x000000, 1);
-                    g.drawRect(120, 195, 420, 300);
+                    g.drawRect(120, 195, 420, ( users.length * 25) + 10);
                 }}
             />
             <Text
