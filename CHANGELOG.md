@@ -9,6 +9,8 @@ Classes: [ADDED, FIXED, CHANGED, UPDATED, REMOVED]
 
 - [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/11): Added a pose test button that shows matching and allows for future development as this feature will be used in the background
 
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/11): Added in background for pose matching
+
 ### User Management Feature
 #### User Information Database
 - [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/12): User information into the database. User is now stored in a sperate location from the database. User information is, date created, last accessed, email, username, organization, and role.
