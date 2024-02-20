@@ -20,6 +20,8 @@ import UserManagementModule from "./AdminHomeModule/UserManagementModule.js";
 import NewUserModule from "./AdminHomeModule/NewUserModule.js";
 import ConjecturePoseMatch from "./TestConjectureModule/ConjecturePoseMatch.js";
 import ConjecturePoseContainer from "./TestConjectureModule/ConjecturePoseContainer.js";
+import PlayMenu from "./PlayMenu/PlayMenu.js";
+import Background from "./Background.js";
 
 const [
   numRows,
@@ -184,14 +186,32 @@ const Story = () => {
             conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
           />
         )}
-        {state.value === "playing" && (
-          <Game
+        
+        {/* // {state.value === "play" && (
+        //   <Background height={height} width={width} />
+        //   // <PlayMenu
+        //   //   width={width}
+        //   //   height={height}
+        //   //   columnDimensions={columnDimensions}
+        //   //   rowDimensions={rowDimensions}
+        //   //   poseData={poseData}
+        //   // />
+        // )} */}
+        {state.value === "main" && (
+          <PlayMenu
+            width={width}
+            height={height}
             poseData={poseData}
             columnDimensions={columnDimensions}
             rowDimensions={rowDimensions}
-            height={height}
-            width={width}
           />
+          // <Game
+          //   poseData={poseData}
+          //   columnDimensions={columnDimensions}
+          //   rowDimensions={rowDimensions}
+          //   height={height}
+          //   width={width}
+          // />
         )}
 
 
