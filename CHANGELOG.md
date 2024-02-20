@@ -2,6 +2,13 @@
 Classes: [ADDED, FIXED, CHANGED, UPDATED, REMOVED]
 
 ## Update: 2/24/2024 - v0.5.7.1 (Week #7)
+### Database Comparison
+- [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/11): Pose matching module that takes in a conjecture UUID and uses the database function to initiate pose matching
+
+-[ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/11): Added in handling for tolerance if a pose tolerance value is specified in the database
+
+-[ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/11): Added a pose test button that shows matching and allows for future development as this feature will be used in the background
+
 ### User Management Feature
 #### User Information Database
 - [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/12): User information into the database. User is now stored in a sperate location from the database. User information is, date created, last accessed, email, username, organization, and role.
