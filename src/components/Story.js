@@ -17,6 +17,7 @@ import ConjectureModule from "./ConjectureModule/ConjectureModule.js";
 import CurricularModule from "./CurricularModule/CurricularModule.js";
 import TestConjectureModule from "./TestConjectureModule/TestConjectureModule.js";
 import ConjecturePoseMatch from "./TestConjectureModule/ConjecturePoseMatch.js";
+import ConjecturePoseContainer from "./TestConjectureModule/ConjecturePoseContainer.js";
 
 const [
   numRows,
@@ -143,7 +144,7 @@ const Story = () => {
           />
         )}
         {state.value === "pose" && (
-          <ConjecturePoseMatch
+          <ConjecturePoseContainer
           
             height={height}
             width={width}
