@@ -44,7 +44,7 @@ function drawConjectureList(xMultiplier, yMultiplier, fontSizeMultiplier, totalW
           color={white}
           fontSize={totalWidth * fontSizeMultiplier/1.3}
           fontColor={blue}
-          text={conjecture["Text Boxes"]["Conjecture Name"]}
+          text={conjecture["Text Boxes"]["Author Name"]}
           fontWeight="bold"
           callback = {() => {
             conjectureCallback();
@@ -57,14 +57,16 @@ function drawConjectureList(xMultiplier, yMultiplier, fontSizeMultiplier, totalW
           key={'author' + index}
           height={totalHeight / 2 * yMultiplier}
           width={totalWidth * 0.6}
-          x={totalWidth * (xMultiplier + 0.25)} //  x position
-          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier} // y position 
+          x={totalWidth * (xMultiplier + 0.25)}
+          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
           color={white}
           fontSize={totalWidth * fontSizeMultiplier / 1.3} 
           fontColor={blue}
-          text={conjecture["Text Boxes"]["Author Name"]}
+          text={conjecture["Text Boxes"]["Conjecture Name"]}
           fontWeight="bold"
-          callback={null}
+          callback = {() => {
+            conjectureCallback();
+          }}
         />
       
       ))}
@@ -81,9 +83,10 @@ function drawConjectureList(xMultiplier, yMultiplier, fontSizeMultiplier, totalW
           fontColor={blue}
           text={conjecture["Text Boxes"]["Conjecture Keywords"]}
           fontWeight="bold"
-          callback={null}
+          callback = {() => {
+            conjectureCallback();
+          }}
         />
-      
       ))}
       {conjectureList.map((conjecture, index) => (
         <RectButton
@@ -98,8 +101,8 @@ function drawConjectureList(xMultiplier, yMultiplier, fontSizeMultiplier, totalW
           text={"+"}
           fontWeight="bold"
           callback = {() => {
-            curricularCallback();
-            Curriculum.addConjecture(conjecture["Text Boxes"]["UUID"]);
+              Curriculum.addConjecture(conjecture);
+              curricularCallback();
           }}
         />
       ))}

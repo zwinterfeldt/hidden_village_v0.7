@@ -11,8 +11,8 @@ import { CurricularContentEditorMachine } from "../../machines/curricularEditorM
 export const Curriculum = {
   CurrentConjectures: [],
 
-  addConjecture(conjectureUUID) {
-    this.CurrentConjectures.push({conjectureUUID});
+  addConjecture(conjecture) {
+    this.CurrentConjectures.push({conjecture});
   },
 
   getCurrentConjectures() {

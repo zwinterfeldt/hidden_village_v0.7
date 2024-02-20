@@ -3,8 +3,10 @@ import { Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { white, black } from "../../utils/colors";
 import InputBox from "../InputBox";
+import RectButton from "../RectButton";
 import { getConjectureList,getConjectureDataByAuthorID } from "../../firebase/database";
 import { blue } from "../../utils/colors";
+import {Curriculum} from "./CurricularModule"
 
 // Handler functions
 function handleCurricularName(key) {
@@ -88,6 +90,73 @@ function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, t
   );
 }
 
+
+function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) {
+  const conjectureList = Curriculum.getCurrentConjectures();
+  if (conjectureList.length == 0){
+    return;
+  }
+
+  return (
+    <>
+      {conjectureList.map((conjecture, index) => (
+        <RectButton
+          key={index}
+          height={totalHeight /2 * yMultiplier}
+          width={totalWidth * 0.7}
+          x={totalWidth * (xMultiplier - .05)}
+          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
+          color={white}
+          fontSize={totalWidth * fontSizeMultiplier/1.3}
+          fontColor={blue}
+          text={conjecture["conjecture"]["Text Boxes"]["Author Name"]}
+          fontWeight="bold"
+          callback = {() => { 
+            console.log("conjecture: ", conjecture["conjecture"]["Text Boxes"]["Author Name"]);
+            console.log("curriculum: ", conjectureList);
+          }}
+        />
+      ))}
+      {conjectureList.map((conjecture, index) => (
+        <RectButton
+          key={index}
+          height={totalHeight /2 * yMultiplier}
+          width={totalWidth * 0.7}
+          x={totalWidth * (xMultiplier + 0.25)}
+          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
+          color={white}
+          fontSize={totalWidth * fontSizeMultiplier/1.3}
+          fontColor={blue}
+          text={conjecture["conjecture"]["Text Boxes"]["Conjecture Name"]}
+          fontWeight="bold"
+          callback = {() => {
+            console.log("conjecture: ", conjecture["conjecture"]["Text Boxes"]["Conjecture Name"]);
+            console.log("curriculum: ", conjectureList);
+          }}
+        />
+      ))}
+      {conjectureList.map((conjecture, index) => (
+        <RectButton
+          key={index}
+          height={totalHeight /2 * yMultiplier}
+          width={totalWidth * 0.7}
+          x={totalWidth * (xMultiplier +0.55)} 
+          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
+          color={white}
+          fontSize={totalWidth * fontSizeMultiplier/1.3}
+          fontColor={blue}
+          text={conjecture["conjecture"]["Text Boxes"]["Conjecture Keywords"]}
+          fontWeight="bold"
+          callback = {() => {
+            console.log("conjecture: ", conjecture["conjecture"]["Text Boxes"]["Conjecture Keywords"]);
+            console.log("curriculum: ", conjectureList);
+          }}
+        />
+      ))}
+    </>
+  );
+}
+
 export const CurricularContentEditor = (props) => {
   const { height, width } = props;
 
@@ -98,11 +167,19 @@ export const CurricularContentEditor = (props) => {
       {createInputBox(220, 0.10, .8, 0.46+ 0.09, 0.136-.030, 'CurricularAuthorID', width, height, handleCurricularAuthorID)}
       {createInputBox(4, 0.10, .3, 0.730, 0.175, 'CurricularPIN', width, height, handlePinInput)}
 
+      {/* For the text input boxes */}
       {createTextElement("Game Editor", 0.43, 0.030, 0.025, width, height)}
       {createTextElement("Keywords:", 0.110, 0.17, 0.018, width, height)}
       {createTextElement("Pin:", 0.690, 0.17, 0.018, width, height)}
       {createTextElement("Author:", 0.480, 0.105, 0.018, width, height)}
       {createTextElement("Game Name:",0.110, 0.100, 0.018, width, height)}
+
+      {/* To label the conjectures */}
+      {createTextElement("Author", 0.170, 0.260, 0.015, width, height)}
+      {createTextElement("Conjecture Name", 0.425, 0.260, 0.015, width, height)}
+      {createTextElement("Keywords", 0.750, 0.260, 0.015, width, height)}
+
+      {drawCurriculum(0.1, 0.3, 0.018, width, height)}
     </>
   );
 };
