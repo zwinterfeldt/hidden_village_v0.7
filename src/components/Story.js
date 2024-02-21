@@ -161,7 +161,7 @@ const Story = () => {
             editCallback={() => send("AUTHOR")} // goes to the Pose Sequence Editor
             mainCallback={() => send("HOME")} // goes to Home
             poseData={poseData}
-            UUID={"15ff9cc4-f39d-4db9-be04-bcad5907f876"}
+            UUID={"b56e115e-2efa-40e0-9c37-72b079907653"}
           />
         )
         }

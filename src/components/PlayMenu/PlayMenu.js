@@ -4,6 +4,11 @@ import { set } from "js-cookie";
 import Button from "../Button";
 import { blue, yellow } from "../../utils/colors";
 import RectButton from "../RectButton";
+import { send } from "xstate";
+import { sendTo } from "xstate/lib/actions";
+import { useMachine } from "@xstate/react";
+import {PlayMenuMachine} from "./PlayMenuMachine";
+import ConjecutureModule from "../ConjectureModule/ConjectureModule";
 
 const PlayMenu = (props) => {
     const {width, height, poseData, columnDimensions, rowDimensions} = props;
@@ -12,6 +17,7 @@ const PlayMenu = (props) => {
     const [distanceBetweenButtons, setDistanceBetweenButtons] = useState();
     const [startingX, setStartingX] = useState();
     const[multiplier, setMultiplier] = useState(1);
+    const[state, send] = useMachine(PlayMenuMachine);
     
 
     useEffect(() => {
@@ -34,7 +40,7 @@ const PlayMenu = (props) => {
                 {text: "New Game", callback: () => console.log("New Game")},
                 {text: "Edit Game", callback: () => console.log("Edit Game")},
                 {text: "Play", callback: () => console.log("Play")},
-                {text: "New Level", callback: () => console.log("New Level")},
+                {text: "New Level", callback: () => send("NEWLEVEL")},
                 {text: "Edit Level", callback: () => console.log("Edit Level")},
                 {text: "Settings", callback: () => console.log("Settings")},
             ])
@@ -44,8 +50,9 @@ const PlayMenu = (props) => {
     return (
         <>
         <Background height={height} width= {width}/>
-        {distanceBetweenButtons !== undefined && buttonList.map((button, idx) => (
+        {state.value === "ready" && buttonList.map((button, idx) => (
             <Button
+                fontColor={yellow}
                 key = {idx}
                 width = {width * 0.145*multiplier}
                 color = {blue}
@@ -57,6 +64,16 @@ const PlayMenu = (props) => {
                 callback={button.callback}
             />
         ))}
+        {state.value === "newLevel" && (
+            <ConjecutureModule
+                width={width}
+                height={height}
+                columnDimensions={columnDimensions}
+                rowDimensions={rowDimensions}
+                editCallback={() => send("AUTHOR")}
+                mainCallback={() => send("HOME")}
+            />
+        )}
         </>
     );
 };
