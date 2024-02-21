@@ -37,8 +37,11 @@ const Home = (props) => {
         console.error('Error fetching data:', error);
       }
     };
-
-    fetchData();
+    setTimeout(() => {
+      
+      fetchData();//wait 5 seconds and then proceed
+    }, 5000);
+    
   }, [onAuthStateChanged]);
 
   return (
