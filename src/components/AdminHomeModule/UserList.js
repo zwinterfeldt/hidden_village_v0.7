@@ -18,21 +18,21 @@ const UserList = (props) => {
     return (
         <>
             <Graphics
-                x = {0}
-                y = {40}
+                x = {width* .3}
+                y = {height * 2.25}
                 draw={(g) => {
                     // rectangle
                     g.beginFill(0xe0c755);
-                    g.drawRect(120, 195, 420, ( users.length * 25) + 10);
+                    g.drawRect(0, 0, width * 2, ( users.length * 25) + 10);
                     g.endFill();
                     // border
                     g.lineStyle(4, 0x000000, 1);
-                    g.drawRect(120, 195, 420, ( users.length * 25) + 10);
+                    g.drawRect(0, 0, width * 2, ( users.length * 25) + 10);
                 }}
             />
             <Text
-                x={120}
-                y={170}
+                x={width * .3}
+                y={height * 1.5}
                 text={`User`}
                 style={
                     new TextStyle({
@@ -46,8 +46,8 @@ const UserList = (props) => {
                 }
             />
             <Text
-                x={400}
-                y={170}
+                x={width * 1.5}
+                y={height * 1.5}
                 text={`Role`}
                 style={
                     new TextStyle({
@@ -65,7 +65,7 @@ const UserList = (props) => {
             {displayedUsers.map((user, index) => (
                 <UserObject
                     key={index} 
-                    width={width}
+                    width={width * .3}
                     height={height}
                     x={x}
                     y={y * 0.2 + (index + 1) * 25}  // Adjust the y position based on index

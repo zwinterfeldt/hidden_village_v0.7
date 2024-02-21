@@ -112,8 +112,8 @@ const UserManagementModule = (props) => {
         <RectButton
             height={height * 0.13}
             width={width * 0.26}
-            x={600}
-            y={180}
+            x={width * .6}
+            y={height * .15}
             color={green}
             fontSize={width * 0.015}
             fontColor={white}

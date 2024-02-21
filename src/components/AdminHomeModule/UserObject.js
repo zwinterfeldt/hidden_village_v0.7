@@ -47,7 +47,7 @@ const UserObject = (props) => {
     return (
         <>
             <Text
-                x={150}
+                x={width * 1.1}
                 y={y + 50}  // Move this line inside the style object
                 text={username}
                 style={
@@ -62,7 +62,7 @@ const UserObject = (props) => {
             <RectButton
                 height={55}
                 width={200}
-                x={420}
+                x={width * 5}
                 y={y + 50}
                 color={roleColors[role]}
                 fontSize={15}
