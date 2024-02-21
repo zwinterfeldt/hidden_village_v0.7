@@ -9,6 +9,9 @@ import { writeToDatabaseConjecture, writeToDatabaseDraft, getConjectureDataByUUI
 import { useMachine } from "@xstate/react";
 import { ConjectureEditorMachine } from "../../machines/conjectureEditorMachine";
 
+// remove when commiting
+import {writeToDatabaseNewUser, getUserRoleFromDatabase, getUserNameFromDatabase} from "../../firebase/userDatabase";
+
 const ConjectureModule = (props) => {
   const { height, width, poseData, columnDimensions, rowDimensions, editCallback, mainCallback } = props;
   const [state, send] = useMachine(ConjectureEditorMachine);
@@ -119,6 +122,32 @@ const ConjectureModule = (props) => {
           text={"PUBLISH"}
           fontWeight={800}
           callback={ () => writeToDatabaseConjecture() } // publish to database
+        />
+
+        {/* // REMOVE the get user role*/}
+        <RectButton
+          height={height * 0.13}
+          width={width * 0.26}
+          x={width * 0.85}
+          y={height * 0.83}
+          color={black}
+          fontSize={width * 0.015}
+          fontColor={white}
+          text={"TEST GET USER NAME"}
+          fontWeight={800}
+          callback={() => {
+            getUserNameFromDatabase()
+            .then((userRole) => {
+                if (userRole !== null) {
+                    console.log(`User Name: ${userRole}`);
+                } else {
+                    console.log("User not found in the database.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error retrieving user role:", error);
+            });
+          }}
         />
 
         {/* TEST RETRIEVE Button */}

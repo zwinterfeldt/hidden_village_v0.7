@@ -16,6 +16,8 @@ import PoseAuthoring from "./PoseAuth/PoseAuthoring.js";
 import ConjectureModule from "./ConjectureModule/ConjectureModule.js";
 import CurricularModule from "./CurricularModule/CurricularModule.js";
 import TestConjectureModule from "./TestConjectureModule/TestConjectureModule.js";
+import UserManagementModule from "./AdminHomeModule/UserManagementModule.js";
+import NewUserModule from "./AdminHomeModule/NewUserModule.js";
 import ConjecturePoseMatch from "./TestConjectureModule/ConjecturePoseMatch.js";
 import ConjecturePoseContainer from "./TestConjectureModule/ConjecturePoseContainer.js";
 
@@ -131,6 +133,10 @@ const Story = () => {
               send("TEST");
               console.log("LOL");}
               } // goes to the Test Module
+            UserManagementCallback={() => {
+              send("userManagementSettings");
+              console.log("User Management");}
+              } // goes to userManagement
           />
         )}
         {state.value === "curricular" && (
@@ -187,6 +193,31 @@ const Story = () => {
             width={width}
           />
         )}
+
+
+
+      {state.value === "ADDNEWUSER" && (
+          <NewUserModule
+            width={width}
+            height={height}
+            UserManagementCallback={() => {
+              send("userManagementSettings");
+              console.log("User Management");}
+              }// goes to user management
+        />
+        )}
+
+        {state.value === "userManagementSettings" && (
+          <UserManagementModule
+            width={width}
+            height={height}
+            mainCallback={() => send("HOME")} // goes to Home
+            addNewUserCallback={() => send("ADDNEWUSER")} // goes to add new user section
+        />
+        )}
+
+
+
       </Stage>
     </>
   );
