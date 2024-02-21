@@ -26,9 +26,6 @@ const CurricularModule = (props) => {
   const { height, width, mainCallback, conjectureSelectCallback } = props;
   const [state, send] = useMachine(CurricularContentEditorMachine);
 
-
-  
-
   // Reset Function
   const resetCurricularValues = () => {
     localStorage.removeItem('CurricularName');

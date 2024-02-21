@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { yellow, blue, green, white, red, black } from "../../utils/colors";
@@ -53,59 +54,59 @@ export const NameBox = (props) => {
     }
   }
   
-    return (
-      <>
-        {/* charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, callback*/}
-        {createInputBox(220, 0.19, 1.595, 0.134, 0.57, 'Multiple Choice 1', width, height, handleBoxInput)}
-        {createInputBox(220, 0.19, 1.595, 0.134, 0.66, 'Multiple Choice 2', width, height, handleBoxInput)}
-        {createInputBox(220, 0.19, 1.595, 0.134, 0.75, 'Multiple Choice 3', width, height, handleBoxInput)}
-        {createInputBox(220, 0.19, 1.595, 0.134, 0.84, 'Multiple Choice 4', width, height, handleBoxInput)}
-        {createInputBox(60, 0.10, 0.54, 0.143+ 0.062, 0.136-.050, 'Conjecture Name', width, height, handleBoxInput)}
-        {createInputBox(220, 0.10, .3, 0.46+ 0.062, 0.136-.050, 'Author Name', width, height, handleBoxInput)}
-        {createInputBox(220, 0.30, 1.595, 0.134, 0.175-.050, 'Conjecture Description', width, height, handleBoxInput)}
-        {createInputBox(220, 0.10, 1.268, 0.203 + 0.062, 0.295-.050, 'Conjecture Keywords', width, height, handleBoxInput)}
+  return (
+    <>
+      {/* charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, callback*/}
+      {createInputBox(220, 0.19, 1.595, 0.134, 0.57, 'Multiple Choice 1', width, height, handleBoxInput)}
+      {createInputBox(220, 0.19, 1.595, 0.134, 0.66, 'Multiple Choice 2', width, height, handleBoxInput)}
+      {createInputBox(220, 0.19, 1.595, 0.134, 0.75, 'Multiple Choice 3', width, height, handleBoxInput)}
+      {createInputBox(220, 0.19, 1.595, 0.134, 0.84, 'Multiple Choice 4', width, height, handleBoxInput)}
+      {createInputBox(60, 0.10, 0.54, 0.143+ 0.062, 0.136-.050, 'Conjecture Name', width, height, handleBoxInput)}
+      {createInputBox(220, 0.10, .3, 0.46+ 0.062, 0.136-.050, 'Author Name', width, height, handleBoxInput)}
+      {createInputBox(220, 0.30, 1.595, 0.134, 0.175-.050, 'Conjecture Description', width, height, handleBoxInput)}
+      {createInputBox(220, 0.10, 1.268, 0.203 + 0.062, 0.295-.050, 'Conjecture Keywords', width, height, handleBoxInput)}
 
-        {/* text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight */}
-        {createTextElement("KEYWORDS:", 0.137+ 0.062, 0.315-0.05, 0.018, width, height)}
-        {createTextElement("PIN:", 0.605+ 0.062, 0.155-0.05, 0.018, width, height)}
-        {createTextElement("AUTHOR:", 0.41+ 0.062, 0.155-0.05, 0.018, width, height)}
-        {createTextElement("CURRENT M-CLIP:", 0.45, 0.305, 0.018, width, height)}
-        {createTextElement("MULTIPLE CHOICE", 0.45, 0.55, 0.018, width, height)}
-        {createTextElement("Conjecture Editor", 0.45, 0.05, 0.025, width, height)}
-        {createTextElement("NAME:", 0.108+ 0.062, 0.155-0.05, 0.018, width, height)}
+      {/* text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight */}
+      {createTextElement("KEYWORDS:", 0.137+ 0.062, 0.315-0.05, 0.018, width, height)}
+      {createTextElement("PIN:", 0.605+ 0.062, 0.155-0.05, 0.018, width, height)}
+      {createTextElement("AUTHOR:", 0.41+ 0.062, 0.155-0.05, 0.018, width, height)}
+      {createTextElement("CURRENT M-CLIP:", 0.45, 0.305, 0.018, width, height)}
+      {createTextElement("MULTIPLE CHOICE", 0.45, 0.55, 0.018, width, height)}
+      {createTextElement("Conjecture Editor", 0.45, 0.05, 0.025, width, height)}
+      {createTextElement("NAME:", 0.108+ 0.062, 0.155-0.05, 0.018, width, height)}
 
-        {intializeCheckmarkBoxes()}
-        {/* If the user clicks multiple choice button A, then only A is marked and the rest are empty */}
-        {props.boxState === "optiona" && (
-          localStorage.setItem("OptionA Checkmark", " X"),
-          localStorage.setItem("OptionB Checkmark", " "),
-          localStorage.setItem("OptionC Checkmark", " "),
-          localStorage.setItem("OptionD Checkmark", " ")
-        )}
-        {/* If the user clicks multiple choice button B, then only B is marked and the rest are empty */}
-        {props.boxState === "optionb" && (
-          localStorage.setItem("OptionA Checkmark", " "),
-          localStorage.setItem("OptionB Checkmark", " X"),
-          localStorage.setItem("OptionC Checkmark", " "),
-          localStorage.setItem("OptionD Checkmark", " ")
-        )}
-        {/* If the user clicks multiple choice button C, then only C is marked and the rest are empty */}
-        {props.boxState === "optionc" && (
-          localStorage.setItem("OptionA Checkmark", " "),
-          localStorage.setItem("OptionB Checkmark", " "),
-          localStorage.setItem("OptionC Checkmark", " X"),
-          localStorage.setItem("OptionD Checkmark", " ")
-        )}
-        {/* If the user clicks multiple choice button D, then only D is marked and the rest are empty */}
-        {props.boxState === "optiond" && (
-          localStorage.setItem("OptionA Checkmark", " "),
-          localStorage.setItem("OptionB Checkmark", " "),
-          localStorage.setItem("OptionC Checkmark", " "),
-          localStorage.setItem("OptionD Checkmark", " X")
-        )}
-      </>
-    );
-  }
+      {intializeCheckmarkBoxes()}
+      {/* If the user clicks multiple choice button A, then only A is marked and the rest are empty */}
+      {props.boxState === "optiona" && (
+        localStorage.setItem("OptionA Checkmark", " X"),
+        localStorage.setItem("OptionB Checkmark", " "),
+        localStorage.setItem("OptionC Checkmark", " "),
+        localStorage.setItem("OptionD Checkmark", " ")
+      )}
+      {/* If the user clicks multiple choice button B, then only B is marked and the rest are empty */}
+      {props.boxState === "optionb" && (
+        localStorage.setItem("OptionA Checkmark", " "),
+        localStorage.setItem("OptionB Checkmark", " X"),
+        localStorage.setItem("OptionC Checkmark", " "),
+        localStorage.setItem("OptionD Checkmark", " ")
+      )}
+      {/* If the user clicks multiple choice button C, then only C is marked and the rest are empty */}
+      {props.boxState === "optionc" && (
+        localStorage.setItem("OptionA Checkmark", " "),
+        localStorage.setItem("OptionB Checkmark", " "),
+        localStorage.setItem("OptionC Checkmark", " X"),
+        localStorage.setItem("OptionD Checkmark", " ")
+      )}
+      {/* If the user clicks multiple choice button D, then only D is marked and the rest are empty */}
+      {props.boxState === "optiond" && (
+        localStorage.setItem("OptionA Checkmark", " "),
+        localStorage.setItem("OptionB Checkmark", " "),
+        localStorage.setItem("OptionC Checkmark", " "),
+        localStorage.setItem("OptionD Checkmark", " X")
+      )}
+    </>
+  );
+}
 
 function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) {
   return (

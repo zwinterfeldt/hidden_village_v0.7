@@ -7,6 +7,7 @@ import { ConjectureSelectorBoxes } from "./ConjectureSelectorModuleBoxes";
 import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
 import {Curriculum} from "../CurricularModule/CurricularModule";
+import {currentConjecture} from "../ConjectureModule/ConjectureModule"
 
 
 
@@ -67,6 +68,7 @@ const CurricularModule = (props) => {
             text={conjecture["Text Boxes"]["Author Name"]}
             fontWeight="bold"
             callback = {() => {
+              currentConjecture.setConjecture(conjecture);
               conjectureCallback(conjecture);
             }}
           />
@@ -85,6 +87,7 @@ const CurricularModule = (props) => {
             text={conjecture["Text Boxes"]["Conjecture Name"]}
             fontWeight="bold"
             callback = {() => {
+              currentConjecture.setConjecture(conjecture);
               conjectureCallback(conjecture);
             }}
           />
@@ -104,6 +107,7 @@ const CurricularModule = (props) => {
             text={conjecture["Text Boxes"]["Conjecture Keywords"]}
             fontWeight="bold"
             callback = {() => {
+              currentConjecture.setConjecture(conjecture);
               conjectureCallback(conjecture);
             }}
           />
