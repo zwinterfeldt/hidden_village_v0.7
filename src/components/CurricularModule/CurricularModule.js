@@ -8,6 +8,8 @@ import { CurricularContentEditor } from "../CurricularModule/CurricularModuleBox
 import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
 
+
+
 export const Curriculum = {
   CurrentConjectures: [],
 
@@ -23,6 +25,8 @@ export const Curriculum = {
 const CurricularModule = (props) => {
   const { height, width, mainCallback, conjectureSelectCallback } = props;
   const [state, send] = useMachine(CurricularContentEditorMachine);
+
+
   
 
   // Reset Function
@@ -42,8 +46,8 @@ const CurricularModule = (props) => {
 
   // Publish function that includes reset
   const publishAndReset = () => {
-    writeToDatabaseConjecture(); // publish to database
-    resetCurricularValues(); // Reset values after publishing
+    writeToDatabaseConjecture(); 
+    resetCurricularValues();
   };
 
   return (
@@ -52,22 +56,47 @@ const CurricularModule = (props) => {
       <RectButton
         height={height * 0.13}
         width={width * 0.26}
-        x={width * 0.71}
+        x={width * 0.85}
         y={height * 0.93}
         color={red}
-        fontSize={width * 0.015}
+        fontSize={width * 0.013}
         fontColor={white}
         text={"BACK"}
         fontWeight={800}
         callback={enhancedMainCallback} //this will reset everything once you leave the page
       />
 
-     
       <RectButton
         height={height * 0.13}
-        width={width * 0.50}
-        x={width *0.58}
-        y={height *0.60}
+        width={width * 0.26}
+        x={width * 0.15}
+        y={height * 0.93}
+        color={blue}
+        fontSize={width * 0.014}
+        fontColor={white}
+        text={"PREVIOUS"}
+        fontWeight={800}
+        callback = {null}
+      />
+
+      <RectButton
+        height={height * 0.13}
+        width={width * 0.26}
+        x={width * 0.35}
+        y={height * 0.93}
+        color={blue}
+        fontSize={width * 0.014}
+        fontColor={white}
+        text={"NEXT"}
+        fontWeight={800}
+        callback={null}
+      />
+
+      <RectButton
+        height={height * 0.13}
+        width={width * 0.45}
+        x={width *0.15}
+        y={height *0.93}
         color={blue}
         fontSize={width * 0.014}
         fontColor={white}
@@ -79,20 +108,19 @@ const CurricularModule = (props) => {
       <RectButton
         height={height * 0.13}
         width={width * 0.26}
-        x={width * 0.58}
+        x={width * 0.55}
         y={height * 0.93}
         color={green}
-        fontSize={width * 0.014}
+        fontSize={width * 0.013}
         fontColor={white}
         text={"SAVE DRAFT"}
         fontWeight={800}
         callback={ () => writeToDatabaseDraft() } // Implement Save feature
       />
-
       <RectButton
         height={height * 0.13}
         width={width * 0.26}
-        x={width * 0.45}
+        x={width * 0.73}
         y={height * 0.93}
         color={blue}
         fontSize={width * 0.015}

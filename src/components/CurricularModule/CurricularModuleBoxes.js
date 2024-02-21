@@ -8,6 +8,7 @@ import { getConjectureList,getConjectureDataByAuthorID } from "../../firebase/da
 import { blue } from "../../utils/colors";
 import {Curriculum} from "./CurricularModule"
 
+
 // Handler functions
 function handleCurricularName(key) {
   const existingValue = localStorage.getItem(key);
