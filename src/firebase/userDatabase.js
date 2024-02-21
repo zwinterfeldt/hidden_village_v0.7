@@ -13,7 +13,6 @@ const auth = getAuth();
 // Listen for changes to the authentication state
 // and update the userId variable accordingly
 onAuthStateChanged(auth, (user) => {
-    console.log("CheeseFrogsandCrackers")
     userId = user.uid;
 });
 
