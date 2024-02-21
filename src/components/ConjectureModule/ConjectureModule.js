@@ -26,14 +26,15 @@ export const currentConjecture = {
 function setLocalStorage(){ 
   const conjecture = currentConjecture.getCurrentConjecture();
   if (conjecture !== null) {
+    console.log(conjecture);
     localStorage.setItem('Author Name' , conjecture['Text Boxes']['Author Name']);
     localStorage.setItem('Conjecture Description' , conjecture['Text Boxes']['Conjecture Description']);
     localStorage.setItem('Conjecture Name' , conjecture['Text Boxes']['Conjecture Name']);
     localStorage.setItem('Conjecture Keywords' , conjecture['Text Boxes']['Conjecture Keywords']);
-    localStorage.setItem("OptionA Checkmark", conjecture['Text Boxes']['Multiple Choice 1']),
-    localStorage.setItem("OptionB Checkmark", conjecture['Text Boxes']['Multiple Choice 2']),
-    localStorage.setItem("OptionC Checkmark", conjecture['Text Boxes']['Multiple Choice 3']),
-    localStorage.setItem("OptionD Checkmark", conjecture['Text Boxes']['Multiple Choice 4'])
+    localStorage.setItem("Multiple Choice 1", conjecture['Text Boxes']['Multiple Choice 1']),
+    localStorage.setItem("Multiple Choice 2", conjecture['Text Boxes']['Multiple Choice 2']),
+    localStorage.setItem("Multiple Choice 3", conjecture['Text Boxes']['Multiple Choice 3']),
+    localStorage.setItem("Multiple Choice 4", conjecture['Text Boxes']['Multiple Choice 4'])
     localStorage.setItem('PIN' , conjecture['Text Boxes']['PIN']);
     localStorage.setItem('start.json' , conjecture['Start Pose']['poseData']);
     localStorage.setItem('intermediate.json' , conjecture['Intermediate Pose']['poseData']);
