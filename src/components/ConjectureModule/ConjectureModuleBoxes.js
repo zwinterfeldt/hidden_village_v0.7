@@ -128,20 +128,7 @@ function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, t
   );
 }
 
-export const YourComponent = (props) => {
-  return (
-    <>
-      {createTextElement("KEYWORDS:", 0.1275, 0.322, 0.018, width, height)}
-      {createTextElement("PIN:", 0.797, 0.13, 0.018, width, height)}
-      {createTextElement("AUTHOR:", 0.6, 0.13, 0.018, width, height)}
-      {createTextElement("CURRENT M-CLIP:", 0.50, 0.37, 0.018, width, height)}
-      {createTextElement("MULTIPLE CHOICE", 0.50, 0.52, 0.018, width, height)}
-      {createTextElement("Conjecture Editor", 0.5, 0.05, 0.025, width, height)}
-      {createTextElement("NAME:", 0.102, 0.13, 0.018, width, height)}
-      {/* ... other Text elements ... */}
-    </>
-  );
-}
+
 
 
 export const PINBox = (props) => {
