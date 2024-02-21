@@ -25,8 +25,7 @@ export const currentConjecture = {
 // currentConjecture receives the value when the conjecture is clicked from ConjectureSelectorModule
 function setLocalStorage(){ 
   const conjecture = currentConjecture.getCurrentConjecture();
-  if (conjecture !== null) {
-    console.log(conjecture);
+  if (currentConjecture.getCurrentConjecture().length != 0) {
     localStorage.setItem('Author Name' , conjecture['Text Boxes']['Author Name']);
     localStorage.setItem('Conjecture Description' , conjecture['Text Boxes']['Conjecture Description']);
     localStorage.setItem('Conjecture Name' , conjecture['Text Boxes']['Conjecture Name']);
