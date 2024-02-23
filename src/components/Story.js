@@ -22,6 +22,7 @@ import ConjecturePoseMatch from "./TestConjectureModule/ConjecturePoseMatch.js";
 import ConjecturePoseContainer from "./TestConjectureModule/ConjecturePoseContainer.js";
 import PlayMenu from "./PlayMenu/PlayMenu.js";
 import Background from "./Background.js";
+import { getUserRoleFromDatabase } from "../firebase/userDatabase.js";
 
 const [
   numRows,

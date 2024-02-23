@@ -117,6 +117,7 @@ const PoseMatching = (props) => {
   useEffect(() => {
     if (!firstPose) {
       let similarityThreshold = 45;
+      // if there is a tolerance for the pose, use that as the threshold
       if (currentPose.tolerance != null) {
         similarityThreshold = currentPose.tolerance;
       }
