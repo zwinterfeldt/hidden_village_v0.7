@@ -19,7 +19,7 @@ const ConjecturePoseContainer = (props) => {
         g.endFill();
       }, []);
 
-
+// Use background and graphics to draw background and then initiate conjecturePoseMatch
     return (
     <>
         <Background height={height * 1.1} width={width} />

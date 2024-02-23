@@ -8,7 +8,7 @@ export const StoryMachine = createMachine({
   states: {
     ready: {
       on: {
-        TOGGLE: "playing",  // move to game
+        TOGGLE: "main",  // move to game
         CONJECT: "conjecture", // move to conjecture editor
         POSE: "pose", // move to pose
         AUTHOR: "edit", // move to poseauthoring
@@ -27,6 +27,9 @@ export const StoryMachine = createMachine({
       on: {
         HOME: "ready", // move to home
       }
+    },
+    main: {
+      
     },
     playing: {},
     conjecture: {

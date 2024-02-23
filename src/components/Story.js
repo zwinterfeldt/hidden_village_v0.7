@@ -20,6 +20,9 @@ import UserManagementModule from "./AdminHomeModule/UserManagementModule.js";
 import NewUserModule from "./AdminHomeModule/NewUserModule.js";
 import ConjecturePoseMatch from "./TestConjectureModule/ConjecturePoseMatch.js";
 import ConjecturePoseContainer from "./TestConjectureModule/ConjecturePoseContainer.js";
+import PlayMenu from "./PlayMenu/PlayMenu.js";
+import Background from "./Background.js";
+import { getUserRoleFromDatabase } from "../firebase/userDatabase.js";
 
 const [
   numRows,
@@ -159,7 +162,7 @@ const Story = () => {
             editCallback={() => send("AUTHOR")} // goes to the Pose Sequence Editor
             mainCallback={() => send("HOME")} // goes to Home
             poseData={poseData}
-            UUID={"15ff9cc4-f39d-4db9-be04-bcad5907f876"}
+            UUID={"b56e115e-2efa-40e0-9c37-72b079907653"}
           />
         )
         }
@@ -184,14 +187,32 @@ const Story = () => {
             conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
           />
         )}
-        {state.value === "playing" && (
-          <Game
+        
+        {/* // {state.value === "play" && (
+        //   <Background height={height} width={width} />
+        //   // <PlayMenu
+        //   //   width={width}
+        //   //   height={height}
+        //   //   columnDimensions={columnDimensions}
+        //   //   rowDimensions={rowDimensions}
+        //   //   poseData={poseData}
+        //   // />
+        // )} */}
+        {state.value === "main" && (
+          <PlayMenu
+            width={width}
+            height={height}
             poseData={poseData}
             columnDimensions={columnDimensions}
             rowDimensions={rowDimensions}
-            height={height}
-            width={width}
           />
+          // <Game
+          //   poseData={poseData}
+          //   columnDimensions={columnDimensions}
+          //   rowDimensions={rowDimensions}
+          //   height={height}
+          //   width={width}
+          // />
         )}
 
 
