@@ -26,7 +26,7 @@ function handleCurricularKeywords(key) {
   }
 }
 
-function handleCurricularAuthorID(key) {
+function handleCurricularAuthor(key) {
   const existingValue = localStorage.getItem(key);
   const newValue = prompt("Please add an Author name:", existingValue);
   if (newValue !== null) {
@@ -165,7 +165,7 @@ export const CurricularContentEditor = (props) => {
     <>
       {createInputBox(60, 0.10, 0.55, 0.123+ 0.10, 0.136-.030, 'CurricularName', width, height, handleCurricularName)}
       {createInputBox(180, 0.10, 1, 0.210, 0.17, 'CurricularKeywords', width, height, handleCurricularKeywords)}
-      {createInputBox(220, 0.10, .8, 0.46+ 0.09, 0.136-.030, 'CurricularAuthorID', width, height, handleCurricularAuthorID)}
+      {createInputBox(220, 0.10, .8, 0.46+ 0.09, 0.136-.030, 'CurricularAuthor', width, height, handleCurricularAuthor)}
       {createInputBox(4, 0.10, .3, 0.730, 0.175, 'CurricularPIN', width, height, handlePinInput)}
 
       {/* For the text input boxes */}

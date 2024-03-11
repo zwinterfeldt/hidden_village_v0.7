@@ -5,7 +5,7 @@ import RectButton from "../RectButton";
 import InputBox from "../InputBox";
 import { ConjectureBox, KeywordsBox, NameBox, PINBox } from "./ConjectureModuleBoxes";
 import { EndBox, IntermediateBox, StartBox } from "../PoseAuth/PoseAuthoringBoxes";
-import { writeToDatabaseConjecture, writeToDatabaseDraft, getConjectureDataByUUID,getConjectureDataByAuthorID, getConjectureDataByPIN, getPoseDataByConjUUID } from "../../firebase/database";
+import { writeToDatabaseConjecture, writeToDatabaseDraft, keysToPush} from "../../firebase/database";
 import { useMachine } from "@xstate/react";
 import { ConjectureEditorMachine } from "../../machines/conjectureEditorMachine";
 
@@ -26,15 +26,11 @@ export const currentConjecture = {
 function setLocalStorage(){ 
   const conjecture = currentConjecture.getCurrentConjecture();
   if (currentConjecture.getCurrentConjecture().length != 0) {
-    localStorage.setItem('Author Name' , conjecture['Text Boxes']['Author Name']);
-    localStorage.setItem('Conjecture Description' , conjecture['Text Boxes']['Conjecture Description']);
-    localStorage.setItem('Conjecture Name' , conjecture['Text Boxes']['Conjecture Name']);
-    localStorage.setItem('Conjecture Keywords' , conjecture['Text Boxes']['Conjecture Keywords']);
-    localStorage.setItem("Multiple Choice 1", conjecture['Text Boxes']['Multiple Choice 1']),
-    localStorage.setItem("Multiple Choice 2", conjecture['Text Boxes']['Multiple Choice 2']),
-    localStorage.setItem("Multiple Choice 3", conjecture['Text Boxes']['Multiple Choice 3']),
-    localStorage.setItem("Multiple Choice 4", conjecture['Text Boxes']['Multiple Choice 4'])
-    localStorage.setItem('PIN' , conjecture['Text Boxes']['PIN']);
+    // fill in keys pushed to Text Boxes by writeToDatabase in database.js
+    for (i = 0; i < keysToPush.length; i++){
+      localStorage.setItem(keysToPush[i], conjecture['Text Boxes'][keysToPush[i]]);
+    }
+    // fill in poses from database
     localStorage.setItem('start.json' , conjecture['Start Pose']['poseData']);
     localStorage.setItem('intermediate.json' , conjecture['Intermediate Pose']['poseData']);
     localStorage.setItem('end.json' , conjecture['End Pose']['poseData']);
@@ -154,75 +150,6 @@ const ConjectureModule = (props) => {
           fontWeight={800}
           callback={ () => writeToDatabaseConjecture() } // publish to database
         />
-
-        {/* TEST RETRIEVE Button */}
-        <RectButton
-          height={height * 0.13}
-          width={width * 0.26}
-          x={width * 0.15}
-          y={height * 0.93}
-          color={black}
-          fontSize={width * 0.015}
-          fontColor={white}
-          text={"TEST UUID"}
-          fontWeight={800}
-          callback={() => {
-            const targetUUID = "698c9d7d-2d4a-44e4-8ac1-abee27569a6b"; // a UUID I created earlier
-            getConjectureDataByUUID(targetUUID)
-              .then((conjectureData) => {
-                console.log('Conjecture Data:', conjectureData);
-              })
-              .catch((error) => {
-                console.error('Error getting conjecture data: ', error);
-              });
-          }}
-        />
-        {/* TEST Author ID Button */}
-        <RectButton
-          height={height * 0.13}
-          width={width * 0.26}
-          x={width * 0.05}
-          y={height * 0.93}
-          color={black}
-          fontSize={width * 0.015}
-          fontColor={white}
-          text={"TEST AuthorID"}
-          fontWeight={800}
-          callback={() => {
-            const userId = "CYONFYmwvXbPT1uLUqkTO2GPtoL2"; // nates user id
-            getConjectureDataByAuthorID(userId)
-              .then((conjectureData) => {
-                console.log('Conjecture Data:', conjectureData);
-              })
-              .catch((error) => {
-                console.error('Error getting conjecture data: ', error);
-              });
-          }}
-        />
-        {/* TEST PIN Button */}
-        <RectButton
-          height={height * 0.13}
-          width={width * 0.26}
-          x={width * 0.25}
-          y={height * 0.93}
-          color={black}
-          fontSize={width * 0.015}
-          fontColor={white}
-          text={"TEST PIN"}
-          fontWeight={800}
-          callback={() => {
-            const PIN = "123456789"; // some PIN I created
-            getConjectureDataByPIN(PIN)
-              .then((conjectureData) => {
-                console.log('Conjecture Data:', conjectureData);
-              })
-              .catch((error) => {
-                console.error('Error getting conjecture data: ', error);
-              });
-          }}
-        />
-
-
         {/* Back Button */}
         <Button
           height={height * 0.32}

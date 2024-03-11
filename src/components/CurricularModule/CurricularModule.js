@@ -1,15 +1,16 @@
+// AKA Game module
 import React from 'react';
 import Background from "../Background";
 import { blue, white, red, green } from "../../utils/colors";
 import Button from "../Button";
 import RectButton from "../RectButton";
-import { writeToDatabaseConjecture, writeToDatabaseDraft, getConjectureDataByUUID,getConjectureDataByAuthorID, getConjectureDataByPIN, getPoseDataByConjUUID } from "../../firebase/database";
+import { writeToDatabaseConjecture, writeToDatabaseCurricularDraft, getConjectureDataByUUID,getConjectureDataByAuthorID, getConjectureDataByPIN, getPoseDataByConjUUID } from "../../firebase/database";
 import { CurricularContentEditor } from "../CurricularModule/CurricularModuleBoxes";
 import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
 
 
-
+// stores a list of conjectures
 export const Curriculum = {
   CurrentConjectures: [],
 
@@ -29,7 +30,7 @@ const CurricularModule = (props) => {
   // Reset Function
   const resetCurricularValues = () => {
     localStorage.removeItem('CurricularName');
-    localStorage.removeItem('CurricularAuthorID');
+    localStorage.removeItem('CurricularAuthor');
     localStorage.removeItem('CurricularKeywords');
     localStorage.removeItem('CurricularPIN');
   };
@@ -112,7 +113,7 @@ const CurricularModule = (props) => {
         fontColor={white}
         text={"SAVE DRAFT"}
         fontWeight={800}
-        callback={ () => writeToDatabaseDraft() } // Implement Save feature
+        callback={ () => writeToDatabaseCurricularDraft() }
       />
       <RectButton
         height={height * 0.13}

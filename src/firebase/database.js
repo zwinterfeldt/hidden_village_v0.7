@@ -1,7 +1,8 @@
-
 // Firebase Init
 import { ref, push, getDatabase, set, query, equalTo, get, orderByChild } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+import { Curriculum } from "../components/CurricularModule/CurricularModule";
 
 
 // Import the uuid library
@@ -20,6 +21,19 @@ const auth = getAuth();
 onAuthStateChanged(auth, (user) => {
   userId = user.uid;
 });
+
+// Define data keys for the text inputs of conjectures
+export const keysToPush = [
+  "Conjecture Name",
+  "Author Name",
+  "PIN",
+  "Conjecture Keywords",
+  "Conjecture Description",
+  "Multiple Choice 1",
+  "Multiple Choice 2",
+  "Multiple Choice 3",
+  "Multiple Choice 4",
+];
 
 // Export a function named writeToDatabase
 export const writeToDatabase = async (poseData, conjectureId, frameRate) => {
@@ -83,19 +97,6 @@ export const writeToDatabaseConjecture = async () => {
   // Initialize empty object to store the data inside
   const dataToPush = {};
 
-  // Define data keys for the text inputs 
-  const keysToPush = [
-    "Conjecture Name",
-    "Author Name",
-    "PIN",
-    "Conjecture Keywords",
-    "Conjecture Description",
-    "Multiple Choice 1",
-    "Multiple Choice 2",
-    "Multiple Choice 3",
-    "Multiple Choice 4",
-  ];
-
   // Fetch values from local storage for each key inside keysToPush 
   const isAnyKeyNullOrUndefined = keysToPush.some((key) => {
     const value = localStorage.getItem(key);
@@ -155,6 +156,7 @@ export const writeToDatabaseConjecture = async () => {
   }
 };
 
+// save a draft of the current conjecture so it can be published later
 export const writeToDatabaseDraft = async () => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
@@ -163,25 +165,12 @@ export const writeToDatabaseDraft = async () => {
   // Initialize empty object to store the data inside
   const dataToPush = {};
 
-  // Define data keys for the text inputs 
-  const keysToPush = [
-    "Conjecture Name",
-    "Author Name",
-    "PIN",
-    "Conjecture Keywords",
-    "Conjecture Description",
-    "Multiple Choice 1",
-    "Multiple Choice 2",
-    "Multiple Choice 3",
-    "Multiple Choice 4",
-  ];
-
   // Fetch values from local storage for each key inside KeysToPush 
   await Promise.all(keysToPush.map(async (key) => {
     const value = localStorage.getItem(key);
     Object.assign(dataToPush, await createTextObjects(key, value));
 
-    // If the valye is undefined assign the value as undefined in firebase
+    // If the value is undefined assign the value as undefined in firebase
     if(value == undefined){
       Object.assign(dataToPush, await createTextObjects(key, "undefined"));
     }
@@ -208,7 +197,7 @@ export const writeToDatabaseDraft = async () => {
   return promises && alert("Draft saved");
 };
 
-// Helper function to create pose objects for the writeToDatabaseConjecture fucntion 
+// Helper function to create pose objects for the writeToDatabaseConjecture function 
 const createPoseObjects = async (poseData, state, tolerance) => {
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
@@ -225,7 +214,7 @@ const createPoseObjects = async (poseData, state, tolerance) => {
   return dataToSend;
 }
 
-// Helper function to create text objects for the writeToDatabaseConjecture fucntion 
+// Helper function to create text objects for the writeToDatabaseConjecture function 
 const createTextObjects = async (key, value) => {
   const dataToSend = {
     [key]: value,
@@ -299,6 +288,38 @@ const countRejectedPromises = async (promises) => {
   // Return the total number of rejected promises
   return rejectedCount;
 };
+
+
+// save a draft of a collection of conjectures to be published later
+export const writeToDatabaseCurricularDraft = async () => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+
+  const CurricularID = uuidv4();
+
+  const conjectureList = Curriculum.getCurrentConjectures();
+  let dataToPush = [];
+  for (let i = 0; i < conjectureList.length; i++){
+    dataToPush.push(conjectureList[i]["conjecture"]["UUID"]);
+  }
+
+  const CurricularPath = `Curricular Draft/Draft: ${localStorage.getItem("CurricularName")}`;
+
+  // creates promises to push all of the data to the database 
+  // uses set to overwrite the random firebaseKeys with easier to read key names
+  const promises = [
+    set(ref(db, `${CurricularPath}/ConjectureUUIDs`), dataToPush),
+    set(ref(db, `${CurricularPath}/Time`), timestamp),
+    set(ref(db, `${CurricularPath}/UUID`), CurricularID),
+    set(ref(db, `${CurricularPath}/Author`), localStorage.getItem("CurricularAuthor")),
+    set(ref(db, `${CurricularPath}/Keywords`), localStorage.getItem("CurricularKeywords")),
+    set(ref(db, `${CurricularPath}/PIN`), localStorage.getItem("CurricularPIN")),
+  ];
+
+  return promises && alert("Curricular Draft saved");
+}
+
 
 // Define a function to retrieve a conjecture based on UUID
 export const getConjectureDataByUUID = async (conjectureID) => {

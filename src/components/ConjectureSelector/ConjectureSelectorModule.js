@@ -8,8 +8,20 @@ import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
 import {Curriculum} from "../CurricularModule/CurricularModule";
 import {currentConjecture} from "../ConjectureModule/ConjectureModule"
+import { getConjectureDataByUUID } from "../../firebase/database";
 
+export function handlePIN(conjecture, message = "Please Enter the PIN."){ // this is meant to be used in an if statement
+  const existingPIN = conjecture["PIN"];
+  const enteredPIN = prompt(message);
 
+  if(enteredPIN == existingPIN){ // proceed with if statement
+    return true;
+  }
+  else if(enteredPIN != null && enteredPIN != ""){ // recursively try to have the user enter a PIN when it is incorrect
+    return handlePIN(conjecture, message = "Incorrect PIN, please try again.");
+  }
+  return false; // do nothing if cancel is clicked
+}
 
 const CurricularModule = (props) => {
   
@@ -61,15 +73,17 @@ const CurricularModule = (props) => {
             height={totalHeight /2 * yMultiplier}
             width={totalWidth * 0.8}
             x={totalWidth * (xMultiplier-0.08)}
-            y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
+            y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier * 0.75}
             color={white}
             fontSize={totalWidth * fontSizeMultiplier/1.3}
             fontColor={blue}
             text={conjecture["Text Boxes"]["Author Name"]}
             fontWeight="bold"
             callback = {() => {
-              currentConjecture.setConjecture(conjecture);
-              conjectureCallback(conjecture);
+              if(handlePIN(conjecture)){
+                currentConjecture.setConjecture(conjecture);
+                conjectureCallback(conjecture);
+              }
             }}
           />
         ))}
@@ -80,15 +94,17 @@ const CurricularModule = (props) => {
             height={totalHeight / 2 * yMultiplier}
             width={totalWidth * 0.6}
             x={totalWidth * (xMultiplier + 0.25)}
-            y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
+            y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier * 0.75}
             color={white}
             fontSize={totalWidth * fontSizeMultiplier / 1.3} 
             fontColor={blue}
             text={conjecture["Text Boxes"]["Conjecture Name"]}
             fontWeight="bold"
             callback = {() => {
-              currentConjecture.setConjecture(conjecture);
-              conjectureCallback(conjecture);
+              if(handlePIN(conjecture)){
+                currentConjecture.setConjecture(conjecture);
+                conjectureCallback(conjecture);
+              }
             }}
           />
         
@@ -100,15 +116,17 @@ const CurricularModule = (props) => {
             height={totalHeight / 2 * yMultiplier}
             width={totalWidth * 0.8}
             x={totalWidth * (xMultiplier +0.50)} 
-            y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
+            y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier * 0.75} 
             color={white}
             fontSize={totalWidth * fontSizeMultiplier / 1.3}
             fontColor={blue}
             text={conjecture["Text Boxes"]["Conjecture Keywords"]}
             fontWeight="bold"
             callback = {() => {
-              currentConjecture.setConjecture(conjecture);
-              conjectureCallback(conjecture);
+              if(handlePIN(conjecture)){
+                currentConjecture.setConjecture(conjecture);
+                conjectureCallback(conjecture);
+              }
             }}
           />
         ))}
@@ -119,16 +137,19 @@ const CurricularModule = (props) => {
             key={index}
             height={0.01}
             width={0.01}
-            x={totalWidth * xMultiplier - totalWidth * xMultiplier *0.8}
-            y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier + totalHeight * yMultiplier *0.1 }
+            x={totalWidth * xMultiplier - totalWidth * xMultiplier *0.7}
+            y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier - totalHeight * yMultiplier *0.15 }
             color={white}
             fontSize={totalWidth * fontSizeMultiplier * 2}
             fontColor={neonGreen}
             text={"+"}
             fontWeight="bold"
             callback = {() => {
-              Curriculum.addConjecture(conjecture);
-              curricularCallback();
+              console.log(conjecture);
+              if(handlePIN(conjecture)){
+                Curriculum.addConjecture(conjecture);
+                curricularCallback();
+              }
             }}
           />
         ))}
