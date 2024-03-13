@@ -38,7 +38,14 @@ export const PlayMenuMachine = createMachine({
     newLevel: {
       on: {
         MAIN: "main", // move to home
+        EDIT: "edit", // move to edit
       },
     },
+    edit: {
+      on: {
+        NEWLEVEL: "newLevel", // move to new level
+      },
+      }
     }
-});
+    }
+);

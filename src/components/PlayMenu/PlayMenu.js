@@ -16,6 +16,8 @@ import { TextStyle } from "@pixi/text";
 import Settings from "../Settings";
 import UserManagementModule from "../AdminHomeModule/UserManagementModule";
 import NewUserModule from "../AdminHomeModule/NewUserModule";
+import PoseAuthoring from "../PoseAuth/PoseAuthoring";
+import ConjecturePoseContainer from "../TestConjectureModule/ConjecturePoseContainer";
 
 const PlayMenu = (props) => {
     const {width, height, poseData, columnDimensions, rowDimensions, role} = props;
@@ -106,19 +108,32 @@ const PlayMenu = (props) => {
                 columnDimensions={columnDimensions}
                 rowDimensions={rowDimensions}
                 mainCallback={() => send("MAIN")}
+                editCallback={() => send("EDIT")}
             />
         )}
+        {state.value === "edit" && (
+            <PoseAuthoring
+            width={width}
+            height={height}
+            poseData={poseData}
+            columnDimensions={columnDimensions}
+            rowDimensions={rowDimensions}
+            conjectureCallback={() => send("NEWLEVEL")}  // goes to the Conjecture Module
+          />
+        )
+        }
         {state.value === "play" && (
-            <Text text={"PLAY THE GAME"} x={width * 0.5} y={height * 0.5} style={
-                new TextStyle({
-                  align: "center",
-                  fontFamily: "Futura",
-                  fontSize: 150,
-                  fontWeight: 800,
-                  fill: [blue],
-                  letterSpacing: 0,
-                })
-              } anchor={0.5} />   
+            <ConjecturePoseContainer
+          
+            height={height}
+            width={width}
+            columnDimensions={columnDimensions}
+            rowDimensions={rowDimensions}
+            editCallback={() => send("AUTHOR")} // goes to the Pose Sequence Editor
+            mainCallback={() => send("HOME")} // goes to Home
+            poseData={poseData}
+            UUID={"43edd593-1838-49f7-9315-6d2a913de763"}
+          /> 
         )}
         {state.value === "settings" && (
             <Settings
