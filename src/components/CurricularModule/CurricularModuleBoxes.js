@@ -110,10 +110,10 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           color={white}
           fontSize={totalWidth * fontSizeMultiplier/1.3}
           fontColor={blue}
-          text={conjecture["conjecture"]["Text Boxes"]["Author Name"]}
+          text={conjecture["Text Boxes"]["Author Name"]}
           fontWeight="bold"
           callback = {() => { 
-            console.log("conjecture: ", conjecture["conjecture"]["Text Boxes"]["Author Name"]);
+            console.log("conjecture: ", conjecture["Text Boxes"]["Author Name"]);
             console.log("curriculum: ", conjectureList);
           }}
         />
@@ -128,10 +128,10 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           color={white}
           fontSize={totalWidth * fontSizeMultiplier/1.3}
           fontColor={blue}
-          text={conjecture["conjecture"]["Text Boxes"]["Conjecture Name"]}
+          text={conjecture["Text Boxes"]["Conjecture Name"]}
           fontWeight="bold"
           callback = {() => {
-            console.log("conjecture: ", conjecture["conjecture"]["Text Boxes"]["Conjecture Name"]);
+            console.log("conjecture: ", conjecture["Text Boxes"]["Conjecture Name"]);
             console.log("curriculum: ", conjectureList);
           }}
         />
@@ -146,10 +146,10 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           color={white}
           fontSize={totalWidth * fontSizeMultiplier/1.3}
           fontColor={blue}
-          text={conjecture["conjecture"]["Text Boxes"]["Conjecture Keywords"]}
+          text={conjecture["Text Boxes"]["Conjecture Keywords"]}
           fontWeight="bold"
           callback = {() => {
-            console.log("conjecture: ", conjecture["conjecture"]["Text Boxes"]["Conjecture Keywords"]);
+            console.log("conjecture: ", conjecture["Text Boxes"]["Conjecture Keywords"]);
             console.log("curriculum: ", conjectureList);
           }}
         />

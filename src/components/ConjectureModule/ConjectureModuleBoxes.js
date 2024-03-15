@@ -4,7 +4,7 @@ import { TextStyle } from "@pixi/text";
 import { yellow, blue, green, white, red, black } from "../../utils/colors";
 import InputBox from "../InputBox";
 
-function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, callback) {
+function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, inputCallback) {
   const text = localStorage.getItem(textKey)?.slice(0, charLimit) +
                (localStorage.getItem(textKey)?.length > charLimit ? '...' : '');
 
@@ -13,6 +13,7 @@ function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yM
   const x = totalWidth * xMultiplier;
   const y = totalHeight * yMultiplier;
 
+  
   return (
     <InputBox
       height={height}
@@ -25,7 +26,9 @@ function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yM
       text={text}
       fontWeight={500}
       outlineColor={black}
-      callback={() => callback(textKey)}
+      callback={() => {
+        inputCallback(textKey);
+      }}
     />
   );
 }
@@ -128,9 +131,6 @@ function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, t
     />
   );
 }
-
-
-
 
 export const PINBox = (props) => {
   const { height, width } = props;

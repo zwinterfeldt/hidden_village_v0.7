@@ -15,7 +15,7 @@ export const Curriculum = {
   CurrentConjectures: [],
 
   addConjecture(conjecture) {
-    this.CurrentConjectures.push({conjecture});
+    this.CurrentConjectures.push(conjecture);
   },
 
   getCurrentConjectures() {
@@ -44,7 +44,7 @@ const CurricularModule = (props) => {
 
   // Publish function that includes reset
   const publishAndReset = () => {
-    writeToDatabaseConjecture(); 
+    writeToDatabaseCurricularDraft(); 
     resetCurricularValues();
   };
 

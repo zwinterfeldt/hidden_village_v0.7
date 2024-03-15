@@ -404,7 +404,7 @@ export const getConjectureList = async () => {
     // ref the realtime db
     const dbRef = ref(db, 'Final');
     // query to find data
-    const q = query(dbRef, orderByChild('AuthorID'));
+    const q = query(dbRef, orderByChild('isFinal'), equalTo(true)); // TODO: isFinal.equalTo(true)
     
     // Execute the query
     const querySnapshot = await get(q);
