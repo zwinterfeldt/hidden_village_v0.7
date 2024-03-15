@@ -1,5 +1,8 @@
 const Settings = () => {
-  return <div>You made it to the setting page!</div>;
+  return <div>
+    <h1>Settings</h1>
+    <p>Here is where you can change your settings.</p>
+  </div>;
 };
 
 export default Settings;

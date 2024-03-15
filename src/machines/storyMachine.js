@@ -9,17 +9,28 @@ export const StoryMachine = createMachine({
   states: {
     ready: {
       on: {
-        TOGGLE: "playing",  // move to game
+        TOGGLE: "main",  // move to game
         CONJECT: "conjecture", // move to conjecture editor
+        POSE: "pose", // move to pose
         AUTHOR: "edit", // move to poseauthoring
         CURRICULAR: "curricular", // move to the curricular content editor
         TEST: "test", // move to test
+        userManagementSettings : "userManagementSettings",
+        ADDNEWUSER: "ADDNEWUSER"
       },
     },
     test: {
       on: {
         HOME: "ready", // move to home
       }
+    },
+    pose: {
+      on: {
+        HOME: "ready", // move to home
+      }
+    },
+    main: {
+      
     },
     playing: {},
     conjecture: {
@@ -46,5 +57,16 @@ export const StoryMachine = createMachine({
         CURRICULAR: "curricular",
       }
     },
+    userManagementSettings:{
+      on:{
+        HOME: "ready",
+        ADDNEWUSER: "ADDNEWUSER" // move to addnewuser screen
+      }
+    },
+    ADDNEWUSER:{
+      on:{
+        userManagementSettings : "userManagementSettings" // go back to user settings screen
+      }
+    }
   },
 });

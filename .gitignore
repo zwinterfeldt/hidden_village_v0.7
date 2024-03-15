@@ -7,3 +7,4 @@ static
 .yarn
 .DS_Store
 .env
+src/.DS_Store
