@@ -24,7 +24,6 @@ const PlayMenu = (props) => {
     const [buttonList, setButtonList] = useState([]);
     const [distanceBetweenButtons, setDistanceBetweenButtons] = useState();
     const [startingX, setStartingX] = useState();
-    const[multiplier, setMultiplier] = useState(1);
     const[state, send] = useMachine(PlayMenuMachine);
     const [userRole, setUserRole] = useState(null);
     
@@ -49,8 +48,6 @@ const PlayMenu = (props) => {
         setStartingX(startingX);
         const spaceInBetween = totalAvailableWidth / (buttonList.length-1);
         setDistanceBetweenButtons(spaceInBetween);
-        const totalArea = width * height;
-        setMultiplier(totalArea/765440);
 
     }, [buttonList, width, height]);
     
@@ -91,9 +88,9 @@ const PlayMenu = (props) => {
             <Button
                 fontColor={yellow}
                 key = {idx}
-                width = {width * 0.145*multiplier}
+                width = {width * 0.1}
                 color = {button.color}
-                fontSize = {40*multiplier}
+                fontSize = {width * 0.02}
                 fontWeight = {600}
                 text={button.text}
                 x={startingX + (idx * distanceBetweenButtons)}
