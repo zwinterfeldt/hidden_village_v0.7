@@ -399,12 +399,19 @@ export const getConjectureDataByPIN = async (PIN) => {
 };
 
 // get a list of all the conjecture UUIDs
-export const getConjectureList = async () => {
+export const getConjectureList = async (final = true) => {
   try {
     // ref the realtime db
     const dbRef = ref(db, 'Final');
+
     // query to find data
-    const q = query(dbRef, orderByChild('isFinal'), equalTo(true)); // TODO: isFinal.equalTo(true)
+    let q;
+    if (final = true){ //return only the final (complete) conjectures
+      q = query(dbRef, orderByChild('isFinal'), equalTo(true));
+    }
+    else{ // return both final conjectures (complete) and drafts of conjectures (incomplete)
+      q = query(dbRef, orderByChild('isFinal'));
+    }
     
     // Execute the query
     const querySnapshot = await get(q);

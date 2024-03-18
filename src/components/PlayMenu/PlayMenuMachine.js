@@ -12,6 +12,8 @@ export const PlayMenuMachine = createMachine({
         PLAY: "play", // move to play
         SETTINGS: "settings", // move to settings
         ADMIN: "admin", // move to admin
+        NEWGAME: "newGame", //move to new game
+        LEVELSELECT: "levelSelect", //move to edit level
       },
     },
     settings: {
@@ -45,7 +47,20 @@ export const PlayMenuMachine = createMachine({
       on: {
         NEWLEVEL: "newLevel", // move to new level
       },
+    },
+    newGame : {
+      on: {
+        MAIN: "main", // move to home
+        EDIT: "edit", // move to edit
+        LEVELSELECT: "levelSelect", // move to conjecture selector
+      },
+    },
+    levelSelect: {
+      on: {
+        NEWLEVEL: "newLevel", // move to new level
+        NEWGAME: "newGame", // move to new game
+        MAIN: "main", // move to home
       }
-    }
-    }
-);
+    },
+  }
+});

@@ -10,11 +10,20 @@ import {Curriculum} from "../CurricularModule/CurricularModule";
 import {currentConjecture} from "../ConjectureModule/ConjectureModule"
 import { getConjectureDataByUUID } from "../../firebase/database";
 
-export function handlePIN(conjecture, message = "Please Enter the PIN."){ // this is meant to be used in an if statement
+export let curricularSelect = false; // keep track of whether the conjecture selector is used for curricular purposes or editing existing conjectures.
+
+export function getCurricularSelect() {
+  return curricularSelect;
+}
+export function setCurricularSelect(trueOrFalse) {
+  curricularSelect = trueOrFalse;
+}
+
+export function handlePIN(conjecture, message = "Please Enter the PIN."){ // this function is meant to be used as an if statement (ex: if(handlePIN){...} )
   const existingPIN = conjecture["PIN"];
   const enteredPIN = prompt(message);
 
-  if(enteredPIN == existingPIN){ // proceed with if statement
+  if(existingPIN == "" || enteredPIN == existingPIN){ // PIN is successful
     return true;
   }
   else if(enteredPIN != null && enteredPIN != ""){ // recursively try to have the user enter a PIN when it is incorrect
@@ -23,9 +32,9 @@ export function handlePIN(conjecture, message = "Please Enter the PIN."){ // thi
   return false; // do nothing if cancel is clicked
 }
 
-const CurricularModule = (props) => {
+const ConjectureSelectModule = (props) => {
   
-  const { height, width, conjectureCallback, curricularCallback} = props;
+  const { height, width, conjectureCallback, backCallback, curricularCallback} = props;
   const [conjectureList, setConjectureList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -64,6 +73,7 @@ const CurricularModule = (props) => {
   const startIndex = currentPage * conjecturesPerPage;
   const currentConjectures = conjectureList.slice(startIndex, startIndex + conjecturesPerPage);
 
+  // draw the buttons that show the author name, name of conjecture, and keywords, and the add conjecture button
   const drawConjectureList = (xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) => {
     return (
       <>
@@ -131,28 +141,28 @@ const CurricularModule = (props) => {
           />
         ))}
 
-        
-        {currentConjectures.map((conjecture, index) => (
-          <RectButton
-            key={index}
-            height={0.01}
-            width={0.01}
-            x={totalWidth * xMultiplier - totalWidth * xMultiplier *0.7}
-            y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier - totalHeight * yMultiplier *0.15 }
-            color={white}
-            fontSize={totalWidth * fontSizeMultiplier * 2}
-            fontColor={neonGreen}
-            text={"+"}
-            fontWeight="bold"
-            callback = {() => {
-              console.log(conjecture);
-              if(handlePIN(conjecture)){
-                Curriculum.addConjecture(conjecture);
-                curricularCallback();
-              }
-            }}
-          />
-        ))}
+        {/* only show these in the curricular editor (disabled when just editing conjecture) */}
+        {curricularSelect ? (
+          currentConjectures.map((conjecture, index) => (
+            <RectButton
+              key={index}
+              height={0.01}
+              width={0.01}
+              x={totalWidth * xMultiplier - totalWidth * xMultiplier *0.7}
+              y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier - totalHeight * yMultiplier *0.15 }
+              color={white}
+              fontSize={totalWidth * fontSizeMultiplier * 2}
+              fontColor={neonGreen}
+              text={"+"}
+              fontWeight="bold"
+              callback = {() => {
+                  Curriculum.addConjecture(conjecture);
+                  curricularCallback();
+              }}
+            />
+          )))
+          :(null)  // do nothing when there should not be a button
+        }
       </>
     );
   };
@@ -197,7 +207,7 @@ const CurricularModule = (props) => {
         fontColor={white}
         text={"BACK"}
         fontWeight={800}
-        callback={curricularCallback}
+        callback={backCallback}
       />
       <RectButton
         height={height * 0.13}
@@ -213,10 +223,10 @@ const CurricularModule = (props) => {
       />
 
       <ConjectureSelectorBoxes height={height} width={width} />
-      {drawConjectureList(0.15, 0.3, 0.018, width, height, conjectureCallback, curricularCallback)}
+      {drawConjectureList(0.15, 0.3, 0.018, width, height, conjectureCallback, backCallback, curricularCallback)}
     </>
   );
 };
 
 
-export default CurricularModule; 
+export default ConjectureSelectModule; 
