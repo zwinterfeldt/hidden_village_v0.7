@@ -91,9 +91,9 @@ const PlayMenu = (props) => {
             <Button
                 fontColor={yellow}
                 key = {idx}
-                width = {width * 0.145*multiplier}
+                width = {width * 0.5}
                 color = {button.color}
-                fontSize = {40*multiplier}
+                fontSize = {40 * multiplier}
                 fontWeight = {600}
                 text={button.text}
                 x={startingX + (idx * distanceBetweenButtons)}

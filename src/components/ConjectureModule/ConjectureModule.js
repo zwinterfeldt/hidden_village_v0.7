@@ -1,5 +1,5 @@
 import Background from "../Background";
-import { green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
+import { powderBlue, skyBlue, cornflowerBlue, green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
 import Button from "../Button";
 import RectButton from "../RectButton";
 import InputBox from "../InputBox";
@@ -13,7 +13,7 @@ import { ConjectureEditorMachine } from "../../machines/conjectureEditorMachine"
 import {writeToDatabaseNewUser, getUserRoleFromDatabase, getUserNameFromDatabase} from "../../firebase/userDatabase";
 
 const ConjectureModule = (props) => {
-  const { height, width, poseData, columnDimensions, rowDimensions, editCallback, mainCallback } = props;
+  const { height, width, poseData, columnDimensions, rowDimensions, editCallback, mainCallback, testCallback } = props;
   const [state, send] = useMachine(ConjectureEditorMachine);
     return (
       <>
@@ -216,7 +216,17 @@ const ConjectureModule = (props) => {
               });
           }}
         />
-
+        <Button
+          width={width * 0.1}
+          x={width * 0.86}
+          y={height * 0.17}
+          color={blue}
+          fontSize={width * 0.015}
+          fontColor={white}
+          text={"TEST POSES"}
+          fontWeight={800}
+          callback={testCallback} // Go to test button
+        />
 
         {/* Back Button */}
         <Button

@@ -23,6 +23,7 @@ import ConjecturePoseContainer from "./TestConjectureModule/ConjecturePoseContai
 import PlayMenu from "./PlayMenu/PlayMenu.js";
 import Background from "./Background.js";
 import { getUserRoleFromDatabase } from "../firebase/userDatabase.js";
+import PoseTest from "./ConjectureModule/PoseTest.js";
 
 const [
   numRows,
@@ -175,6 +176,7 @@ const Story = () => {
             rowDimensions={rowDimensions}
             editCallback={() => send("AUTHOR")} // goes to the Pose Sequence Editor
             mainCallback={() => send("HOME")} // goes to Home
+            testCallback={() => send("TEST")} // goes to test
           />
         )}
         {state.value === "edit" && (
@@ -185,6 +187,16 @@ const Story = () => {
             columnDimensions={columnDimensions}
             rowDimensions={rowDimensions}
             conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
+          />
+        )}
+        {state.value === "test" && (
+          <PoseTest
+            width={width}
+            height={height}
+            poseData={poseData}
+            columnDimensions={columnDimensions}
+            rowDimensions={rowDimensions}
+            conjectureCallback={() => send("CONJECT")}
           />
         )}
         
