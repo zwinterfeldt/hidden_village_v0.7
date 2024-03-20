@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Background from "../Background";
-import { blue, white, red, neonGreen,green } from "../../utils/colors";
+import { blue, white, red, neonGreen,green, black } from "../../utils/colors";
 import RectButton from "../RectButton";
 import { getConjectureList } from "../../firebase/database";
 import { ConjectureSelectorBoxes } from "./ConjectureSelectorModuleBoxes";
@@ -44,7 +44,7 @@ const ConjectureSelectModule = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getConjectureList();
+        const result = await getConjectureList(curricularSelect);
         setConjectureList(result);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -125,7 +125,7 @@ const ConjectureSelectModule = (props) => {
             key={'keywords' + index}
             height={totalHeight / 2 * yMultiplier}
             width={totalWidth * 0.8}
-            x={totalWidth * (xMultiplier +0.50)} 
+            x={totalWidth * (xMultiplier +0.5)} 
             y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier * 0.75} 
             color={white}
             fontSize={totalWidth * fontSizeMultiplier / 1.3}
@@ -161,7 +161,29 @@ const ConjectureSelectModule = (props) => {
               }}
             />
           )))
-          :(null)  // do nothing when there should not be a button
+          // show whether the conjectures are drafts or finals in the level editor
+          :(currentConjectures.map((conjecture, index) => (
+            <RectButton
+              key={index}
+              height={totalHeight / 2 * yMultiplier}
+              width={totalWidth * (xMultiplier * 0.85 )}
+              x={totalWidth * xMultiplier - totalWidth * xMultiplier * 0.95}
+              y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier * 0.75 }
+              color={white}
+              fontSize={totalWidth * fontSizeMultiplier / 1.3}
+              fontColor={blue}
+              text={conjecture["isFinal"] ? "X" : " "}
+              fontWeight="bold"
+              callback = {() => {
+                if(handlePIN(conjecture)){
+                  currentConjecture.setConjecture(conjecture);
+                  conjectureCallback(conjecture);
+                }
+              }}
+            />
+          ))
+            
+          )  
         }
       </>
     );

@@ -69,12 +69,12 @@ export const NameBox = (props) => {
       {createInputBox(220, 0.30, 1.595, 0.134, 0.175-.050, 'Conjecture Description', width, height, handleBoxInput)}
       {createInputBox(220, 0.10, 1.268, 0.203 + 0.062, 0.295-.050, 'Conjecture Keywords', width, height, handleBoxInput)}
 
-      {/* text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight */}
+      {/* text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight, color */}
       {createTextElement("KEYWORDS:", 0.137+ 0.062, 0.315-0.05, 0.018, width, height)}
       {createTextElement("PIN:", 0.605+ 0.062, 0.155-0.05, 0.018, width, height)}
       {createTextElement("AUTHOR:", 0.41+ 0.062, 0.155-0.05, 0.018, width, height)}
       {createTextElement("CURRENT M-CLIP:", 0.45, 0.305, 0.018, width, height)}
-      {createTextElement("MULTIPLE CHOICE", 0.45, 0.55, 0.018, width, height)}
+      {createTextElement("MULTIPLE CHOICE", 0.45, 0.533, 0.018, width, height)}
       {createTextElement("Conjecture Editor", 0.45, 0.05, 0.025, width, height)}
       {createTextElement("NAME:", 0.108+ 0.062, 0.155-0.05, 0.018, width, height)}
 
@@ -111,7 +111,7 @@ export const NameBox = (props) => {
   );
 }
 
-function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) {
+function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight, color = blue) {
   return (
     <Text
       text={text}
@@ -123,7 +123,7 @@ function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, t
           fontFamily: "Arial",
           fontSize: totalWidth * fontSizeMultiplier,
           fontWeight: 800,
-          fill: [blue],
+          fill: [color],
           letterSpacing: 0,
         })
       }

@@ -124,7 +124,7 @@ export const writeToDatabaseConjecture = async () => {
     const endPoseData = await createPoseObjects(endJson, 'EndPose', localStorage.getItem('End Tolerance'));
 
     // Define the database path
-    const conjecturePath = `Final/Conjecture: ${localStorage.getItem("Conjecture Name")}`;
+    const conjecturePath = `Level: ${localStorage.getItem("Conjecture Name")}`;
 
     // Fetch values from local storage for each key inside keysToPush 
     await Promise.all(keysToPush.map(async (key) => {
@@ -148,6 +148,7 @@ export const writeToDatabaseConjecture = async () => {
       set(ref(db, `${conjecturePath}/Intermediate Pose`), intermediatePoseData),
       set(ref(db, `${conjecturePath}/End Pose`), endPoseData),
       set(ref(db, `${conjecturePath}/Text Boxes`), dataToPush),
+      set(ref(db, `${conjecturePath}/isFinal`), true),
     ];
 
     return promises && alert("Conjecture successfully published to database.");
@@ -182,7 +183,7 @@ export const writeToDatabaseDraft = async () => {
   const endPoseData = await createPoseObjects(localStorage.getItem('end.json'), 'EndPose', localStorage.getItem('End Tolerance'));
 
   // Define the database path
-  const conjecturePath = `Draft/Draft: ${localStorage.getItem("Conjecture Name")}`;
+  const conjecturePath = `Level: ${localStorage.getItem("Conjecture Name")}`;
 
   // creates promises to push all of the data to the database 
   // uses set to overwrite the random firebaseKeys with easier to read key names
@@ -192,6 +193,7 @@ export const writeToDatabaseDraft = async () => {
     set(ref(db, `${conjecturePath}/Intermediate Pose`), intermediatePoseData),
     set(ref(db, `${conjecturePath}/End Pose`), endPoseData),
     set(ref(db, `${conjecturePath}/Text Boxes`), dataToPush),
+    set(ref(db, `${conjecturePath}/isFinal`), false),
   ];
 
   return promises && alert("Draft saved");
@@ -304,7 +306,7 @@ export const writeToDatabaseCurricularDraft = async () => {
     dataToPush.push(conjectureList[i]["conjecture"]["UUID"]);
   }
 
-  const CurricularPath = `Curricular Draft/Draft: ${localStorage.getItem("CurricularName")}`;
+  const CurricularPath = `Game: ${localStorage.getItem("CurricularName")}`;
 
   // creates promises to push all of the data to the database 
   // uses set to overwrite the random firebaseKeys with easier to read key names
@@ -315,6 +317,7 @@ export const writeToDatabaseCurricularDraft = async () => {
     set(ref(db, `${CurricularPath}/Author`), localStorage.getItem("CurricularAuthor")),
     set(ref(db, `${CurricularPath}/Keywords`), localStorage.getItem("CurricularKeywords")),
     set(ref(db, `${CurricularPath}/PIN`), localStorage.getItem("CurricularPIN")),
+    set(ref(db, `${CurricularPath}/isFinal`), false),
   ];
 
   return promises && alert("Curricular Draft saved");
@@ -325,7 +328,7 @@ export const writeToDatabaseCurricularDraft = async () => {
 export const getConjectureDataByUUID = async (conjectureID) => {
   try {
     // ref the realtime db
-    const dbRef = ref(db, 'Final');
+    const dbRef = ref(db, 'Level');
     // query to find data with the UUID
     const q = query(dbRef, orderByChild('UUID'), equalTo(conjectureID));
     
@@ -348,7 +351,7 @@ export const getConjectureDataByUUID = async (conjectureID) => {
 export const getConjectureDataByAuthorID = async (authorID) => {
   try {
     // ref the realtime db
-    const dbRef = ref(db, 'Final');
+    const dbRef = ref(db, 'Level');
     // query to find data with the AuthorID
     const q = query(dbRef, orderByChild('AuthorID'), equalTo(authorID));
     
@@ -375,7 +378,7 @@ export const getConjectureDataByAuthorID = async (authorID) => {
 export const getConjectureDataByPIN = async (PIN) => {
   try {
     // ref the realtime db
-    const dbRef = ref(db, 'Final');
+    const dbRef = ref(db, 'Level');
     // query to find data with the PIN
     const q = query(dbRef, orderByChild('PIN'), equalTo(PIN));
     
@@ -399,15 +402,15 @@ export const getConjectureDataByPIN = async (PIN) => {
 };
 
 // get a list of all the conjecture UUIDs
-export const getConjectureList = async (final = true) => {
+export const getConjectureList = async (final) => {
   try {
     // ref the realtime db
     const dbRef = ref(db, 'Final');
 
     // query to find data
     let q;
-    if (final = true){ //return only the final (complete) conjectures
-      q = query(dbRef, orderByChild('isFinal'), equalTo(true));
+    if (final){ //return only the final (complete) conjectures
+      q = query(dbRef, orderByChild('isFinal'), equalTo(final));
     }
     else{ // return both final conjectures (complete) and drafts of conjectures (incomplete)
       q = query(dbRef, orderByChild('isFinal'));
