@@ -15,13 +15,37 @@ import { curricularSelect, setCurricularSelect } from '../ConjectureSelector/Con
 export const Curriculum = {
   CurrentConjectures: [],
 
-  addConjecture(conjecture) {
+  addConjecture(conjecture) { // add the entire conjecture object to a list
     this.CurrentConjectures.push(conjecture);
   },
 
-  getCurrentConjectures() {
+  getCurrentConjectures() { // return the game (list of conjectures)
     return this.CurrentConjectures;
   },
+
+  getConjecturebyIndex(index) { // return a specific conjecture
+    return this.CurrentConjectures[index];
+  },
+
+  moveConjectureUpByIndex(index){ // swaps 2 elements so the index rises up the list
+    if(index > 0) {
+      const temp = this.CurrentConjectures[index - 1];
+      this.CurrentConjectures[index - 1] = this.CurrentConjectures[index];
+      this.CurrentConjectures[index] = temp;
+    }
+  },
+
+  moveConjectureDownByIndex(index){ // swaps 2 elements so the index falls down the list
+    if(index < this.CurrentConjectures.length - 1){
+      const temp = this.CurrentConjectures[index + 1];
+      this.CurrentConjectures[index + 1] = this.CurrentConjectures[index];
+      this.CurrentConjectures[index] = temp;
+    }
+  },
+
+  removeConjectureByIndex(index){ // remove a particular conjecture based on its index in the list
+    this.CurrentConjectures.pop(index);
+  }
 };
 
 const CurricularModule = (props) => {

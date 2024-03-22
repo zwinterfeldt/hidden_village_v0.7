@@ -5,7 +5,7 @@ import { white, black } from "../../utils/colors";
 import InputBox from "../InputBox";
 import RectButton from "../RectButton";
 import { getConjectureList,getConjectureDataByAuthorID } from "../../firebase/database";
-import { blue } from "../../utils/colors";
+import { blue, red, green, orange } from "../../utils/colors";
 import {Curriculum} from "./CurricularModule"
 
 
@@ -104,8 +104,8 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
         <RectButton
           key={index}
           height={totalHeight /2 * yMultiplier}
-          width={totalWidth * 0.7}
-          x={totalWidth * (xMultiplier - .05)}
+          width={totalWidth * xMultiplier *4}
+          x={totalWidth * xMultiplier * 0.25}
           y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
           color={white}
           fontSize={totalWidth * fontSizeMultiplier/1.3}
@@ -113,7 +113,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           text={conjecture["Text Boxes"]["Author Name"]}
           fontWeight="bold"
           callback = {() => { 
-            console.log("conjecture: ", conjecture["Text Boxes"]["Author Name"]);
+            console.log("conjecture: ", conjecture["Text Boxes"]["Conjecture Keywords"]);
             console.log("curriculum: ", conjectureList);
           }}
         />
@@ -122,8 +122,8 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
         <RectButton
           key={index}
           height={totalHeight /2 * yMultiplier}
-          width={totalWidth * 0.7}
-          x={totalWidth * (xMultiplier + 0.25)}
+          width={totalWidth * xMultiplier *7}
+          x={totalWidth * xMultiplier * 1.9}
           y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
           color={white}
           fontSize={totalWidth * fontSizeMultiplier/1.3}
@@ -140,8 +140,8 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
         <RectButton
           key={index}
           height={totalHeight /2 * yMultiplier}
-          width={totalWidth * 0.7}
-          x={totalWidth * (xMultiplier +0.55)} 
+          width={totalWidth * xMultiplier * 7}
+          x={totalWidth * xMultiplier * 4.75} 
           y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
           color={white}
           fontSize={totalWidth * fontSizeMultiplier/1.3}
@@ -151,6 +151,57 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           callback = {() => {
             console.log("conjecture: ", conjecture["Text Boxes"]["Conjecture Keywords"]);
             console.log("curriculum: ", conjectureList);
+          }}
+        />
+      ))}
+      {conjectureList.map((conjecture, index) => (
+        <RectButton
+          key={index}
+          height={totalHeight /2 * yMultiplier}
+          width={totalWidth * xMultiplier * 0.8}
+          x={totalWidth * xMultiplier * 7.6} 
+          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
+          color={green}
+          fontSize={totalWidth * fontSizeMultiplier}
+          fontColor={white}
+          text={"^"}
+          fontWeight="bold"
+          callback = {() => {
+            console.log("curriculum: ", Curriculum.moveConjectureUpByIndex(index));
+          }}
+        />
+      ))}
+      {conjectureList.map((conjecture, index) => (
+        <RectButton
+          key={index}
+          height={totalHeight /2 * yMultiplier}
+          width={totalWidth * xMultiplier * 0.8}
+          x={totalWidth * xMultiplier * 8} 
+          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
+          color={red}
+          fontSize={totalWidth * fontSizeMultiplier/1.3}
+          fontColor={white}
+          text={"v"}
+          fontWeight="bold"
+          callback = {() => {
+            console.log("curriculum: ", Curriculum.moveConjectureDownByIndex(index));
+          }}
+        />
+      ))}
+      {conjectureList.map((conjecture, index) => (
+        <RectButton
+          key={index}
+          height={totalHeight /2 * yMultiplier}
+          width={totalWidth * xMultiplier *1.6}
+          x={totalWidth * xMultiplier * 8.4} 
+          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
+          color={orange}
+          fontSize={totalWidth * fontSizeMultiplier/1.3}
+          fontColor={white}
+          text={"Remove"}
+          fontWeight="bold"
+          callback = {() => {
+            console.log("curriculum: ", Curriculum.removeConjectureByIndex(index));
           }}
         />
       ))}
@@ -176,9 +227,9 @@ export const CurricularContentEditor = (props) => {
       {createTextElement("Game Name:",0.110, 0.100, 0.018, width, height)}
 
       {/* To label the conjectures */}
-      {createTextElement("Author", 0.170, 0.260, 0.015, width, height)}
-      {createTextElement("Conjecture Name", 0.425, 0.260, 0.015, width, height)}
-      {createTextElement("Keywords", 0.750, 0.260, 0.015, width, height)}
+      {createTextElement("Author", 0.0825, 0.260, 0.015, width, height)}
+      {createTextElement("Conjecture Name", 0.275, 0.260, 0.015, width, height)}
+      {createTextElement("Keywords", 0.58, 0.260, 0.015, width, height)}
 
       {drawCurriculum(0.1, 0.3, 0.018, width, height)}
     </>
