@@ -183,7 +183,7 @@ export const writeToDatabaseDraft = async () => {
   const endPoseData = await createPoseObjects(localStorage.getItem('end.json'), 'EndPose', localStorage.getItem('End Tolerance'));
 
   // Define the database path
-  const conjecturePath = `Level: ${localStorage.getItem("Conjecture Name")}`;
+  const conjecturePath = `Level/ ${localStorage.getItem("Conjecture Name")}`;
 
   // creates promises to push all of the data to the database 
   // uses set to overwrite the random firebaseKeys with easier to read key names
@@ -306,7 +306,7 @@ export const writeToDatabaseCurricularDraft = async () => {
     dataToPush.push(conjectureList[i]["conjecture"]["UUID"]);
   }
 
-  const CurricularPath = `Game: ${localStorage.getItem("CurricularName")}`;
+  const CurricularPath = `Game/ ${localStorage.getItem("CurricularName")}`;
 
   // creates promises to push all of the data to the database 
   // uses set to overwrite the random firebaseKeys with easier to read key names
