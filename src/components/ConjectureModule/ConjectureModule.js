@@ -173,7 +173,7 @@ const ConjectureModule = (props) => {
         text={"BACK"}
         fontWeight={800}
         callback={() => {
-          if (!setIsSaved) {
+          if (setIsSaved) {
             // If data hasn't been saved
             const confirmLeave = window.confirm("You didnt save your work. Are you sure you want to leave?");
             if (confirmLeave) {
