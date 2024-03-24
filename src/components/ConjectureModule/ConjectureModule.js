@@ -26,7 +26,7 @@ export const currentConjecture = {
 // currentConjecture receives the value when the conjecture is clicked from ConjectureSelectorModule
 function setLocalStorage(){ 
   const conjecture = currentConjecture.getCurrentConjecture();
-  if (currentConjecture.getCurrentConjecture().length != 0) {
+  if (currentConjecture.getCurrentConjecture() != null && currentConjecture.getCurrentConjecture().length != 0) {
     // fill in keys pushed to Text Boxes by writeToDatabase in database.js
     for (i = 0; i < keysToPush.length; i++){
       localStorage.setItem(keysToPush[i], conjecture['Text Boxes'][keysToPush[i]]);
@@ -35,6 +35,8 @@ function setLocalStorage(){
     localStorage.setItem('start.json' , conjecture['Start Pose']['poseData']);
     localStorage.setItem('intermediate.json' , conjecture['Intermediate Pose']['poseData']);
     localStorage.setItem('end.json' , conjecture['End Pose']['poseData']);
+
+    currentConjecture.CurrentConjecture = null; // clear currentConjecture to avoid an infinite loop
   }
 }
 
