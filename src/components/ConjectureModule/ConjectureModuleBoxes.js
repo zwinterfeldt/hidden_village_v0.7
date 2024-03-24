@@ -45,17 +45,17 @@ export const NameBox = (props) => {
     }
   }
 
-  // Makes sure that on startup, the checkmark boxes start empty
-  function intializeCheckmarkBoxes() {
-    startup = true
-    if (startup === true) {
-      startup = false
-      localStorage.setItem("OptionA Checkmark", " ")
-      localStorage.setItem("OptionB Checkmark", " ")
-      localStorage.setItem("OptionC Checkmark", " ")
-      localStorage.setItem("OptionD Checkmark", " ")
-    }
-  }
+  // // Makes sure that on startup, the checkmark boxes start empty
+  // function intializeCheckmarkBoxes() {
+  //   startup = true
+  //   if (startup === true) {
+  //     startup = false
+  //     localStorage.setItem("OptionA Checkmark", " ")
+  //     localStorage.setItem("OptionB Checkmark", " ")
+  //     localStorage.setItem("OptionC Checkmark", " ")
+  //     localStorage.setItem("OptionD Checkmark", " ")
+  //   }
+  // }
   
   return (
     <>
@@ -78,35 +78,39 @@ export const NameBox = (props) => {
       {createTextElement("Conjecture Editor", 0.45, 0.05, 0.025, width, height)}
       {createTextElement("NAME:", 0.108+ 0.062, 0.155-0.05, 0.018, width, height)}
 
-      {intializeCheckmarkBoxes()}
+      {/* {intializeCheckmarkBoxes()} */}
       {/* If the user clicks multiple choice button A, then only A is marked and the rest are empty */}
-      {props.boxState === "optiona" && (
+      {/* {props.boxState === "optiona" && (localStorage.setItem("Correct Answer", "optiona"))} */}
+      {/* {props.boxState === "optiona" && (
         localStorage.setItem("OptionA Checkmark", " X"),
         localStorage.setItem("OptionB Checkmark", " "),
         localStorage.setItem("OptionC Checkmark", " "),
         localStorage.setItem("OptionD Checkmark", " ")
-      )}
+      )} */}
       {/* If the user clicks multiple choice button B, then only B is marked and the rest are empty */}
-      {props.boxState === "optionb" && (
+      {/* {props.boxState === "optionb" && (localStorage.setItem("Correct Answer", "optionb"))} */}
+      {/* {props.boxState === "optionb" && (
         localStorage.setItem("OptionA Checkmark", " "),
         localStorage.setItem("OptionB Checkmark", " X"),
         localStorage.setItem("OptionC Checkmark", " "),
         localStorage.setItem("OptionD Checkmark", " ")
-      )}
+      )} */}
       {/* If the user clicks multiple choice button C, then only C is marked and the rest are empty */}
-      {props.boxState === "optionc" && (
+      {/* {props.boxState === "optionc" && (localStorage.setItem("Correct Answer", "optionc"))} */}
+      {/* {props.boxState === "optionc" && (
         localStorage.setItem("OptionA Checkmark", " "),
         localStorage.setItem("OptionB Checkmark", " "),
         localStorage.setItem("OptionC Checkmark", " X"),
         localStorage.setItem("OptionD Checkmark", " ")
-      )}
+      )} */}
       {/* If the user clicks multiple choice button D, then only D is marked and the rest are empty */}
-      {props.boxState === "optiond" && (
+      {/* {props.boxState === "optiond" && (localStorage.setItem("Correct Answer", "optiond"))} */}
+      {/* {props.boxState === "optiond" && (
         localStorage.setItem("OptionA Checkmark", " "),
         localStorage.setItem("OptionB Checkmark", " "),
         localStorage.setItem("OptionC Checkmark", " "),
         localStorage.setItem("OptionD Checkmark", " X")
-      )}
+      )} */} 
     </>
   );
 }

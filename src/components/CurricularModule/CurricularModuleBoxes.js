@@ -167,7 +167,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           text={"^"}
           fontWeight="bold"
           callback = {() => {
-            console.log("curriculum: ", Curriculum.moveConjectureUpByIndex(index));
+            Curriculum.moveConjectureUpByIndex(index);
           }}
         />
       ))}
@@ -184,7 +184,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           text={"v"}
           fontWeight="bold"
           callback = {() => {
-            console.log("curriculum: ", Curriculum.moveConjectureDownByIndex(index));
+            Curriculum.moveConjectureDownByIndex(index);
           }}
         />
       ))}
@@ -201,7 +201,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           text={"Remove"}
           fontWeight="bold"
           callback = {() => {
-            console.log("curriculum: ", Curriculum.removeConjectureByIndex(index));
+            Curriculum.removeConjectureByIndex(index);
           }}
         />
       ))}

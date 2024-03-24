@@ -6,7 +6,7 @@ import RectButton from "../RectButton";
 import InputBox from "../InputBox";
 import { ConjectureBox, KeywordsBox, NameBox, PINBox } from "./ConjectureModuleBoxes";
 import { EndBox, IntermediateBox, StartBox } from "../PoseAuth/PoseAuthoringBoxes";
-import { writeToDatabaseConjecture, writeToDatabaseDraft, keysToPush} from "../../firebase/database";
+import { writeToDatabaseConjecture, writeToDatabaseConjectureDraft, keysToPush} from "../../firebase/database";
 import { useMachine } from "@xstate/react";
 import { ConjectureEditorMachine } from "../../machines/conjectureEditorMachine";
 
@@ -31,12 +31,20 @@ function setLocalStorage(){
     for (i = 0; i < keysToPush.length; i++){
       localStorage.setItem(keysToPush[i], conjecture['Text Boxes'][keysToPush[i]]);
     }
+
     // fill in poses from database
-    localStorage.setItem('start.json' , conjecture['Start Pose']['poseData']);
-    localStorage.setItem('intermediate.json' , conjecture['Intermediate Pose']['poseData']);
-    localStorage.setItem('end.json' , conjecture['End Pose']['poseData']);
+    if (conjecture['Intermediate Pose']['poseData'] !== undefined)
+      localStorage.setItem('start.json' , conjecture['Start Pose']['poseData']);
+    if (conjecture['Intermediate Pose']['poseData'] !== undefined)
+      localStorage.setItem('intermediate.json' , conjecture['Intermediate Pose']['poseData']);
+    if (conjecture['Intermediate Pose']['poseData'] !== undefined)
+      localStorage.setItem('end.json' , conjecture['End Pose']['poseData']);
 
     currentConjecture.CurrentConjecture = null; // clear currentConjecture to avoid an infinite loop
+  }
+
+  if(localStorage.getItem("Correct Answer") == null) { // ensures that there is always a correct answer
+    localStorage.setItem("Correct Answer", "A");
   }
 }
 
@@ -127,7 +135,7 @@ const ConjectureModule = (props) => {
         text={"SAVE DRAFT"}
         fontWeight={800}
         callback={ () =>{
-          writeToDatabaseConjecture();
+          writeToDatabaseConjectureDraft();
           setIsSaved(true);
           
         }}/>
@@ -199,9 +207,12 @@ const ConjectureModule = (props) => {
         color={white}
         fontSize={width * 0.024}  //  Dynamically modify font size based on screen width
         fontColor={black}
-        text={localStorage.getItem("OptionA Checkmark")}
+        text={localStorage.getItem("Correct Answer") === "A" ? " X" : " "}
         fontWeight={600}
-        callback={() => send("OPTIONA")}
+        callback={() => {
+          send("OPTIONA");
+          localStorage.setItem("Correct Answer", "A");
+        }}
       />
       <InputBox
         height={height * 0.14}
@@ -211,9 +222,12 @@ const ConjectureModule = (props) => {
         color={white}
         fontSize={width * 0.024}  //  Dynamically modify font size based on screen width
         fontColor={black}
-        text={localStorage.getItem("OptionB Checkmark")}
+        text={localStorage.getItem("Correct Answer") === "B" ? " X" : " "}
         fontWeight={600}
-        callback={() => send("OPTIONB")}
+        callback={() => {
+          send("OPTIONB");
+          localStorage.setItem("Correct Answer", "B");
+        }}
       />
       <InputBox
         height={height * 0.14}
@@ -223,9 +237,12 @@ const ConjectureModule = (props) => {
         color={white}
         fontSize={width * 0.024}  //  Dynamically modify font size based on screen width
         fontColor={black}
-        text={localStorage.getItem("OptionC Checkmark")}
+        text={localStorage.getItem("Correct Answer") === "C" ? " X" : " "}
         fontWeight={600}
-        callback={() => send("OPTIONC")}
+        callback={() => {
+          send("OPTIONC");
+          localStorage.setItem("Correct Answer", "C");
+        }}
       />
       <InputBox
         height={height * 0.14}
@@ -235,9 +252,12 @@ const ConjectureModule = (props) => {
         color={white}
         fontSize={width * 0.024}  //  Dynamically modify font size based on screen width
         fontColor={black}
-        text={localStorage.getItem("OptionD Checkmark")}
+        text={localStorage.getItem("Correct Answer") === "D" ? " X" : " "}
         fontWeight={600}
-        callback={() => send("OPTIOND")}
+        callback={() => {
+          send("OPTIOND");
+          localStorage.setItem("Correct Answer", "D");
+        }}
       />
     </>
   );

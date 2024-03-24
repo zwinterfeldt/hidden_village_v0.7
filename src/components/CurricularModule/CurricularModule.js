@@ -4,7 +4,7 @@ import Background from "../Background";
 import { blue, white, red, green } from "../../utils/colors";
 import Button from "../Button";
 import RectButton from "../RectButton";
-import { writeToDatabaseConjecture, writeToDatabaseCurricularDraft, getConjectureDataByUUID,getConjectureDataByAuthorID, getConjectureDataByPIN, getPoseDataByConjUUID } from "../../firebase/database";
+import { writeToDatabaseCurricular, writeToDatabaseCurricularDraft } from "../../firebase/database";
 import { CurricularContentEditor } from "../CurricularModule/CurricularModuleBoxes";
 import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
@@ -60,18 +60,19 @@ const CurricularModule = (props) => {
     localStorage.removeItem('CurricularPIN');
   };
 
-
   // Reset Function
   const enhancedMainCallback = () => {
     resetCurricularValues(); // Reset values before going back
     mainCallback(); //use the callbackfunction
   };
 
-  // Publish function that includes reset
-  const publishAndReset = () => {
-    writeToDatabaseCurricularDraft(); 
-    resetCurricularValues();
-  };
+    // Publish function that includes reset
+    const publishAndReset = () => {
+      if(writeToDatabaseCurricularDraft()){
+        resetCurricularValues();
+        Curriculum.CurrentConjectures = [];
+      }
+    };
 
   return (
     <>
