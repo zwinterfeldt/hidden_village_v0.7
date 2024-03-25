@@ -66,13 +66,14 @@ const CurricularModule = (props) => {
     mainCallback(); //use the callbackfunction
   };
 
-    // Publish function that includes reset
-    const publishAndReset = () => {
-      if(writeToDatabaseCurricularDraft()){
+  // Publish function that includes reset
+  async function publishAndReset()  {
+      promise = await writeToDatabaseCurricular();
+      if (promise != undefined){ // promise is undefined if the game cannot be published
         resetCurricularValues();
         Curriculum.CurrentConjectures = [];
       }
-    };
+  };
 
   return (
     <>

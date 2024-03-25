@@ -114,7 +114,7 @@ export const writeToDatabaseConjecture = async () => {
 
   // if any text values are not there alert message and exit
   if (isAnyKeyNullOrUndefined) {
-    return alert("One or more text values are empty. Cannot publish conjecture to database.");
+    return alert("One or more text values are empty. Cannot publish conjecture to database."), false;
   }
 
   // Check if any of the pose data is null before proceeding
@@ -162,7 +162,7 @@ export const writeToDatabaseConjecture = async () => {
 
     return promises && alert("Conjecture successfully published to database.");
   } else {
-    return alert("One or more poses are missing. Cannot publish conjecture to database.");
+    return alert("One or more poses are missing. Cannot publish conjecture to database."), false;
   }
 };
 
@@ -195,7 +195,7 @@ export const writeToDatabaseConjectureDraft = async () => {
 
   // if the level isn't named, alert message and exit
   if (dataToPush.Name === undefined) {
-    return alert("Please name your level before saving a draft.");
+    return alert("Please name your level before saving a draft."), false;
   }
 
   // Define the database path
@@ -388,10 +388,11 @@ export const writeToDatabaseCurricular = async () => {
 
   // if anything is missing return an alert and exit
   if(hasUndefined){
-    return alert("One or more text values are empty. Cannot publish game to database.")
+    //alert("One or more text values are empty. Cannot publish game to database.");
+    return alert("One or more text values are empty. Cannot publish game to database.");
   }
   if(conjectureList.length == 0){
-    return alert("Please add at least 1 level to your game before publishing.")
+    return alert("Please add at least 1 level to your game before publishing.");
   }
 
   const CurricularPath = `Game/${localStorage.getItem("CurricularName")}`;
@@ -403,10 +404,10 @@ export const writeToDatabaseCurricular = async () => {
     set(ref(db, `${CurricularPath}/ConjectureUUIDs`), conjectures),
     set(ref(db, `${CurricularPath}/Time`), timestamp),
     set(ref(db, `${CurricularPath}/UUID`), CurricularID),
-    set(ref(db, `${CurricularPath}/isFinal`), false),
+    set(ref(db, `${CurricularPath}/isFinal`), true),
   ];
 
-  return promises && alert("Game Published");
+  return alert("Game Published"), promises; //returns the promises and alerts that the game has been published
 }
 
 
