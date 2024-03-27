@@ -14,6 +14,7 @@ export const PlayMenuMachine = createMachine({
         ADMIN: "admin", // move to admin
         NEWGAME: "newGame", //move to new game
         LEVELSELECT: "levelSelect", //move to edit level
+        GAMESELECT: "gameSelect",
       },
     },
     settings: {
@@ -58,6 +59,12 @@ export const PlayMenuMachine = createMachine({
     levelSelect: {
       on: {
         NEWLEVEL: "newLevel", // move to new level
+        NEWGAME: "newGame", // move to new game
+        MAIN: "main", // move to home
+      }
+    },
+    gameSelect: {
+      on: {
         NEWGAME: "newGame", // move to new game
         MAIN: "main", // move to home
       }

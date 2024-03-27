@@ -12,6 +12,7 @@ import { ConjectureEditorMachine } from "../../machines/conjectureEditorMachine"
 
 export const currentConjecture = {
   CurrentConjecture: [],
+  CurrentUUID: [],
 
   setConjecture(conjecture) {
     this.CurrentConjecture = conjecture;
@@ -20,6 +21,19 @@ export const currentConjecture = {
   getCurrentConjecture() {
     return this.CurrentConjecture;
   },
+
+  setCurrentUUID(UUID){
+    this.CurrentUUID = UUID;
+  },
+
+  getCurrentUUID(){
+    if(this.CurrentUUID != null){
+      return this.CurrentUUID;
+    }
+    else{
+      return null;
+    }
+  }
 }
 
 // fill in local storage using currentConjecture if an existing conjecture is selected
@@ -40,6 +54,7 @@ function setLocalStorage(){
     if (conjecture['Intermediate Pose']['poseData'] !== undefined)
       localStorage.setItem('end.json' , conjecture['End Pose']['poseData']);
 
+    currentConjecture.CurrentUUID = conjecture['UUID']; // set the UUID before clearing currentConjecture
     currentConjecture.CurrentConjecture = null; // clear currentConjecture to avoid an infinite loop
   }
 
@@ -135,7 +150,7 @@ const ConjectureModule = (props) => {
         text={"SAVE DRAFT"}
         fontWeight={800}
         callback={ () =>{
-          writeToDatabaseConjectureDraft();
+          writeToDatabaseConjectureDraft(currentConjecture.getCurrentUUID());
           setIsSaved(true);
           
         }}/>
@@ -166,8 +181,8 @@ const ConjectureModule = (props) => {
         fontColor={white}
         text={"PUBLISH"}
         fontWeight={800}
-        callback={ () =>{  
-          writeToDatabaseConjecture();
+        callback={ () =>{
+          writeToDatabaseConjecture(currentConjecture.getCurrentUUID());
           setIsSaved(true);
           } // publish to database
         }/>

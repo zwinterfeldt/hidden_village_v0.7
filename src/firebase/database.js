@@ -95,13 +95,20 @@ export const writeToDatabasePoseAuth = async (poseData, state, tolerance) => {
   return promise;
 };
 
-export const writeToDatabaseConjecture = async () => {
+export const writeToDatabaseConjecture = async (existingUUID) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
+  let conjectureID;
 
-  const conjectureID = uuidv4();
-  console.log('Conjecture UUID:', conjectureID);
+  // define the UUID based on whether it exists already or not
+  if(existingUUID == null){
+    conjectureID = uuidv4();
+  }
+  else{
+    conjectureID = existingUUID;
+  }
+  
 
   // Initialize empty object to store the data inside
   const dataToPush = {};
@@ -133,7 +140,7 @@ export const writeToDatabaseConjecture = async () => {
     const endPoseData = await createPoseObjects(endJson, 'EndPose', localStorage.getItem('End Tolerance'));
 
     // Define the database path
-    const conjecturePath = `Level/${localStorage.getItem("Conjecture Name")}`;
+    const conjecturePath = `Level/${conjectureID}`;
 
     // Fetch values from local storage for each key inside keysToPush 
     await Promise.all(keysToPush.map(async (key) => {
@@ -198,12 +205,19 @@ export const writeToDatabaseConjecture = async () => {
 };
 
 // save a draft of the current conjecture so it can be published later
-export const writeToDatabaseConjectureDraft = async () => {
+export const writeToDatabaseConjectureDraft = async (existingUUID) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
+  let conjectureID;
 
-  const conjectureID = uuidv4();
+  // define the UUID based on whether it exists already or not
+  if(existingUUID == null){
+    conjectureID = uuidv4();
+  }
+  else{
+    conjectureID = existingUUID;
+  }
 
   // Initialize empty object to store the data inside
   const dataToPush = {};
@@ -230,7 +244,7 @@ export const writeToDatabaseConjectureDraft = async () => {
   }
 
   // Define the database path
-  const conjecturePath = `Level/${localStorage.getItem("Conjecture Name")}`;
+  const conjecturePath = `Level/${conjectureID}`;
 
   // creates promises to push all of the data to the database 
   // uses set to overwrite the random firebaseKeys with easier to read key names
@@ -372,7 +386,7 @@ export const writeToDatabaseCurricularDraft = async () => {
     return alert("Please name the game first.");
   }
 
-  const CurricularPath = `Game/${localStorage.getItem("CurricularName")}`;
+  const CurricularPath = `Game/${CurricularID}`;
 
   // creates promises to push all of the data to the database 
   // uses set to overwrite the random firebaseKeys with easier to read key names
@@ -426,7 +440,7 @@ export const writeToDatabaseCurricular = async () => {
     return alert("Please add at least 1 level to your game before publishing.");
   }
 
-  const CurricularPath = `Game/${localStorage.getItem("CurricularName")}`;
+  const CurricularPath = `Game/${CurricularID}`;
 
   // creates promises to push all of the data to the database 
   // uses set to overwrite the random firebaseKeys with easier to read key names
@@ -519,7 +533,7 @@ export const getConjectureDataByPIN = async (PIN) => {
   }
 };
 
-// get a list of all the conjecture UUIDs
+// get a list of all the levels
 export const getConjectureList = async (final) => {
   try {
     // ref the realtime db
@@ -545,6 +559,41 @@ export const getConjectureList = async (final) => {
         conjectures.push(conjectureSnapshot.val());
       });
       return conjectures; // return the data if its good
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
+
+
+// get a list of all the games
+export const getCurricularList = async (final) => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Game');
+
+    // query to find data
+    let q;
+    if (final){ //return only the final (complete) conjectures
+      q = query(dbRef, orderByChild('isFinal'), equalTo(final));
+    }
+    else{ // return both final conjectures (complete) and drafts of conjectures (incomplete)
+      q = query(dbRef, orderByChild('isFinal'));
+    }
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      // get all the conjectures in an array
+      const curricular = [];
+      querySnapshot.forEach((curricularSnapshot) => {
+        curricular.push(curricularSnapshot.val());
+      });
+      return curricular; // return the data if its good
     } else {
       return null; // This will happen if data not found
     }
