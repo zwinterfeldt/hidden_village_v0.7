@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import Background from "../Background";
 import { blue, white, red, neonGreen,green, black } from "../../utils/colors";
 import RectButton from "../RectButton";
-import { getConjectureList } from "../../firebase/database";
+import { getConjectureList, searchConjecturesByWord } from "../../firebase/database";
 import { ConjectureSelectorBoxes } from "./ConjectureSelectorModuleBoxes";
 import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
 import {Curriculum} from "../CurricularModule/CurricularModule";
 import {currentConjecture} from "../ConjectureModule/ConjectureModule"
 import { getConjectureDataByUUID } from "../../firebase/database";
+
+import InputBox from '../InputBox';
 
 export let curricularSelect = false; // keep track of whether the conjecture selector is used for curricular purposes or editing existing conjectures.
 
@@ -54,6 +56,8 @@ const ConjectureSelectModule = (props) => {
     fetchData();
   }, []);
 
+
+
   //use to get a fixed number of conjectures per page and to navigate between the pages
   const conjecturesPerPage = 7;
   const totalPages = Math.ceil(conjectureList.length / conjecturesPerPage);
@@ -67,6 +71,19 @@ const ConjectureSelectModule = (props) => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
+  };
+  const searchConjectures = async (searchWord) => {
+    try{
+      console.log("Search Button")
+      const result = await searchConjecturesByWord(searchWord);
+      console.log(result)
+
+      setConjectureList(result);
+    }
+    catch (error){
+      console.log("No conjectures found")
+    }
+    
   };
 
   // use to determine the subset of conjectures to display based on the current page
@@ -189,6 +206,17 @@ const ConjectureSelectModule = (props) => {
     );
   };
 
+  const [search, setSearch] = useState("search by one word");
+  function sendSearchPrompt(){
+    let enteredSearch = prompt("Please Enter a Word to Search Conjectures", search);
+    if (enteredSearch !== null) {
+      setSearch(enteredSearch)
+    } else if (enteredSearch !== null) {
+    alert('Error reading search: No value');
+    }
+
+  } 
+
   return (
     <>
       <Background height={height * 1.1} width={width} />
@@ -217,6 +245,32 @@ const ConjectureSelectModule = (props) => {
         text={"NEXT"}
         fontWeight={800}
         callback={nextPage}
+      />
+
+      {/* This is my search button */}
+      <RectButton
+        height={height * .13}
+        width={width * 0.26}
+        x={width * 0.9}
+        y={height * 0.05}
+        color={blue}
+        fontSize={width * 0.014}
+        fontColor={white}
+        text={"SEARCH"}
+        fontWeight={800}
+        callback={() => searchConjectures(search)}
+      />
+      <InputBox
+          height={height * 0.15}
+          width={width * 0.5}
+          x={width * 0.7}
+          y={height * 0.05}
+          color={white}
+          fontSize={width * 0.015}
+          fontColor={black}
+          text={search}
+          fontWeight={300}
+          callback={sendSearchPrompt} // Create Popup
       />
 
       <RectButton

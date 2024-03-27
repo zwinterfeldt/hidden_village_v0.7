@@ -6,7 +6,7 @@ import RectButton from "../RectButton";
 import InputBox from "../InputBox";
 import { ConjectureBox, KeywordsBox, NameBox, PINBox } from "./ConjectureModuleBoxes";
 import { EndBox, IntermediateBox, StartBox } from "../PoseAuth/PoseAuthoringBoxes";
-import { writeToDatabaseConjecture, writeToDatabaseConjectureDraft, keysToPush} from "../../firebase/database";
+import { writeToDatabaseConjecture, writeToDatabaseConjectureDraft, keysToPush, searchConjecturesByWord} from "../../firebase/database";
 import { useMachine } from "@xstate/react";
 import { ConjectureEditorMachine } from "../../machines/conjectureEditorMachine";
 
@@ -169,7 +169,7 @@ const ConjectureModule = (props) => {
         callback={ () =>{  
           writeToDatabaseConjecture();
           setIsSaved(true);
-        } // publish to database
+          } // publish to database
         }/>
       {/* Back Button */}
       <Button

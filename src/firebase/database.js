@@ -1,5 +1,5 @@
 // Firebase Init
-import { ref, push, getDatabase, set, query, equalTo, get, orderByChild } from "firebase/database";
+import { ref, push, getDatabase, set, query, equalTo, get, orderByChild, orderByKey } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { Curriculum } from "../components/CurricularModule/CurricularModule";
@@ -146,6 +146,36 @@ export const writeToDatabaseConjecture = async () => {
       }
     }));
 
+
+    // searrcxh words
+    const searchWordsToPush = {
+      "Author Name": dataToPush["Author Name"],
+      "Conjecture Description": dataToPush["Conjecture Description"],
+      "Conjecture Keywords": dataToPush["Conjecture Keywords"],
+      "Conjecture Name": dataToPush["Conjecture Name"]
+    };
+    console.log(searchWordsToPush)
+
+    // Extracting values from searchWordsToPush object
+    const searchWordsValues = Object.values(searchWordsToPush);
+    // Concatenating search words into a single lowercase string
+    const concatenatedSearchWords = searchWordsValues.join(" ").toLowerCase();
+
+    // Splitting the concatenated string into individual words
+    const wordsArray = concatenatedSearchWords.split(" ");
+
+    // Initializing an empty object to store search words
+    const searchWordsToPushToDatabase = {};
+
+    // Loop through the words array and set each word as a key in the searchWordsToPushToDatabase object with the word itself as its value
+    wordsArray.forEach(word => {
+      if (word !== undefined) {
+        searchWordsToPushToDatabase[word] = word;
+      }
+    });
+
+    console.log(searchWordsToPushToDatabase)
+
     // creates promises to push all of the data to the database 
     // uses set to overwrite the random firebaseKeys with easier to read key names
     const promises = [
@@ -158,6 +188,7 @@ export const writeToDatabaseConjecture = async () => {
       set(ref(db, `${conjecturePath}/End Pose`), endPoseData),
       set(ref(db, `${conjecturePath}/Text Boxes`), dataToPush),
       set(ref(db, `${conjecturePath}/isFinal`), true),
+      set(ref(db,`${conjecturePath}/Search Words`), searchWordsToPushToDatabase)
     ];
 
     return promises && alert("Conjecture successfully published to database.");
@@ -519,5 +550,39 @@ export const getConjectureList = async (final) => {
     }
   } catch (error) {
     throw error; // this is an actual bad thing
+  }
+};
+
+export const searchConjecturesByWord = async (searchWord) => {
+  try {
+    // Reference the realtime db
+    const dbRef = ref(db, 'Level');
+
+    // Query to find data
+    const q = query(dbRef, orderByChild('Search Words'));
+
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // Array to store matching conjectures
+    const matchingConjectures = [];
+
+    // This takes forever..............
+    querySnapshot.forEach((snapshot) => {
+      // Check if snapshot data contains searchWord as a key
+      const searchData = snapshot.val();
+      if (searchData && searchData['Search Words'] && searchData['Search Words'][searchWord]) {
+        // Found searchWord key in this snapshot
+        // Add this snapshot's data to the list of matching conjectures
+        matchingConjectures.push(searchData);
+      }
+    });
+
+    // Return the list of matching conjectures
+    return matchingConjectures;
+  } catch (error) {
+    console.error('Error searching conjectures:', error);
+    // Handle error appropriately
+    return []; // Return an empty array in case of error
   }
 };
