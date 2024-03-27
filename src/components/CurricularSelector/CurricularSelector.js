@@ -2,50 +2,39 @@ import React, { useState, useEffect } from 'react';
 import Background from "../Background";
 import { blue, white, red, neonGreen,green, black } from "../../utils/colors";
 import RectButton from "../RectButton";
-import { getConjectureList } from "../../firebase/database";
-import { ConjectureSelectorBoxes } from "./ConjectureSelectorModuleBoxes";
+import { getCurricularList } from "../../firebase/database";
+import { CurricularSelectorBoxes } from "./CurricularSelectorModuleBoxes";
 import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
 import {Curriculum} from "../CurricularModule/CurricularModule";
-import {currentConjecture} from "../ConjectureModule/ConjectureModule"
 import { getConjectureDataByUUID } from "../../firebase/database";
 
-export let conjectureSelect = false; // keep track of whether the conjecture selector is used for curricular purposes or editing existing conjectures.
-
-export function getConjectureSelect() {
-  return conjectureSelect;
-}
-export function setConjectureSelect(trueOrFalse) {
-  conjectureSelect = trueOrFalse;
-}
-
-export function handlePIN(conjecture, message = "Please Enter the PIN."){ // this function is meant to be used as an if statement (ex: if(handlePIN){...} )
-  const existingPIN = conjecture["PIN"];
+export function handlePIN(curricular, message = "Please Enter the PIN."){ // this function is meant to be used as an if statement (ex: if(handlePIN){...} )
+  const existingPIN = curricular["PIN"];
   const enteredPIN = prompt(message);
 
   if(existingPIN == "" || enteredPIN == existingPIN){ // PIN is successful
     return true;
   }
   else if(enteredPIN != null && enteredPIN != ""){ // recursively try to have the user enter a PIN when it is incorrect
-    return handlePIN(conjecture, message = "Incorrect PIN, please try again.");
+    return handlePIN(curricular, message = "Incorrect PIN, please try again.");
   }
   return false; // do nothing if cancel is clicked
 }
 
-const ConjectureSelectModule = (props) => {
+const CurricularSelectModule = (props) => {
   
   const { height, width, conjectureCallback, backCallback, curricularCallback} = props;
-  const [conjectureList, setConjectureList] = useState([]);
+  const [curricularList, setCurricularList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-
 
   const [state, send] = useMachine(CurricularContentEditorMachine);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getConjectureList(conjectureSelect);
-        setConjectureList(result);
+        const result = await getCurricularList();
+        setCurricularList(result);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -55,8 +44,8 @@ const ConjectureSelectModule = (props) => {
   }, []);
 
   //use to get a fixed number of conjectures per page and to navigate between the pages
-  const conjecturesPerPage = 7;
-  const totalPages = Math.ceil(conjectureList.length / conjecturesPerPage);
+  const curricularPerPage = 7;
+  const totalPages = Math.ceil(curricularList.length / curricularPerPage);
 
   const nextPage = () => {
     if (currentPage < totalPages - 1) {
@@ -70,14 +59,14 @@ const ConjectureSelectModule = (props) => {
   };
 
   // use to determine the subset of conjectures to display based on the current page
-  const startIndex = currentPage * conjecturesPerPage;
-  const currentConjectures = conjectureList.slice(startIndex, startIndex + conjecturesPerPage);
+  const startIndex = currentPage * curricularPerPage;
+  const currentCurriculars = curricularList.slice(startIndex, startIndex + curricularPerPage);
 
   // draw the buttons that show the author name, name of conjecture, and keywords, and the add conjecture button
-  const drawConjectureList = (xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) => {
+  const drawCurricularList = (xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) => {
     return (
       <>
-        {currentConjectures.map((conjecture, index) => (
+        {currentCurriculars.map((curricular, index) => (
           <RectButton
             key={index}
             height={totalHeight /2 * yMultiplier}
@@ -87,18 +76,19 @@ const ConjectureSelectModule = (props) => {
             color={white}
             fontSize={totalWidth * fontSizeMultiplier/1.3}
             fontColor={blue}
-            text={conjecture["Text Boxes"]["Author Name"]}
+            text={curricular}
             fontWeight="bold"
             callback = {() => {
-              if(handlePIN(conjecture)){
-                currentConjecture.setConjecture(conjecture);
-                conjectureCallback(conjecture);
-              }
+            //   if(handlePIN(conjecture)){
+            //     currentConjecture.setConjecture(conjecture);
+            //     conjectureCallback(conjecture);
+            //   }
+            console.log(curricular);
             }}
           />
         ))}
 
-        {currentConjectures.map((conjecture, index) => (
+        {/* {currentCurriculars.map((conjecture, index) => (
           <RectButton
             key={'author' + index}
             height={totalHeight / 2 * yMultiplier}
@@ -120,7 +110,7 @@ const ConjectureSelectModule = (props) => {
         
         ))}
 
-        {currentConjectures.map((conjecture, index) => (
+        {currentCurriculars.map((conjecture, index) => (
           <RectButton
             key={'keywords' + index}
             height={totalHeight / 2 * yMultiplier}
@@ -139,11 +129,11 @@ const ConjectureSelectModule = (props) => {
               }
             }}
           />
-        ))}
+        ))} */}
 
         {/* only show these in the curricular editor (disabled when just editing conjecture) */}
-        {conjectureSelect ? (
-          currentConjectures.map((conjecture, index) => (
+        {/* {conjectureSelect ? (
+          currentCurriculars.map((conjecture, index) => (
             <RectButton
               key={index}
               height={0.01}
@@ -162,7 +152,7 @@ const ConjectureSelectModule = (props) => {
             />
           )))
           // show whether the conjectures are drafts or finals in the level editor
-          :(currentConjectures.map((conjecture, index) => (
+          :(currentCurriculars.map((conjecture, index) => (
             <RectButton
               key={index}
               height={totalHeight / 2 * yMultiplier}
@@ -184,7 +174,7 @@ const ConjectureSelectModule = (props) => {
           ))
             
           )  
-        }
+        } */}
       </>
     );
   };
@@ -244,11 +234,11 @@ const ConjectureSelectModule = (props) => {
         callback={null}
       />
 
-      <ConjectureSelectorBoxes height={height} width={width} />
-      {drawConjectureList(0.15, 0.3, 0.018, width, height, conjectureCallback, backCallback, curricularCallback)}
+      <CurricularSelectorBoxes height={height} width={width} />
+      {drawCurricularList(0.15, 0.3, 0.018, width, height, conjectureCallback, backCallback, curricularCallback)}
     </>
   );
 };
 
 
-export default ConjectureSelectModule; 
+export default CurricularSelectModule; 

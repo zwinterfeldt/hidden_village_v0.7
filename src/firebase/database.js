@@ -502,7 +502,7 @@ export const getConjectureDataByPIN = async (PIN) => {
   }
 };
 
-// get a list of all the conjecture UUIDs
+// get a list of all the levels
 export const getConjectureList = async (final) => {
   try {
     // ref the realtime db
@@ -528,6 +528,41 @@ export const getConjectureList = async (final) => {
         conjectures.push(conjectureSnapshot.val());
       });
       return conjectures; // return the data if its good
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
+
+
+// get a list of all the games
+export const getCurricularList = async (final) => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Game');
+
+    // query to find data
+    let q;
+    if (final){ //return only the final (complete) conjectures
+      q = query(dbRef, orderByChild('isFinal'), equalTo(final));
+    }
+    else{ // return both final conjectures (complete) and drafts of conjectures (incomplete)
+      q = query(dbRef, orderByChild('isFinal'));
+    }
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      // get all the conjectures in an array
+      const curricular = [];
+      querySnapshot.forEach((curricularSnapshot) => {
+        curricular.push(curricularSnapshot.val());
+      });
+      return curricular; // return the data if its good
     } else {
       return null; // This will happen if data not found
     }
