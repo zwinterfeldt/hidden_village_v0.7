@@ -21,6 +21,7 @@ import UserManagementModule from "../AdminHomeModule/UserManagementModule";
 import NewUserModule from "../AdminHomeModule/NewUserModule";
 import PoseAuthoring from "../PoseAuth/PoseAuthoring";
 import ConjecturePoseContainer from "../TestConjectureModule/ConjecturePoseContainer";
+import PlayGame from "../PlayGameModule/PlayGame";
 
 const PlayMenu = (props) => {
     const {width, height, poseData, columnDimensions, rowDimensions, role} = props;
@@ -123,17 +124,14 @@ const PlayMenu = (props) => {
         )
         }
         {state.value === "play" && (
-            <ConjecturePoseContainer
-          
-            height={height}
-            width={width}
-            columnDimensions={columnDimensions}
-            rowDimensions={rowDimensions}
-            editCallback={() => send("AUTHOR")} // goes to the Pose Sequence Editor
-            mainCallback={() => send("HOME")} // goes to Home
-            poseData={poseData}
-            UUID={"43edd593-1838-49f7-9315-6d2a913de763"}
-          /> 
+            <PlayGame
+                width={width}
+                height={height}
+                backCallback={()=> send("MAIN")}
+                columnDimensions={columnDimensions}
+                rowDimensions={rowDimensions}
+                poseData={poseData}
+            /> 
         )}
         {state.value === "settings" && (
             <Settings

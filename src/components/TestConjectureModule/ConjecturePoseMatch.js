@@ -12,27 +12,9 @@ import { PoseBox } from "./PoseDisplayBox";
 import { set } from "firebase/database";
 import  PoseMatching  from "../PoseMatching";
 
-const getConjectureKeyByConjectureData = (conjectureData) => {
-  try {
-      let conjectureKey;
-      for (const key in conjectureData) {
-          if (key.startsWith('Conjecture')) {
-              conjectureKey = key;
-              break;
-          }
-      }
-      console.log(conjectureKey);
-
-      return conjectureKey;
-  } catch (error) {
-      throw error;
-  }
-};  
-
 const ConjecturePoseMatch = (props) => {
   const { height, width, columnDimensions, rowDimensions, editCallback, mainCallback, poseData,UUID } = props;
   const [conjectureData, setConjectureData] = useState(null);
-  const [conjectureKey, setConjectureKey] = useState(null);
   const [poses, setPoses] = useState(null);
 
   const getTolerance = (poseData) => {  
@@ -46,27 +28,27 @@ const ConjecturePoseMatch = (props) => {
     const fetchData = async () => {
     try {
       const data = await getConjectureDataByUUID(UUID);
-      const key = getConjectureKeyByConjectureData(data);
       setConjectureData(data);
-      setConjectureKey(key);
     } catch (error) {
       console.error('Error getting data: ', error);
       // Handle the error appropriately
     }
     };
+    
 
     fetchData();
 }, []);
 
 useEffect(() => {
-  if (conjectureData != null && conjectureKey != null) {
-    const startPose = JSON.parse(conjectureData[conjectureKey]['Start Pose']['poseData']);
-    const intermediatePose = JSON.parse(conjectureData[conjectureKey]['Intermediate Pose']['poseData']);
-    const endPose = JSON.parse(conjectureData[conjectureKey]['End Pose']['poseData']);
+  console.log(conjectureData)
+  if (conjectureData != null) {
+    const startPose = JSON.parse(conjectureData[UUID]['Start Pose']['poseData']);
+    const intermediatePose = JSON.parse(conjectureData[UUID]['Intermediate Pose']['poseData']);
+    const endPose = JSON.parse(conjectureData[UUID]['End Pose']['poseData']);
 
-    const startTolerance = getTolerance(conjectureData[conjectureKey]['Start Pose']);
-    const intermediateTolerance = getTolerance(conjectureData[conjectureKey]['Intermediate Pose']);
-    const endTolerance = getTolerance(conjectureData[conjectureKey]['End Pose']);
+    const startTolerance = getTolerance(conjectureData[UUID]['Start Pose']);
+    const intermediateTolerance = getTolerance(conjectureData[UUID]['Intermediate Pose']);
+    const endTolerance = getTolerance(conjectureData[UUID]['End Pose']);
 
     startPose["tolerance"] = startTolerance;
     intermediatePose["tolerance"] = intermediateTolerance;
@@ -77,7 +59,7 @@ useEffect(() => {
   }
 
 }
-, [conjectureData, conjectureKey]);
+, [conjectureData]);
 
 return(
   <>
