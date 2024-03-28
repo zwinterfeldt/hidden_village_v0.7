@@ -12,7 +12,7 @@ import { getConjectureDataByUUID } from "../../firebase/database";
 
 import InputBox from '../InputBox';
 
-export let curricularSelect = false; // keep track of whether the conjecture selector is used for curricular purposes or editing existing conjectures.
+export let conjectureSelect = false; // keep track of whether the conjecture selector is used for curricular purposes or editing existing conjectures.
 
 export function getConjectureSelect() {
   return conjectureSelect;

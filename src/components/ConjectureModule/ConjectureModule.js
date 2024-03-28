@@ -27,7 +27,7 @@ export const currentConjecture = {
   },
 
   getCurrentUUID(){
-    if(this.CurrentUUID != null){
+    if(this.CurrentUUID != null && this.CurrentUUID != ""){
       return this.CurrentUUID;
     }
     else{

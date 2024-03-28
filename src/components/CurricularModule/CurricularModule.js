@@ -8,7 +8,7 @@ import { writeToDatabaseCurricular, writeToDatabaseCurricularDraft } from "../..
 import { CurricularContentEditor } from "../CurricularModule/CurricularModuleBoxes";
 import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
-import { curricularSelect, setCurricularSelect } from '../ConjectureSelector/ConjectureSelectorModule';
+import { curricularSelect, setConjectureSelect } from '../ConjectureSelector/ConjectureSelectorModule';
 
 
 // stores a list of conjectures
@@ -128,7 +128,7 @@ const CurricularModule = (props) => {
         text={"+Add Conjecture"}
         fontWeight={800}
         callback={() => {
-          setCurricularSelect(true); //conjecture selector is being accessed from the curricular module
+          setConjectureSelect(true); //conjecture selector is being accessed from the curricular module
           conjectureSelectCallback();
         }}
       />
