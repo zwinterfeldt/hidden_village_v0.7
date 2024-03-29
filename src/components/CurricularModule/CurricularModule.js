@@ -171,7 +171,7 @@ const CurricularModule = (props) => {
         fontColor={white}
         text={"SAVE DRAFT"}
         fontWeight={800}
-        callback={ () => writeToDatabaseCurricularDraft(Curriculum.getCurrentUUID()) }
+        callback={() => {writeToDatabaseCurricularDraft(Curriculum.getCurrentUUID()) }}
       />
       <RectButton
         height={height * 0.13}
@@ -183,7 +183,7 @@ const CurricularModule = (props) => {
         fontColor={white}
         text={"PUBLISH"}
         fontWeight={800}
-        callback={publishAndReset(Curriculum.getCurrentUUID())} // Enhanced to include reset
+        callback={() => {publishAndReset(Curriculum.getCurrentUUID())}} // Enhanced to include reset
       />
       <CurricularContentEditor height={height} width={width} />
     </>

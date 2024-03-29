@@ -361,11 +361,11 @@ export const writeToDatabaseCurricularDraft = async (UUID) => {
   const timestamp = dateObj.toISOString();
 
   let CurricularID; // set the UUID based on whether creating new game or editing existing game
-  if(UUID != null){
-    CurricularID = UUID;
+  if(UUID == null){
+    CurricularID = uuidv4();
   }
   else{
-    CurricularID = uuidv4();
+    CurricularID = UUID;
   }
 
   //get the UUID of each conjecture
@@ -409,17 +409,17 @@ export const writeToDatabaseCurricularDraft = async (UUID) => {
 
 
 // publish a completed game
-export const writeToDatabaseCurricular = async () => {
+export const writeToDatabaseCurricular = async (UUID) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
 
   let CurricularID; // set the UUID based on whether creating new game or editing existing game
-  if(UUID != null){
-    CurricularID = UUID;
+  if(UUID == null){
+    CurricularID = uuidv4();
   }
   else{
-    CurricularID = uuidv4();
+    CurricularID = UUID;
   }
 
   //get the UUID of each conjecture
