@@ -38,7 +38,10 @@ const PlayGameMachine = createMachine({
 }, {
   actions: {
     loadNextUuid: assign({
-      uuidIndex: (context) => (context.uuidIndex + 1)
+      uuidIndex: (context) => {
+        console.log(context.uuidIndex + 1)
+        return context.uuidIndex + 1
+      }
     })
   }
 });

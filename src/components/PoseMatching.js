@@ -65,7 +65,7 @@ const PoseMatching = (props) => {
       const timer = setTimeout(() => {
         console.log("moved to next step");
         onComplete();
-      }, 2000);
+      }, 400);
       return () => clearTimeout(timer);
     }
   }, [poses, transition]);

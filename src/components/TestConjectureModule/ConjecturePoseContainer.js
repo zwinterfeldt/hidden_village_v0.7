@@ -6,7 +6,7 @@ import { darkGray, yellow } from "../../utils/colors";
 import React, { useCallback } from "react";
 
 const ConjecturePoseContainer = (props) => {
-    const { height, width, columnDimensions, rowDimensions, editCallback, mainCallback, poseData,UUID } = props;
+    const { height, width, columnDimensions, rowDimensions, editCallback, mainCallback, poseData,UUID,onCompleteCallback } = props;
     const drawModalBackground = useCallback((g) => {
         g.beginFill(darkGray, 0.9);
         g.drawRect(0, 0, window.innerWidth, window.innerHeight);
@@ -33,6 +33,7 @@ const ConjecturePoseContainer = (props) => {
             mainCallback={mainCallback}
             poseData={poseData}
             UUID={UUID}
+            onCompleteCallback={onCompleteCallback}
         />
     </>
     );

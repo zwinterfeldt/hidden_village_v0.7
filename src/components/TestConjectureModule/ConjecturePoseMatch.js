@@ -13,7 +13,7 @@ import { set } from "firebase/database";
 import  PoseMatching  from "../PoseMatching";
 
 const ConjecturePoseMatch = (props) => {
-  const { height, width, columnDimensions, rowDimensions, editCallback, mainCallback, poseData,UUID } = props;
+  const { height, width, columnDimensions, rowDimensions, onCompleteCallback, mainCallback, poseData,UUID } = props;
   const [conjectureData, setConjectureData] = useState(null);
   const [poses, setPoses] = useState(null);
 
@@ -63,21 +63,15 @@ useEffect(() => {
 
 return(
   <>
-      
-      
-      {/* )} */}
       {poses != null && (
         <>
-          
-          <PoseMatching
+        <PoseMatching
           poseData={poseData}
           posesToMatch={[
-            poses,
-            poses,
             poses
           ].flat()}
           columnDimensions={columnDimensions}
-          onComplete={() => send("NEXT")}
+          onComplete={onCompleteCallback}
         />
         </>
       )}
