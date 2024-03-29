@@ -186,14 +186,8 @@ const PlayMenu = (props) => {
             height={height}
             columnDimensions={columnDimensions}
             rowDimensions={rowDimensions}
-            // conjectureCallback={() => send("NEWLEVEL")}  // goes to the Conjecture Module
-            // curricularCallback={() => send("NEWGAME")}
-            // backCallback={() => {
-            //   if(getConjectureSelect()) // if selecting a level to add to a game, go back to the game screen
-            //     send("NEWGAME");
-            //   else
-            //     send("MAIN") // if selecting a level to edit, go to main menu
-            // }}
+            curricularCallback={() => send("NEWGAME")}
+            mainCallback={() => {send("MAIN")}}
           />
         )}
         </>

@@ -355,12 +355,18 @@ const countRejectedPromises = async (promises) => {
 
 
 // save a draft of a collection of conjectures to be published later
-export const writeToDatabaseCurricularDraft = async () => {
+export const writeToDatabaseCurricularDraft = async (UUID) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
 
-  const CurricularID = uuidv4();
+  let CurricularID; // set the UUID based on whether creating new game or editing existing game
+  if(UUID != null){
+    CurricularID = UUID;
+  }
+  else{
+    CurricularID = uuidv4();
+  }
 
   //get the UUID of each conjecture
   const conjectureList = Curriculum.getCurrentConjectures();
@@ -408,7 +414,13 @@ export const writeToDatabaseCurricular = async () => {
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
 
-  const CurricularID = uuidv4();
+  let CurricularID; // set the UUID based on whether creating new game or editing existing game
+  if(UUID != null){
+    CurricularID = UUID;
+  }
+  else{
+    CurricularID = uuidv4();
+  }
 
   //get the UUID of each conjecture
   const conjectureList = Curriculum.getCurrentConjectures();

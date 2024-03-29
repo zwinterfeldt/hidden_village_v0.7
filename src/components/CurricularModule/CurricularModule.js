@@ -4,7 +4,7 @@ import Background from "../Background";
 import { blue, white, red, green } from "../../utils/colors";
 import Button from "../Button";
 import RectButton from "../RectButton";
-import { writeToDatabaseCurricular, writeToDatabaseCurricularDraft } from "../../firebase/database";
+import { writeToDatabaseCurricular, writeToDatabaseCurricularDraft, getConjectureDataByUUID } from "../../firebase/database";
 import { CurricularContentEditor } from "../CurricularModule/CurricularModuleBoxes";
 import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
@@ -14,6 +14,7 @@ import { curricularSelect, setConjectureSelect } from '../ConjectureSelector/Con
 // stores a list of conjectures
 export const Curriculum = {
   CurrentConjectures: [],
+  CurrentUUID: null, // null if using new game. Same UUID from database if editing existing game.
 
   addConjecture(conjecture) { // add the entire conjecture object to a list
     this.CurrentConjectures.push(conjecture);
@@ -25,6 +26,19 @@ export const Curriculum = {
 
   getConjecturebyIndex(index) { // return a specific conjecture
     return this.CurrentConjectures[index];
+  },
+
+  getCurrentUUID(){ //return the UUID if editing an existing conjecture
+    if(this.CurrentUUID != null && this.CurrentUUID != ""){
+      return this.CurrentUUID;
+    }
+    else{
+      return null;
+    }
+  },
+
+  setCurrentUUID(newUUID){
+    this.CurrentUUID = newUUID;
   },
 
   moveConjectureUpByIndex(index){ // swaps 2 elements so the index rises up the list
@@ -45,7 +59,20 @@ export const Curriculum = {
 
   removeConjectureByIndex(index){ // remove a particular conjecture based on its index in the list
     this.CurrentConjectures.pop(index);
-  }
+  },
+
+  async setCurricularEditor(curricular){ // fill in curriculum data
+    for(i=0; i < curricular["ConjectureUUIDs"].length; i++){
+      conjectureList = await getConjectureDataByUUID(curricular["ConjectureUUIDs"][i]); //getConjectureDataByUUID returns a list
+      conjecture = conjectureList[curricular["ConjectureUUIDs"][i]]; // get the specific conjecture from that list
+      this.CurrentConjectures.push(conjecture);
+    }
+    localStorage.setItem('CurricularName', curricular["CurricularName"]);
+    localStorage.setItem('CurricularAuthor', curricular["CurricularAuthor"]);
+    localStorage.setItem('CurricularKeywords', curricular["CurricularKeywords"]);
+    localStorage.setItem('CurricularPIN', curricular["CurricularPIN"]);
+    this.setCurrentUUID(curricular["UUID"]);
+  },
 };
 
 const CurricularModule = (props) => {
@@ -58,6 +85,7 @@ const CurricularModule = (props) => {
     localStorage.removeItem('CurricularAuthor');
     localStorage.removeItem('CurricularKeywords');
     localStorage.removeItem('CurricularPIN');
+    Curriculum.setCurrentUUID(null);
   };
 
   // Reset Function
@@ -67,8 +95,8 @@ const CurricularModule = (props) => {
   };
 
   // Publish function that includes reset
-  async function publishAndReset()  {
-      promise = await writeToDatabaseCurricular();
+  async function publishAndReset(currentUUID)  {
+      promise = await writeToDatabaseCurricular(currentUUID);
       if (promise != undefined){ // promise is undefined if the game cannot be published
         resetCurricularValues();
         Curriculum.CurrentConjectures = [];
@@ -143,7 +171,7 @@ const CurricularModule = (props) => {
         fontColor={white}
         text={"SAVE DRAFT"}
         fontWeight={800}
-        callback={ () => writeToDatabaseCurricularDraft() }
+        callback={ () => writeToDatabaseCurricularDraft(Curriculum.getCurrentUUID()) }
       />
       <RectButton
         height={height * 0.13}
@@ -155,7 +183,7 @@ const CurricularModule = (props) => {
         fontColor={white}
         text={"PUBLISH"}
         fontWeight={800}
-        callback={publishAndReset} // Enhanced to include reset
+        callback={publishAndReset(Curriculum.getCurrentUUID())} // Enhanced to include reset
       />
       <CurricularContentEditor height={height} width={width} />
     </>
