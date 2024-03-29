@@ -10,10 +10,15 @@ import {Curriculum} from "../CurricularModule/CurricularModule";
 import { getConjectureDataByUUID } from "../../firebase/database";
 
 export function handlePIN(curricular, message = "Please Enter the PIN."){ // this function is meant to be used as an if statement (ex: if(handlePIN){...} )
-  const existingPIN = curricular["PIN"];
+  const existingPIN = curricular["CurricularPIN"];
+
+  if(existingPIN == "" || existingPIN == "undefined" || existingPIN == null){ // no existing PIN
+    return true;
+  }
+
   const enteredPIN = prompt(message);
 
-  if(existingPIN == "" || enteredPIN == existingPIN){ // PIN is successful
+  if(enteredPIN == existingPIN){ // PIN is successful
     return true;
   }
   else if(enteredPIN != null && enteredPIN != ""){ // recursively try to have the user enter a PIN when it is incorrect
@@ -24,7 +29,7 @@ export function handlePIN(curricular, message = "Please Enter the PIN."){ // thi
 
 const CurricularSelectModule = (props) => {
   
-  const { height, width, conjectureCallback, backCallback, curricularCallback} = props;
+  const { height, width, mainCallback, curricularCallback} = props;
   const [curricularList, setCurricularList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -76,21 +81,20 @@ const CurricularSelectModule = (props) => {
             color={white}
             fontSize={totalWidth * fontSizeMultiplier/1.3}
             fontColor={blue}
-            text={curricular}
+            text={curricular["CurricularAuthor"]}
             fontWeight="bold"
             callback = {() => {
-            //   if(handlePIN(conjecture)){
-            //     currentConjecture.setConjecture(conjecture);
-            //     conjectureCallback(conjecture);
-            //   }
-            console.log(curricular);
+              if(handlePIN(curricular)){
+                Curriculum.setCurricularEditor(curricular);
+                curricularCallback();
+              }
             }}
           />
         ))}
 
-        {/* {currentCurriculars.map((conjecture, index) => (
+        {currentCurriculars.map((curricular, index) => (
           <RectButton
-            key={'author' + index}
+            key={index}
             height={totalHeight / 2 * yMultiplier}
             width={totalWidth * 0.6}
             x={totalWidth * (xMultiplier + 0.25)}
@@ -98,21 +102,21 @@ const CurricularSelectModule = (props) => {
             color={white}
             fontSize={totalWidth * fontSizeMultiplier / 1.3} 
             fontColor={blue}
-            text={conjecture["Text Boxes"]["Conjecture Name"]}
+            text={curricular["CurricularName"]}
             fontWeight="bold"
             callback = {() => {
-              if(handlePIN(conjecture)){
-                currentConjecture.setConjecture(conjecture);
-                conjectureCallback(conjecture);
+              if(handlePIN(curricular)){
+                currentConjecture.setConjecture(curricular);
+                conjectureCallback(curricular);
               }
             }}
           />
         
         ))}
 
-        {currentCurriculars.map((conjecture, index) => (
+        {currentCurriculars.map((curricular, index) => (
           <RectButton
-            key={'keywords' + index}
+            key={index}
             height={totalHeight / 2 * yMultiplier}
             width={totalWidth * 0.8}
             x={totalWidth * (xMultiplier +0.5)} 
@@ -120,39 +124,19 @@ const CurricularSelectModule = (props) => {
             color={white}
             fontSize={totalWidth * fontSizeMultiplier / 1.3}
             fontColor={blue}
-            text={conjecture["Text Boxes"]["Conjecture Keywords"]}
+            text={curricular["CurricularKeywords"]}
             fontWeight="bold"
             callback = {() => {
-              if(handlePIN(conjecture)){
-                currentConjecture.setConjecture(conjecture);
-                conjectureCallback(conjecture);
+              if(handlePIN(curricular)){
+                currentConjecture.setConjecture(curricular);
+                conjectureCallback(curricular);
               }
             }}
           />
-        ))} */}
+        ))}
 
-        {/* only show these in the curricular editor (disabled when just editing conjecture) */}
-        {/* {conjectureSelect ? (
-          currentCurriculars.map((conjecture, index) => (
-            <RectButton
-              key={index}
-              height={0.01}
-              width={0.01}
-              x={totalWidth * xMultiplier - totalWidth * xMultiplier *0.7}
-              y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier - totalHeight * yMultiplier *0.15 }
-              color={white}
-              fontSize={totalWidth * fontSizeMultiplier * 2}
-              fontColor={neonGreen}
-              text={"+"}
-              fontWeight="bold"
-              callback = {() => {
-                  Curriculum.addConjecture(conjecture);
-                  curricularCallback();
-              }}
-            />
-          )))
-          // show whether the conjectures are drafts or finals in the level editor
-          :(currentCurriculars.map((conjecture, index) => (
+        {/* show an X if the game (curricular) is published */}
+        {(currentCurriculars.map((curricular, index) => (
             <RectButton
               key={index}
               height={totalHeight / 2 * yMultiplier}
@@ -162,19 +146,19 @@ const CurricularSelectModule = (props) => {
               color={white}
               fontSize={totalWidth * fontSizeMultiplier / 1.3}
               fontColor={blue}
-              text={conjecture["isFinal"] ? "X" : " "}
+              text={curricular["isFinal"] ? "X" : " "}
               fontWeight="bold"
               callback = {() => {
-                if(handlePIN(conjecture)){
-                  currentConjecture.setConjecture(conjecture);
-                  conjectureCallback(conjecture);
+                if(handlePIN(curricular)){
+                  currentConjecture.setConjecture(curricular);
+                  conjectureCallback(curricular);
                 }
               }}
             />
           ))
             
           )  
-        } */}
+        }
       </>
     );
   };
@@ -219,7 +203,7 @@ const CurricularSelectModule = (props) => {
         fontColor={white}
         text={"BACK"}
         fontWeight={800}
-        callback={backCallback}
+        callback={mainCallback}
       />
       <RectButton
         height={height * 0.13}
@@ -235,7 +219,7 @@ const CurricularSelectModule = (props) => {
       />
 
       <CurricularSelectorBoxes height={height} width={width} />
-      {drawCurricularList(0.15, 0.3, 0.018, width, height, conjectureCallback, backCallback, curricularCallback)}
+      {drawCurricularList(0.15, 0.3, 0.018, width, height, mainCallback, curricularCallback)}
     </>
   );
 };

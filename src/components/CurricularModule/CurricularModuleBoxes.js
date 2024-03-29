@@ -113,7 +113,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           text={conjecture["Text Boxes"]["Author Name"]}
           fontWeight="bold"
           callback = {() => { 
-            console.log("conjecture: ", conjecture["Text Boxes"]["Conjecture Keywords"]);
+            console.log("conjecture: ", conjecture);
             console.log("curriculum: ", conjectureList);
           }}
         />
