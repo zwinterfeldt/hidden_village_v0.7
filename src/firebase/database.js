@@ -221,6 +221,7 @@ export const writeToDatabaseConjectureDraft = async (existingUUID) => {
 
   // Initialize empty object to store the data inside
   const dataToPush = {};
+  let noName = false;
 
   // Fetch values from local storage for each key inside KeysToPush 
   await Promise.all(keysToPush.map(async (key) => {
@@ -230,6 +231,9 @@ export const writeToDatabaseConjectureDraft = async (existingUUID) => {
     // If the value is undefined assign the value as undefined in firebase
     if(value == undefined){
       Object.assign(dataToPush, await createTextObjects(key, "undefined"));
+      if(key == "Conjecture Name"){
+        noName = true;
+      }
     }
   }));
 
@@ -239,7 +243,7 @@ export const writeToDatabaseConjectureDraft = async (existingUUID) => {
   const endPoseData = await createPoseObjects(localStorage.getItem('end.json'), 'EndPose', localStorage.getItem('End Tolerance'));
 
   // if the level isn't named, alert message and exit
-  if (dataToPush.Name === undefined) {
+  if (noName) {
     return alert("Please name your level before saving a draft."), false;
   }
 

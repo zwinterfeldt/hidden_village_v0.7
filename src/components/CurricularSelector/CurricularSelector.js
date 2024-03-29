@@ -11,9 +11,14 @@ import { getConjectureDataByUUID } from "../../firebase/database";
 
 export function handlePIN(curricular, message = "Please Enter the PIN."){ // this function is meant to be used as an if statement (ex: if(handlePIN){...} )
   const existingPIN = curricular["CurricularPIN"];
+
+  if(existingPIN == "" || existingPIN == "undefined" || existingPIN == null){ // no existing PIN
+    return true;
+  }
+
   const enteredPIN = prompt(message);
 
-  if(existingPIN == "" || enteredPIN == existingPIN){ // PIN is successful
+  if(enteredPIN == existingPIN){ // PIN is successful
     return true;
   }
   else if(enteredPIN != null && enteredPIN != ""){ // recursively try to have the user enter a PIN when it is incorrect
@@ -79,7 +84,6 @@ const CurricularSelectModule = (props) => {
             text={curricular["CurricularAuthor"]}
             fontWeight="bold"
             callback = {() => {
-              //console.log(curricular);
               if(handlePIN(curricular)){
                 Curriculum.setCurricularEditor(curricular);
                 curricularCallback();

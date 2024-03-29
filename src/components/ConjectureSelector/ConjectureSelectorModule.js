@@ -23,6 +23,11 @@ export function setConjectureSelect(trueOrFalse) {
 
 export function handlePIN(conjecture, message = "Please Enter the PIN."){ // this function is meant to be used as an if statement (ex: if(handlePIN){...} )
   const existingPIN = conjecture["PIN"];
+
+  if(existingPIN == "" || existingPIN == "undefined" || existingPIN == null){ // no existing PIN
+    return true;
+  }
+
   const enteredPIN = prompt(message);
 
   if(existingPIN == "" || enteredPIN == existingPIN){ // PIN is successful

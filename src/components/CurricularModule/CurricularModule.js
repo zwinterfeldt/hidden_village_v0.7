@@ -62,16 +62,20 @@ export const Curriculum = {
   },
 
   async setCurricularEditor(curricular){ // fill in curriculum data
-    for(i=0; i < curricular["ConjectureUUIDs"].length; i++){
-      conjectureList = await getConjectureDataByUUID(curricular["ConjectureUUIDs"][i]); //getConjectureDataByUUID returns a list
-      conjecture = conjectureList[curricular["ConjectureUUIDs"][i]]; // get the specific conjecture from that list
-      this.CurrentConjectures.push(conjecture);
+    if(curricular["ConjectureUUIDs"]){ // only fill in existing values
+      for(i=0; i < curricular["ConjectureUUIDs"].length; i++){
+        conjectureList = await getConjectureDataByUUID(curricular["ConjectureUUIDs"][i]); //getConjectureDataByUUID returns a list
+        conjecture = conjectureList[curricular["ConjectureUUIDs"][i]]; // get the specific conjecture from that list
+        this.CurrentConjectures.push(conjecture);
+      }
     }
-    localStorage.setItem('CurricularName', curricular["CurricularName"]);
-    localStorage.setItem('CurricularAuthor', curricular["CurricularAuthor"]);
-    localStorage.setItem('CurricularKeywords', curricular["CurricularKeywords"]);
-    localStorage.setItem('CurricularPIN', curricular["CurricularPIN"]);
-    this.setCurrentUUID(curricular["UUID"]);
+      localStorage.setItem('CurricularName', curricular["CurricularName"]);
+      localStorage.setItem('CurricularAuthor', curricular["CurricularAuthor"]);
+      localStorage.setItem('CurricularKeywords', curricular["CurricularKeywords"]);
+      if(curricular["CurricularPIN"] != "undefined" && curricular["CurricularPIN"] != null){
+        localStorage.setItem('CurricularPIN', curricular["CurricularPIN"]);
+      }
+      this.setCurrentUUID(curricular["UUID"]);
   },
 };
 
