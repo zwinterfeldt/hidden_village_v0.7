@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { white, black, red, blue } from "../../utils/colors";
-import { curricularSelect } from './ConjectureSelectorModule';
+import { getAddToCurricular } from './ConjectureSelectorModule';
 
 import { getConjectureList,getConjectureDataByAuthorID } from "../../firebase/database";
 
@@ -30,7 +30,7 @@ export const ConjectureSelectorBoxes = (props) => {
   const { height, width } = props;
   let firstColumn; //will display either Final (for edit level select) or Add (for adding level to game)
 
-  if(curricularSelect)
+  if(getAddToCurricular())
     firstColumn = "      Add" //extra spacing fixes alignment differences
   else
     firstColumn = "Published"

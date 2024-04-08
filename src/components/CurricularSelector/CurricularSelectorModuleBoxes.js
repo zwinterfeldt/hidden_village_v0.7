@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { white, black, red, blue } from "../../utils/colors";
-//import { curricularSelect } from '../ConjectureSelector';
 
-import { getConjectureList,getConjectureDataByAuthorID } from "../../firebase/database";
 
 function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) {
   return (

@@ -10,8 +10,8 @@ import { useMachine } from "@xstate/react";
 import {PlayMenuMachine} from "./PlayMenuMachine";
 import ConjecutureModule from "../ConjectureModule/ConjectureModule";
 import CurricularModule from "../CurricularModule/CurricularModule.js";
-import ConjectureSelectorModule, { getConjectureSelect, setConjectureSelect } from "../ConjectureSelector/ConjectureSelectorModule.js";
-import CurricularSelectorModule from "../CurricularSelector/CurricularSelector.js";
+import ConjectureSelectorModule, { getAddToCurricular, setAddtoCurricular } from "../ConjectureSelector/ConjectureSelectorModule.js";
+import CurricularSelectorModule, { getPlayGame, setPlayGame } from "../CurricularSelector/CurricularSelector.js";
 import { getUserRoleFromDatabase } from "../../firebase/userDatabase";
 import { Text } from "@inlet/react-pixi";
 
@@ -64,10 +64,10 @@ const PlayMenu = (props) => {
             list.push(
                 {text: "Admin", callback: () => send("ADMIN"), color: babyBlue},
                 {text: "New Game", callback: () => send("NEWGAME"), color: skyBlue},
-                {text: "Edit Game", callback: () => send("GAMESELECT"), color: powderBlue},
+                {text: "Edit Game", callback: () => (setPlayGame(false), send("GAMESELECT")), color: powderBlue},
                 {text: "Play", callback: () => send("PLAY"), color: royalBlue},
                 {text: "New Level", callback: () => send("NEWLEVEL"), color: dodgerBlue},
-                {text: "Edit Level", callback: () => (setConjectureSelect(false),send("LEVELSELECT")), color: steelBlue},
+                {text: "Edit Level", callback: () => (setAddtoCurricular(false),send("LEVELSELECT")), color: steelBlue},
                 {text: "Settings", callback: () => send("SETTINGS"), color: cornflowerBlue},
             );
         } else if (role === "Student"){
@@ -75,10 +75,10 @@ const PlayMenu = (props) => {
         } else if (role === "Teacher"){
             list.push(
                 {text: "New Game", callback: () => send("NEWGAME"), color: skyBlue},
-                {text: "Edit Game", callback: () => send("GAMESELECT"), color: powderBlue},
+                {text: "Edit Game", callback: () => (setPlayGame(false), send("GAMESELECT")), color: powderBlue},
                 {text: "Play", callback: () => send("PLAY"), color: royalBlue},
                 {text: "New Level", callback: () => send("NEWLEVEL"), color: dodgerBlue},
-                {text: "Edit Level", callback: () => (setConjectureSelect(false),send("LEVELSELECT")), color: steelBlue},
+                {text: "Edit Level", callback: () => (setAddtoCurricular(false),send("LEVELSELECT")), color: steelBlue},
                 {text: "Settings", callback: () => send("SETTINGS"), color: cornflowerBlue},
             );
         }
@@ -173,7 +173,7 @@ const PlayMenu = (props) => {
             conjectureCallback={() => send("NEWLEVEL")}  // goes to the Conjecture Module
             curricularCallback={() => send("NEWGAME")}
             backCallback={() => {
-              if(getConjectureSelect()) // if selecting a level to add to a game, go back to the game screen
+              if(getAddToCurricular()) // if selecting a level to add to a game, go back to the game screen
                 send("NEWGAME");
               else
                 send("MAIN") // if selecting a level to edit, go to main menu
@@ -186,7 +186,16 @@ const PlayMenu = (props) => {
             height={height}
             columnDimensions={columnDimensions}
             rowDimensions={rowDimensions}
-            curricularCallback={() => send("NEWGAME")}
+            curricularCallback={() => {
+              if (!getPlayGame()) // edit game
+                send("NEWGAME");
+              else
+                null; // TODO: connect to the new play game module
+                // 1. send to play game using state machine here
+                // 2. for the main menu button (up above), do something like:  {text: "Play Game", callback: () => (setPlayGame(true), send("GAMESELECT")), color: powderBlue}
+                // 3. import Curriculum from CurricularModule.js in the game playing module
+                // 4. Should be able to use Curriculum.getCurrentConjectures() to get a list of UUIDs and Curriculum.getCurrentUUID() to get the UUID of the game
+            }}
             mainCallback={() => {send("MAIN")}}
           />
         )}

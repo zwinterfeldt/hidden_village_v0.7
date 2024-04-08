@@ -156,11 +156,11 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
       ))}
       {conjectureList.map((conjecture, index) => (
         <RectButton
-          key={index}
+          key={conjecture}
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier * 0.8}
           x={totalWidth * xMultiplier * 7.6} 
-          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
+          y={totalHeight * yMultiplier + totalHeight * index * 4 * fontSizeMultiplier} 
           color={green}
           fontSize={totalWidth * fontSizeMultiplier}
           fontColor={white}
@@ -173,7 +173,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
       ))}
       {conjectureList.map((conjecture, index) => (
         <RectButton
-          key={index}
+          key={conjecture}
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier * 0.8}
           x={totalWidth * xMultiplier * 8} 

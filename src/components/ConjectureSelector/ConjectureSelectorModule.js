@@ -8,28 +8,25 @@ import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
 import {Curriculum} from "../CurricularModule/CurricularModule";
 import {currentConjecture} from "../ConjectureModule/ConjectureModule"
-import { getConjectureDataByUUID } from "../../firebase/database";
 
 import InputBox from '../InputBox';
 
-export let conjectureSelect = false; // keep track of whether the conjecture selector is used for curricular purposes or editing existing conjectures.
+export let addToCurricular = false; // keep track of whether the conjecture selector is used for curricular purposes or editing existing conjectures.
 
-export function getConjectureSelect() {
-  return conjectureSelect;
+export function getAddToCurricular() {
+  return addToCurricular;
 }
-export function setConjectureSelect(trueOrFalse) {
-  conjectureSelect = trueOrFalse;
+export function setAddtoCurricular(trueOrFalse) {
+  addToCurricular = trueOrFalse;
 }
 
 export function handlePIN(conjecture, message = "Please Enter the PIN."){ // this function is meant to be used as an if statement (ex: if(handlePIN){...} )
   const existingPIN = conjecture["PIN"];
-
   if(existingPIN == "" || existingPIN == "undefined" || existingPIN == null){ // no existing PIN
     return true;
   }
 
   const enteredPIN = prompt(message);
-
   if(existingPIN == "" || enteredPIN == existingPIN){ // PIN is successful
     return true;
   }
@@ -45,13 +42,12 @@ const ConjectureSelectModule = (props) => {
   const [conjectureList, setConjectureList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
 
-
   const [state, send] = useMachine(CurricularContentEditorMachine);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getConjectureList(conjectureSelect);
+        const result = await getConjectureList(addToCurricular);
         setConjectureList(result);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -60,8 +56,6 @@ const ConjectureSelectModule = (props) => {
 
     fetchData();
   }, []);
-
-
 
   //use to get a fixed number of conjectures per page and to navigate between the pages
   const conjecturesPerPage = 7;
@@ -164,7 +158,7 @@ const ConjectureSelectModule = (props) => {
         ))}
 
         {/* only show these in the curricular editor (disabled when just editing conjecture) */}
-        {conjectureSelect ? (
+        {addToCurricular ? (
           currentConjectures.map((conjecture, index) => (
             <RectButton
               key={index}

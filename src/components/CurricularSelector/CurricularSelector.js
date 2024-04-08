@@ -7,7 +7,15 @@ import { CurricularSelectorBoxes } from "./CurricularSelectorModuleBoxes";
 import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
 import {Curriculum} from "../CurricularModule/CurricularModule";
-import { getConjectureDataByUUID } from "../../firebase/database";
+
+export let playGame = false; // keep track of whether the curricular content list is being used to edit or play games.
+
+export function getPlayGame() {
+  return playGame;
+}
+export function setPlayGame(trueOrFalse) {
+  playGame = trueOrFalse;
+}
 
 export function handlePIN(curricular, message = "Please Enter the PIN."){ // this function is meant to be used as an if statement (ex: if(handlePIN){...} )
   const existingPIN = curricular["CurricularPIN"];
@@ -63,11 +71,11 @@ const CurricularSelectModule = (props) => {
     }
   };
 
-  // use to determine the subset of conjectures to display based on the current page
+  // use to determine the subset of games to display based on the current page
   const startIndex = currentPage * curricularPerPage;
   const currentCurriculars = curricularList.slice(startIndex, startIndex + curricularPerPage);
 
-  // draw the buttons that show the author name, name of conjecture, and keywords, and the add conjecture button
+  // draw the buttons that show the author name, name of game, and keywords, and the add conjecture button
   const drawCurricularList = (xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) => {
     return (
       <>
@@ -106,8 +114,8 @@ const CurricularSelectModule = (props) => {
             fontWeight="bold"
             callback = {() => {
               if(handlePIN(curricular)){
-                currentConjecture.setConjecture(curricular);
-                conjectureCallback(curricular);
+                Curriculum.setCurricularEditor(curricular);
+                curricularCallback();
               }
             }}
           />
@@ -128,8 +136,8 @@ const CurricularSelectModule = (props) => {
             fontWeight="bold"
             callback = {() => {
               if(handlePIN(curricular)){
-                currentConjecture.setConjecture(curricular);
-                conjectureCallback(curricular);
+                Curriculum.setCurricularEditor(curricular);
+                curricularCallback();
               }
             }}
           />
@@ -150,8 +158,8 @@ const CurricularSelectModule = (props) => {
               fontWeight="bold"
               callback = {() => {
                 if(handlePIN(curricular)){
-                  currentConjecture.setConjecture(curricular);
-                  conjectureCallback(curricular);
+                  Curriculum.setCurricularEditor(curricular);
+                  curricularCallback();
                 }
               }}
             />
