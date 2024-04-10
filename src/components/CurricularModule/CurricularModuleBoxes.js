@@ -94,13 +94,34 @@ function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, t
 
 function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) {
   const conjectureList = Curriculum.getCurrentConjectures();
+  //use to get a fixed number of conjectures per page and to navigate between the pages
+  const conjecturesPerPage = 7;
+  const totalPages = Math.ceil(conjectureList.length / conjecturesPerPage);
+  const [currentPage, setCurrentPage] = useState(0);
+
   if (conjectureList.length == 0){
     return;
   }
 
+  const nextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const prevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // use to determine the subset of conjectures to display based on the current page
+  const startIndex = currentPage * conjecturesPerPage;
+  const currentConjectures = conjectureList.slice(startIndex, startIndex + conjecturesPerPage);
+
+
   return (
     <>
-      {conjectureList.map((conjecture, index) => (
+      {currentConjectures.map((conjecture, index) => (
         <RectButton
           key={index}
           height={totalHeight /2 * yMultiplier}
@@ -118,7 +139,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           }}
         />
       ))}
-      {conjectureList.map((conjecture, index) => (
+      {currentConjectures.map((conjecture, index) => (
         <RectButton
           key={index}
           height={totalHeight /2 * yMultiplier}
@@ -136,7 +157,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           }}
         />
       ))}
-      {conjectureList.map((conjecture, index) => (
+      {currentConjectures.map((conjecture, index) => (
         <RectButton
           key={index}
           height={totalHeight /2 * yMultiplier}
@@ -154,7 +175,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           }}
         />
       ))}
-      {conjectureList.map((conjecture, index) => (
+      {currentConjectures.map((conjecture, index) => (
         <RectButton
           key={conjecture}
           height={totalHeight /2 * yMultiplier}
@@ -171,7 +192,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           }}
         />
       ))}
-      {conjectureList.map((conjecture, index) => (
+      {currentConjectures.map((conjecture, index) => (
         <RectButton
           key={conjecture}
           height={totalHeight /2 * yMultiplier}
@@ -188,7 +209,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           }}
         />
       ))}
-      {conjectureList.map((conjecture, index) => (
+      {currentConjectures.map((conjecture, index) => (
         <RectButton
           key={index}
           height={totalHeight /2 * yMultiplier}
@@ -205,6 +226,32 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           }}
         />
       ))}
+      
+      <RectButton
+        height={totalHeight * 0.13}
+        width={totalWidth * 0.26}
+        x={totalWidth * 0.02}
+        y={totalHeight * 0.93}
+        color={blue}
+        fontSize={totalWidth * 0.014}
+        fontColor={white}
+        text={"PREVIOUS"}
+        fontWeight={800}
+        callback={prevPage}
+      />
+
+      <RectButton
+        height={totalHeight * 0.13}
+        width={totalWidth * 0.26}
+        x={totalWidth * 0.14}
+        y={totalHeight * 0.93}
+        color={blue}
+        fontSize={totalWidth * 0.014}
+        fontColor={white}
+        text={"NEXT"}
+        fontWeight={800}
+        callback={nextPage}
+      />
     </>
   );
 }

@@ -18,6 +18,8 @@ const dodgerBlue = 0x1e90ff;
 const royalBlue = 0x4169e1;
 const navyBlue = 0x000080;
 const midnightBlue = 0x191970;
+const gold = 0xFFD700;
+const goldenRod = 0xDAA520;
 
 
-export { yellow, blue, white, darkGray, pink, green, neonGreen, black, red, orange, turquoise, skyBlue, babyBlue, powderBlue, cornflowerBlue, steelBlue, dodgerBlue, royalBlue, navyBlue, midnightBlue};
+export { yellow, blue, white, darkGray, pink, green, neonGreen, black, red, orange, turquoise, skyBlue, babyBlue, powderBlue, cornflowerBlue, steelBlue, dodgerBlue, royalBlue, navyBlue, midnightBlue, gold, goldenRod};

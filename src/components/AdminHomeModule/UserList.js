@@ -68,7 +68,7 @@ const UserList = (props) => {
                     width={width * .3}
                     height={height}
                     x={x}
-                    y={y * 0.2 + (index + 1) * 25}  // Adjust the y position based on index
+                    y={y * 0.2 + (index + 2) * 25}  // Adjust the y position based on index
                     index={index}
                     username={user.userName}
                     role={user.userRole}
