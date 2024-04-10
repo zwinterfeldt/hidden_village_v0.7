@@ -53,7 +53,7 @@ export const writeNewUserToDatabase = async (userEmail, userRole) => {
         const newRole = userRole;
         // lets addd user to the realtime database now
     
-        writeCurrentUserToDatabaseNewUser(newID, newEmail, newRole);
+        writeCurrentUserToDatabaseNewUser(newID, newEmail, newRole, newOrg);
         alert("User Created")
 
 
@@ -68,7 +68,7 @@ export const writeNewUserToDatabase = async (userEmail, userRole) => {
 
 };
 
-export const writeCurrentUserToDatabaseNewUser = async (newID,newEmail,newRole) => {
+export const writeCurrentUserToDatabaseNewUser = async (newID,newEmail,newRole, newOrg) => {
     // Create a new date object to get a timestamp
     const dateObj = new Date();
     const timestamp = dateObj.toISOString();
@@ -82,7 +82,7 @@ export const writeCurrentUserToDatabaseNewUser = async (newID,newEmail,newRole) 
     const userRole = newRole;
     console.log(`User Role: ${userRole}`)
 
-    const userOrg = "Minnesota State University, Mankato"
+    const userOrg = newOrg
     console.log(`User Org: ${userOrg}`)
 
    // Extract username from email
@@ -191,7 +191,7 @@ export const changeUserRoleInDatabase = async (userId, newRole) => {
     const userSnapshot = await get(ref(db, userPath));
 
     if (userSnapshot.val() === null) {
-        // User does not exist, handle accordingly
+        // User does not exist
         alert("User does not exist in the database.");
         return false;
     }

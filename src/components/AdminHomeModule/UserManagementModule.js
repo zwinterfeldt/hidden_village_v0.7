@@ -23,16 +23,16 @@ const UserManagementModule = (props) => {
 
     const refreshUserList = async () => {
         try {
-        const organization = "Minnesota State University, Mankato";
-        setLoading(true);
+            const organization = "Minnesota State University, Mankato";
+            setLoading(true);
 
-        const users = await getUsersByOrganizationFromDatabase(organization);
-        console.log('User:', JSON.stringify(users[0], null, 2));
-        setUsersList(users);
+            const users = await getUsersByOrganizationFromDatabase(organization);
+            console.log('User:', JSON.stringify(users[0], null, 2));
+            setUsersList(users);
         } catch (error) {
-        console.error('Error fetching users:', error);
+            console.error('Error fetching users:', error);
         } finally {
-        setLoading(false);
+            setLoading(false);
         }
     }
 
