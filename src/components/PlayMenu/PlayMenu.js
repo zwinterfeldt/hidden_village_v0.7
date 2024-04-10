@@ -87,7 +87,9 @@ const PlayMenu = (props) => {
 
     return (
         <>
-        <Background height={height} width= {width}/>
+        {state.value === "main" && (
+          <Background height={height} width= {width}/>
+        )}
         {state.value === "main" && buttonList.map((button, idx) => (
             <Button
                 fontColor={yellow}
