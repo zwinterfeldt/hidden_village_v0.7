@@ -1,7 +1,7 @@
 // AKA Game module
 import React from 'react';
 import Background from "../Background";
-import { blue, white, red, green, gold, goldenRod } from "../../utils/colors";
+import { blue, white, red, green, gold, goldenRod, indigo } from "../../utils/colors";
 import Button from "../Button";
 import RectButton from "../RectButton";
 import { writeToDatabaseCurricular, writeToDatabaseCurricularDraft, getConjectureDataByUUID } from "../../firebase/database";
@@ -128,7 +128,7 @@ const CurricularModule = (props) => {
         width={width * 0.45}
         x={width *0.3}
         y={height *0.93}
-        color={goldenRod}
+        color={indigo}
         fontSize={width * 0.014}
         fontColor={white}
         text={"+Add Conjecture"}
