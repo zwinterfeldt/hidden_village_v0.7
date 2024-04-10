@@ -127,7 +127,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier *4}
           x={totalWidth * xMultiplier * 0.25}
-          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
+          y={totalHeight * (index+1) * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
           color={white}
           fontSize={totalWidth * fontSizeMultiplier/1.3}
           fontColor={blue}
@@ -145,7 +145,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier *7}
           x={totalWidth * xMultiplier * 1.9}
-          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
+          y={totalHeight * (index+1) * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
           color={white}
           fontSize={totalWidth * fontSizeMultiplier/1.3}
           fontColor={blue}
@@ -163,7 +163,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier * 7}
           x={totalWidth * xMultiplier * 4.75} 
-          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
+          y={totalHeight * (index+1) * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
           color={white}
           fontSize={totalWidth * fontSizeMultiplier/1.3}
           fontColor={blue}
@@ -181,7 +181,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier * 0.8}
           x={totalWidth * xMultiplier * 7.6} 
-          y={totalHeight * yMultiplier + totalHeight * index * 4 * fontSizeMultiplier} 
+          y={totalHeight * yMultiplier + totalHeight * (index+1) * 4 * fontSizeMultiplier} 
           color={green}
           fontSize={totalWidth * fontSizeMultiplier}
           fontColor={white}
@@ -198,7 +198,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier * 0.8}
           x={totalWidth * xMultiplier * 8} 
-          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
+          y={totalHeight * (index+1) * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
           color={red}
           fontSize={totalWidth * fontSizeMultiplier/1.3}
           fontColor={white}
@@ -215,7 +215,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier *1.6}
           x={totalWidth * xMultiplier * 8.4} 
-          y={totalHeight * index * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
+          y={totalHeight * (index+1) * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
           color={orange}
           fontSize={totalWidth * fontSizeMultiplier/1.3}
           fontColor={white}
@@ -274,11 +274,11 @@ export const CurricularContentEditor = (props) => {
       {createTextElement("Game Name:",0.110, 0.100, 0.018, width, height)}
 
       {/* To label the conjectures */}
-      {createTextElement("Author", 0.0825, 0.31, 0.015, width, height)}
-      {createTextElement("Conjecture Name", 0.275, 0.31, 0.015, width, height)}
-      {createTextElement("Keywords", 0.58, 0.31, 0.015, width, height)}
+      {createTextElement("Author", 0.0825, 0.32, 0.015, width, height)}
+      {createTextElement("Conjecture Name", 0.275, 0.32, 0.015, width, height)}
+      {createTextElement("Keywords", 0.58, 0.32, 0.015, width, height)}
 
-      {drawCurriculum(0.1, 0.35, 0.018, width, height)}
+      {drawCurriculum(0.1, 0.3, 0.018, width, height)}
     </>
   );
 };
