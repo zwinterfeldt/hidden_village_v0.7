@@ -67,6 +67,7 @@ export const PlayMenuMachine = createMachine({
       on: {
         NEWGAME: "newGame", // move to new game
         MAIN: "main", // move to home
+        PLAY: "play",
       }
     },
   }

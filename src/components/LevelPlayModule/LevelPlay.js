@@ -6,6 +6,7 @@ import LevelPlayMachine from "./LevelPlayMachine";
 import ConjecturePoseContainter from "../TestConjectureModule/ConjecturePoseContainer"
 import Button from "../Button";
 import CursorMode from "../CursorMode";
+import { getConjectureDataByUUID } from "../../firebase/database";
 
 const LevelPlay = (props) => {
   const {

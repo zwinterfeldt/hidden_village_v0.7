@@ -46,7 +46,7 @@ const CurricularSelectModule = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getCurricularList();
+        const result = await getCurricularList(getPlayGame());
         setCurricularList(result);
       } catch (error) {
         console.error('Error fetching data:', error);
