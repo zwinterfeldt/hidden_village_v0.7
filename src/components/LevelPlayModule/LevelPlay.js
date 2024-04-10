@@ -5,6 +5,7 @@ import {red, white} from "../../utils/colors"
 import LevelPlayMachine from "./LevelPlayMachine";
 import ConjecturePoseContainter from "../TestConjectureModule/ConjecturePoseContainer"
 import Button from "../Button";
+import CursorMode from "../CursorMode";
 
 const LevelPlay = (props) => {
   const {
@@ -16,62 +17,75 @@ const LevelPlay = (props) => {
     UUID,
     width,
     height,
-    backCallback,
-    uuidIDX
+    backCallback
   } = props;
   const [state, send] = useMachine(LevelPlayMachine);
   const [experimentText, setExperimentText] = useState(
     `Read the following aloud:\n\nFigure it out? \n\n Answer TRUE or FALSE?`
   );
+  const [conjectureData, setConjectureData] = useState(null);
+  const [poses, setPoses] = useState(null);
 
-//   const drawModalBackground = useCallback((g) => {
-//     g.beginFill(darkGray, 0.9);
-//     g.drawRect(0, 0, window.innerWidth, window.innerHeight);
-//     g.endFill();
-//     const col1 = columnDimensions(1);
-//     g.beginFill(yellow, 1);
-//     g.drawRect(col1.x, col1.y, col1.width, col1.height);
-//     const col3 = columnDimensions(3);
-//     g.drawRect(col3.x, col3.y, col3.width, col3.height);
-//     g.endFill();
-//   }, []);
+  const getTolerance = (poseData) => {  
+    const tolerance = poseData['tolerance'] || null;
+    if (tolerance != null){
+      return parseInt(tolerance.replace('%', ''));
+    }
+    return null;
+  }
+  useEffect(() => {
+    const fetchData = async () => {
+    try {
+      const data = await getConjectureDataByUUID(UUID);
+      setConjectureData(data);
+    } catch (error) {
+      console.error('Error getting data: ', error);
+    }
+  };
+    fetchData();
+}, []);
+
+useEffect(() => {
+  console.log(conjectureData)
+  if (conjectureData != null) {
+    const startPose = JSON.parse(conjectureData[UUID]['Start Pose']['poseData']);
+    const intermediatePose = JSON.parse(conjectureData[UUID]['Intermediate Pose']['poseData']);
+    const endPose = JSON.parse(conjectureData[UUID]['End Pose']['poseData']);
+
+    const startTolerance = getTolerance(conjectureData[UUID]['Start Pose']);
+    const intermediateTolerance = getTolerance(conjectureData[UUID]['Intermediate Pose']);
+    const endTolerance = getTolerance(conjectureData[UUID]['End Pose']);
+
+    startPose["tolerance"] = startTolerance;
+    intermediatePose["tolerance"] = intermediateTolerance;
+    endPose["tolerance"] = endTolerance;
+
+    const arr = [startPose, intermediatePose, endPose];
+    setPoses(arr);
+  }
+
+}
+, [conjectureData]);
 
   useEffect(() => {
     if (state.value === "intuition") {
       setExperimentText(
-        `Read the following ALOUD:\n\nNext\n\n Answer: TRUE or FALSE?`
+        `Read the following ALOUD:\n\n${conjectureData[UUID]['Text Boxes']['Conjecture Description']}\n\n Answer: TRUE or FALSE?`
       );
     } else if (state.value === "insight") {
       setExperimentText(
-        `Alright! Explain WHY :\n\n Last step \n\n is TRUE or FALSE?`
+        `Alright! Explain WHY :\n\n${conjectureData[UUID]['Text Boxes']['Conjecture Description']}\n\n is TRUE or FALSE?`
       );
     }
-    // } else if (state.value === "levelEnd") {
-    //     onLevelComplete()
-    // }
   }, [state.value]);
+
   useEffect(() => {
     console.log("UUID prop changed:", UUID);
 }, [UUID]);
 
-//   const handleUserKeyPress = useCallback((event) => {
-//     const { _, keyCode } = event;
-//     // keyCode 78 is n
-//     if (keyCode === 78) {
-//       send("NEXT");
-//     }
-//   }, []);
-
-//   useEffect(() => {
-//     window.addEventListener("keydown", handleUserKeyPress);
-//     return () => {
-//       window.removeEventListener("keydown", handleUserKeyPress);
-//     };
-//   }, [handleUserKeyPress]);
-
   return (
     <>
-      {state.value === "poseMatching" && (
+      {state.value === "poseMatching" && poses != null && (
         <>
           <ConjecturePoseContainter
             width={width}
@@ -82,42 +96,21 @@ const LevelPlay = (props) => {
             mainCallback={backCallback}
             UUID={UUID}
             onCompleteCallback={() => {send("NEXT")}}
+            poses={poses}
           />
         </>
       )}
       {state.value === "intuition" && (
-        <Button
-        width={width * 0.20}
-        x={width * 0.5}
-        y={height * 0.5}
-        color={red}
-        fontSize={width * 0.02}
-        fontColor={white}
-        text={"NEXT"}
-        fontWeight={800}
-        callback={() => send("NEXT")}
-        />)}
-        {/* // <ExperimentalTask
-        //   prompt={experimentText}
-        //   columnDimensions={columnDimensions}
-        //   poseData={poseData}
-        //   rowDimensions={rowDimensions}
-        //   onComplete={() => send("NEXT")}
-        //   cursorTimer={debugMode ? 1_000 : 10_000}
-        // /> */}
-      {state.value === "insight" && (
-        <Button
-        width={width * 0.20}
-        x={width * 0.5}
-        y={height * 0.5}
-        color={red}
-        fontSize={width * 0.02}
-        fontColor={white}
-        text={"END"}
-        fontWeight={800}
-        callback={onLevelComplete}
-        />)}
-        {/* <ExperimentalTask
+         <ExperimentalTask
+          prompt={experimentText}
+          columnDimensions={columnDimensions}
+          poseData={poseData}
+          rowDimensions={rowDimensions}
+          onComplete={() => send("NEXT")}
+          cursorTimer={debugMode ? 1_000 : 10_000}
+        /> )}
+        {state.value === "insight" && (
+        <ExperimentalTask
           prompt={experimentText}
           columnDimensions={columnDimensions}
           poseData={poseData}
@@ -125,7 +118,7 @@ const LevelPlay = (props) => {
           onComplete={onLevelComplete}
           cursorTimer={debugMode ? 1_000 : 30_000}
         />
-      )} */}
+      )}
     </>
   );
 };

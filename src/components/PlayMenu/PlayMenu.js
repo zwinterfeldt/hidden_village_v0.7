@@ -14,6 +14,7 @@ import ConjectureSelectorModule, { getAddToCurricular, setAddtoCurricular } from
 import CurricularSelectorModule, { getPlayGame, setPlayGame } from "../CurricularSelector/CurricularSelector.js";
 import { getUserRoleFromDatabase } from "../../firebase/userDatabase";
 import { Text } from "@inlet/react-pixi";
+import { Curriculum } from "../CurricularModule/CurricularModule.js";
 
 import { TextStyle } from "@pixi/text";
 import Settings from "../Settings";
@@ -65,7 +66,7 @@ const PlayMenu = (props) => {
                 {text: "Admin", callback: () => send("ADMIN"), color: babyBlue},
                 {text: "New Game", callback: () => send("NEWGAME"), color: purple},
                 {text: "Edit Game", callback: () => (setPlayGame(false), send("GAMESELECT")), color: powderBlue},
-                {text: "Play", callback: () => send("PLAY"), color: royalBlue},
+                {text: "Play Game", callback: () => (setPlayGame(true), send("GAMESELECT")), color: royalBlue},
                 {text: "New Level", callback: () => send("NEWLEVEL"), color: dodgerBlue},
                 {text: "Edit Level", callback: () => (setAddtoCurricular(false),send("LEVELSELECT")), color: steelBlue},
                 {text: "Settings", callback: () => send("SETTINGS"), color: cornflowerBlue},
@@ -133,6 +134,7 @@ const PlayMenu = (props) => {
                 columnDimensions={columnDimensions}
                 rowDimensions={rowDimensions}
                 poseData={poseData}
+                gameUUID={Curriculum.getCurrentUUID()}
             /> 
         )}
         {state.value === "settings" && (
@@ -192,7 +194,7 @@ const PlayMenu = (props) => {
               if (!getPlayGame()) // edit game
                 send("NEWGAME");
               else
-                null; // TODO: connect to the new play game module
+                send("PLAY"); // TODO: connect to the new play game module
                 // 1. send to play game using state machine here
                 // 2. for the main menu button (up above), do something like:  {text: "Play Game", callback: () => (setPlayGame(true), send("GAMESELECT")), color: powderBlue}
                 // 3. import Curriculum from CurricularModule.js in the game playing module

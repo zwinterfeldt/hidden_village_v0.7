@@ -495,6 +495,29 @@ export const getConjectureDataByUUID = async (conjectureID) => {
   }
 };
 
+// Define a function to retrieve a conjecture based on UUID
+export const getCurricularDataByUUID = async (curricularID) => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Game');
+    // query to find data with the UUID
+    const q = query(dbRef, orderByChild('UUID'), equalTo(curricularID));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      const data = querySnapshot.val();
+      return data; // return the data if its good
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
+
 // Define a function to retrieve an array of conjectures based on AuthorID
 export const getConjectureDataByAuthorID = async (authorID) => {
   try {

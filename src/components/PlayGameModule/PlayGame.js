@@ -1,15 +1,14 @@
 import Button from "../Button";
 import PlayGameMachine from "./PlayGameMachine";
-import { green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
-
-import { useMachine, useSelector } from "@xstate/react";
+import {white, red} from "../../utils/colors";
+import { useMachine} from "@xstate/react";
 import { useEffect, useState } from "react";
-import ConjecturePoseContainer from "../TestConjectureModule/ConjecturePoseContainer";
 import LevelPlay from "../LevelPlayModule/LevelPlay";
+import { getCurricularDataByUUID } from "../../firebase/database";
 
 const PlayGame = (props) => {
     const uuidsTest = ["73aa54b9-5b60-4ab5-afad-d35c11ca5982", "cff8ccca-7479-4611-ae0c-2b7c14e83e93"]
-    const { columnDimensions, rowDimensions, poseData, height, width, backCallback } = props;
+    const { columnDimensions, rowDimensions, poseData, height, width, backCallback, gameUUID } = props;
     const [uuidIDX, setuuidIDX] = useState(0);
     const [state, send] = useMachine(PlayGameMachine, {
         context: {
@@ -19,6 +18,20 @@ const PlayGame = (props) => {
     useEffect(() => {
         console.log("uuidIDX changed:", uuidIDX);
     }, [uuidIDX]);
+
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+        try {
+          const data = await getCurricularDataByUUID(UUID);
+          setLevelsList(data[UUID]['ConjectureUUIDs']);
+        } catch (error) {
+          console.error('Error getting data: ', error);
+        }
+      };
+        fetchData();
+    }, []);
 
     useEffect(() => {
         setuuidIDX(state.context.uuidIndex)
@@ -37,7 +50,8 @@ const PlayGame = (props) => {
             poseData={poseData}
             mainCallback={backCallback}
             UUID={uuidsTest[uuidIDX]}
-            onLevelComplete={() => {send("LOAD_NEXT"),console.log(state.value),console.log(state.context.uuidIndex)}}
+            onLevelComplete={() => {send("LOAD_NEXT")}}
+            needBack={false}
         />)}
         {state.value === "end" && (
         <Button
