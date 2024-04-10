@@ -184,6 +184,23 @@ export const getUserNameFromDatabase = async (props) => {
 };
 
 export const changeUserRoleInDatabase = async (userId, newRole) => {
+
+    // const user = auth.currentUser;
+
+    // if (user) {
+    //     // User is signed in.
+    //     const CurrentUserId = user.uid;
+    //     console.log('User ID:', userId);
+    // } else {
+    //     // No user signed in.
+    //     console.log('No user signed in.');
+    // }
+
+    // if(userId == CurrentUserId){
+    //     console.log("This is working I promise")
+    // }
+    
+
     console.log(userId)
     const userPath = `Users/${userId}`;
 

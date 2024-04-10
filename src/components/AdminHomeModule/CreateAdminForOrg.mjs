@@ -124,9 +124,3 @@ export const writeNewUserToDatabase = async (userEmail, userRole, userPassword, 
     });
 }
 
-const adminUserEmail = "DELETE4Admin@email.com"
-const adminUserRole = UserPermissions.Admin
-const adminUserOrganization = "Minnesota State University, Mankato"
-const adminUserPassword = "admin1"
-
-writeNewUserToDatabase(adminUserEmail,adminUserRole,adminUserPassword,adminUserOrganization);
