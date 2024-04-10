@@ -95,7 +95,7 @@ function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, t
 function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) {
   const conjectureList = Curriculum.getCurrentConjectures();
   //use to get a fixed number of conjectures per page and to navigate between the pages
-  const conjecturesPerPage = 7;
+  const conjecturesPerPage = 6;
   const totalPages = Math.ceil(conjectureList.length / conjecturesPerPage);
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -274,11 +274,11 @@ export const CurricularContentEditor = (props) => {
       {createTextElement("Game Name:",0.110, 0.100, 0.018, width, height)}
 
       {/* To label the conjectures */}
-      {createTextElement("Author", 0.0825, 0.260, 0.015, width, height)}
-      {createTextElement("Conjecture Name", 0.275, 0.260, 0.015, width, height)}
-      {createTextElement("Keywords", 0.58, 0.260, 0.015, width, height)}
+      {createTextElement("Author", 0.0825, 0.31, 0.015, width, height)}
+      {createTextElement("Conjecture Name", 0.275, 0.31, 0.015, width, height)}
+      {createTextElement("Keywords", 0.58, 0.31, 0.015, width, height)}
 
-      {drawCurriculum(0.1, 0.3, 0.018, width, height)}
+      {drawCurriculum(0.1, 0.35, 0.018, width, height)}
     </>
   );
 };

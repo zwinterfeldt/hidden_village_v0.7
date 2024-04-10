@@ -1,7 +1,7 @@
 // AKA Game module
 import React from 'react';
 import Background from "../Background";
-import { blue, white, red, green, gold, goldenRod, indigo } from "../../utils/colors";
+import { blue, white, red, green, indigo, hotPink, purple } from "../../utils/colors";
 import Button from "../Button";
 import RectButton from "../RectButton";
 import { writeToDatabaseCurricular, writeToDatabaseCurricularDraft, getConjectureDataByUUID } from "../../firebase/database";
@@ -110,6 +110,59 @@ const CurricularModule = (props) => {
   return (
     <>
       <Background height={height * 1.1} width={width} />
+
+      <RectButton
+        height={height *0.13}
+        width={width * 0.5}
+        x={width * 0.1}
+        y={height * 0.23}
+        color={red}
+        fontSize={width * 0.013}
+        fontColor={white}
+        text={"SET GAME OPTIONS"}
+        fontWeight={800}
+        callback={null}
+      />
+
+      <RectButton
+        height={height *0.13}
+        width={width * 0.5}
+        x={width * 0.4}
+        y={height * 0.23}
+        color={hotPink}
+        fontSize={width * 0.013}
+        fontColor={white}
+        text={"STORY EDITOR"}
+        fontWeight={800}
+        callback={null}
+      />
+
+      <RectButton
+        height={height *0.13}
+        width={width * 0.5}
+        x={width * 0.7}
+        y={height * 0.23}
+        color={purple}
+        fontSize={width * 0.013}
+        fontColor={white}
+        text={"INSTRUCTIONS"}
+        fontWeight={800}p
+        callback={()=> (alert("Click +Add Conjecture to add a level to the game.\nPress Save Draft to save an incomplete game.\nPress Publish to save a completed game."))}
+      />
+
+      <RectButton
+        height={height * 0.13}
+        width={width * 0.26}
+        x={width * 0.85}
+        y={height * 0.93}
+        color={red}
+        fontSize={width * 0.013}
+        fontColor={white}
+        text={"BACK"}
+        fontWeight={800}
+        callback={enhancedMainCallback} //this will reset everything once you leave the page
+      />
+
       <RectButton
         height={height * 0.13}
         width={width * 0.26}
