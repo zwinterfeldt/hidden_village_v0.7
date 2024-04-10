@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Background from "../Background"
 import { set } from "js-cookie";
 import Button from "../Button";
-import { blue, yellow, skyBlue, babyBlue, powderBlue, cornflowerBlue, steelBlue, dodgerBlue, royalBlue, navyBlue, midnightBlue } from "../../utils/colors";
+import { blue, yellow, purple, babyBlue, powderBlue, cornflowerBlue, steelBlue, dodgerBlue, royalBlue, navyBlue, midnightBlue } from "../../utils/colors";
 import RectButton from "../RectButton";
 import { send } from "xstate";
 import { sendTo } from "xstate/lib/actions";
@@ -63,7 +63,7 @@ const PlayMenu = (props) => {
         if(role === "Admin" || role === "Developer"){ // if user is not a student
             list.push(
                 {text: "Admin", callback: () => send("ADMIN"), color: babyBlue},
-                {text: "New Game", callback: () => send("NEWGAME"), color: skyBlue},
+                {text: "New Game", callback: () => send("NEWGAME"), color: purple},
                 {text: "Edit Game", callback: () => (setPlayGame(false), send("GAMESELECT")), color: powderBlue},
                 {text: "Play", callback: () => send("PLAY"), color: royalBlue},
                 {text: "New Level", callback: () => send("NEWLEVEL"), color: dodgerBlue},
@@ -74,7 +74,7 @@ const PlayMenu = (props) => {
             list.push({text: "Play", callback: () => console.log("Play"), color: royalBlue}, {text: "Settings", callback: () => send("SETTINGS"), color: cornflowerBlue})
         } else if (role === "Teacher"){
             list.push(
-                {text: "New Game", callback: () => send("NEWGAME"), color: skyBlue},
+                {text: "New Game", callback: () => send("NEWGAME"), color: purple},
                 {text: "Edit Game", callback: () => (setPlayGame(false), send("GAMESELECT")), color: powderBlue},
                 {text: "Play", callback: () => send("PLAY"), color: royalBlue},
                 {text: "New Level", callback: () => send("NEWLEVEL"), color: dodgerBlue},
