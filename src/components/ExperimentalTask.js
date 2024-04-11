@@ -2,11 +2,14 @@ import { useState, useCallback, useEffect } from "react";
 import { Graphics, Text, useApp } from "@inlet/react-pixi";
 import CursorMode from "./CursorMode.js";
 import Pose from "./Pose/index";
-import { white, darkGray, yellow } from "../utils/colors";
+import { white, darkGray, yellow, red } from "../utils/colors";
 import { promiseChecker, writeToDatabase } from "../firebase/database.js";
+import Button from "./Button.js";
 
 const ExperimentalTask = (props) => {
   const {
+    width,
+    height,
     prompt,
     poseData,
     columnDimensions,
@@ -105,6 +108,18 @@ const ExperimentalTask = (props) => {
       <Pose poseData={poseData} colAttr={columnDimensions(3)} />
       {showCursor && ( 
         <>
+          {/* <Button
+          width={width * 0.20}
+          x={width * 0.9}
+          y={height * 0.9}
+          color={red}
+          fontSize={width * 0.02}
+          fontColor={white}
+          text={"NEXT"}
+          fontWeight={800}
+          callback={onComplete}
+      /> */}
+      {/* This results in a big slow down, TODO need to fix */}
           <CursorMode
             poseData={poseData}
             rowDimensions={rowDimensions}

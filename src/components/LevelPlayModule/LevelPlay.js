@@ -106,6 +106,8 @@ useEffect(() => {
       )}
       {state.value === "intuition" && (
          <ExperimentalTask
+         width={width}
+         heigh={height}
           prompt={experimentText}
           columnDimensions={columnDimensions}
           poseData={poseData}

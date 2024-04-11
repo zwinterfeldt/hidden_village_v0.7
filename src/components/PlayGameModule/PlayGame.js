@@ -24,7 +24,7 @@ const PlayGame = (props) => {
 
     return(
         <>
-        {state.value === "idle" && uuidsList != null && (
+        {state.value === "idle" && uuidsList[0] != undefined && (
         <LevelPlay
             key={uuidsList[uuidIDX]['UUID']}
             width={width}
