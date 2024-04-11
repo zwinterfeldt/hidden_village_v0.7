@@ -35,19 +35,21 @@ const LevelPlay = (props) => {
     return null;
   }
   useEffect(() => {
-    const fetchData = async () => {
-    try {
-      const data = await getConjectureDataByUUID(UUID);
-      setConjectureData(data);
-    } catch (error) {
-      console.error('Error getting data: ', error);
+    if(UUID != null){
+      const fetchData = async () => {
+        try {
+          const data = await getConjectureDataByUUID(UUID);
+          setConjectureData(data);
+        } catch (error) {
+          console.error('Error getting data: ', error);
+        }
+      };
+      fetchData();
     }
-  };
-    fetchData();
 }, []);
 
 useEffect(() => {
-  console.log(conjectureData)
+  console.log("conjectureData:", conjectureData);
   if (conjectureData != null) {
     const startPose = JSON.parse(conjectureData[UUID]['Start Pose']['poseData']);
     const intermediatePose = JSON.parse(conjectureData[UUID]['Intermediate Pose']['poseData']);

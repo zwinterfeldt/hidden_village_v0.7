@@ -123,7 +123,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
     <>
       {currentConjectures.map((conjecture, index) => (
         <RectButton
-          key={index}
+          key={conjecture["Text Boxes"]["Author Name"] + index}
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier *4}
           x={totalWidth * xMultiplier * 0.25}
@@ -141,7 +141,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
       ))}
       {currentConjectures.map((conjecture, index) => (
         <RectButton
-          key={index}
+          key={conjecture["Text Boxes"]["Conjecture Name"] + index}
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier *7}
           x={totalWidth * xMultiplier * 1.9}
@@ -159,7 +159,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
       ))}
       {currentConjectures.map((conjecture, index) => (
         <RectButton
-          key={index}
+          key={conjecture["Text Boxes"]["Conjecture Keywords"] + index}
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier * 7}
           x={totalWidth * xMultiplier * 4.75} 
@@ -177,7 +177,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
       ))}
       {currentConjectures.map((conjecture, index) => (
         <RectButton
-          key={conjecture}
+          key={index + " up"}
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier * 0.8}
           x={totalWidth * xMultiplier * 7.6} 
@@ -194,7 +194,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
       ))}
       {currentConjectures.map((conjecture, index) => (
         <RectButton
-          key={conjecture}
+          key={index+ " down"}
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier * 0.8}
           x={totalWidth * xMultiplier * 8} 
@@ -211,7 +211,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
       ))}
       {currentConjectures.map((conjecture, index) => (
         <RectButton
-          key={index}
+          key={index + " remove"}
           height={totalHeight /2 * yMultiplier}
           width={totalWidth * xMultiplier *1.6}
           x={totalWidth * xMultiplier * 8.4} 

@@ -8,7 +8,7 @@ import { writeToDatabaseCurricular, writeToDatabaseCurricularDraft, getConjectur
 import { CurricularContentEditor } from "../CurricularModule/CurricularModuleBoxes";
 import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
-import { curricularSelect, setAddtoCurricular } from '../ConjectureSelector/ConjectureSelectorModule';
+import { setAddtoCurricular } from '../ConjectureSelector/ConjectureSelectorModule';
 
 
 // stores a list of conjectures
@@ -28,7 +28,7 @@ export const Curriculum = {
     return this.CurrentConjectures[index];
   },
 
-  getCurrentUUID(){ //return the UUID if editing an existing conjecture
+  getCurrentUUID(){ //return the UUID if editing an existing game
     if(this.CurrentUUID != null && this.CurrentUUID != ""){
       return this.CurrentUUID;
     }
@@ -75,7 +75,6 @@ export const Curriculum = {
       if(curricular["CurricularPIN"] != "undefined" && curricular["CurricularPIN"] != null){
         localStorage.setItem('CurricularPIN', curricular["CurricularPIN"]);
       }
-      this.setCurrentUUID(curricular["UUID"]);
   },
 };
 

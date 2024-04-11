@@ -93,6 +93,7 @@ const CurricularSelectModule = (props) => {
             fontWeight="bold"
             callback = {() => {
               if(handlePIN(curricular)){
+                Curriculum.setCurrentUUID(curricular["UUID"]);
                 Curriculum.setCurricularEditor(curricular);
                 curricularCallback();
               }
@@ -114,6 +115,7 @@ const CurricularSelectModule = (props) => {
             fontWeight="bold"
             callback = {() => {
               if(handlePIN(curricular)){
+                Curriculum.setCurrentUUID(curricular["UUID"]);
                 Curriculum.setCurricularEditor(curricular);
                 curricularCallback();
               }
@@ -136,6 +138,7 @@ const CurricularSelectModule = (props) => {
             fontWeight="bold"
             callback = {() => {
               if(handlePIN(curricular)){
+                Curriculum.setCurrentUUID(curricular["UUID"]);
                 Curriculum.setCurricularEditor(curricular);
                 curricularCallback();
               }
@@ -158,6 +161,7 @@ const CurricularSelectModule = (props) => {
               fontWeight="bold"
               callback = {() => {
                 if(handlePIN(curricular)){
+                  Curriculum.setCurrentUUID(curricular["UUID"]);
                   Curriculum.setCurricularEditor(curricular);
                   curricularCallback();
                 }
