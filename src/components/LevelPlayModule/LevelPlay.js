@@ -84,6 +84,7 @@ useEffect(() => {
 
   useEffect(() => {
     console.log("UUID prop changed:", UUID);
+    console.log(UUID);
 }, [UUID]);
 
   return (

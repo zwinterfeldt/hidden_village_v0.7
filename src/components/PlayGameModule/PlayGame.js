@@ -8,33 +8,14 @@ import { getCurricularDataByUUID } from "../../firebase/database";
 import { Curriculum } from "../CurricularModule/CurricularModule";
 
 const PlayGame = (props) => {
-    const { columnDimensions, rowDimensions, poseData, height, width, backCallback, gameUUID } = props;
-    const uuidsTest = Curriculum.getCurrentConjectures();
+    const { columnDimensions, rowDimensions, poseData, height, width, backCallback } = props;
+    const uuidsList = Curriculum.getCurrentConjectures();
     const [uuidIDX, setuuidIDX] = useState(0);
-    const [levelsList, setLevelsList] = useState(0);
     const [state, send] = useMachine(PlayGameMachine, {
         context: {
-            uuids: uuidsTest
+            uuids: uuidsList
         }
     });
-    useEffect(() => {
-        console.log("uuidIDX changed:", uuidIDX);
-    }, [uuidIDX]);
-
-
-
-    useEffect(() => {
-        const fetchData = async () => {
-        try {
-          const data = await getCurricularDataByUUID(gameUUID);
-          console.log("data:", data);
-          setLevelsList(data[gameUUID]['ConjectureUUIDs']);
-        } catch (error) {
-          console.error('Error getting data: ', error);
-        }
-      };
-        fetchData();
-    }, []);
 
     useEffect(() => {
         setuuidIDX(state.context.uuidIndex)
@@ -43,16 +24,16 @@ const PlayGame = (props) => {
 
     return(
         <>
-        {state.value === "idle" && (
+        {state.value === "idle" && uuidsList != null && (
         <LevelPlay
-            key={levelsList[uuidIDX]}
+            key={uuidsList[uuidIDX]['UUID']}
             width={width}
             height={height}
             columnDimensions={columnDimensions}
             rowDimensions={rowDimensions}
             poseData={poseData}
             mainCallback={backCallback}
-            UUID={levelsList[uuidIDX]}
+            UUID={uuidsList[uuidIDX]['UUID']}
             onLevelComplete={() => {send("LOAD_NEXT")}}
             needBack={false}
         />)}

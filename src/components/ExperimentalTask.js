@@ -105,12 +105,12 @@ const ExperimentalTask = (props) => {
       <Pose poseData={poseData} colAttr={columnDimensions(3)} />
       {showCursor && ( 
         <>
-          {/* <CursorMode
+          <CursorMode
             poseData={poseData}
             rowDimensions={rowDimensions}
             callback={onComplete}
-          /> */}
-          {/* <Text
+          />
+          <Text
             text={"When you're ready to move on, click 'Next' to continue"}
             y={columnDimensions(1).y + 7 * (columnDimensions(1).height / 8)}
             x={columnDimensions(1).x + columnDimensions(1).margin}
@@ -125,7 +125,7 @@ const ExperimentalTask = (props) => {
                 wordWrapWidth: columnDimensions(1).width * 2,
               })
             } 
-          /> */}
+          />
         </>
       )}
     </>
