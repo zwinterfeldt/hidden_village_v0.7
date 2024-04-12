@@ -88,10 +88,10 @@ const UserManagementModule = (props) => {
         {usersList.length !== 0 && (
             <UserList 
                 users={usersList} 
-                height={height}
-                width={width}
-                x={width}
-                y={height}
+                height={height * 0.13}
+                width={width * 0.26}
+                x={width * 0.4}
+                y={height * 0.93}
                 refreshUserListCallback = {refreshUserList}
             />
         )}
