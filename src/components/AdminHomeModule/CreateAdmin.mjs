@@ -7,9 +7,9 @@ const UserPermissions = {
     Student: 'Student',
 };
 
-const adminUserEmail = "DELETE5Admin@email.com"
+const adminUserEmail = "RSDAdmin@email.com"
 const adminUserRole = UserPermissions.Admin
-const adminUserOrganization = "Minnesota State University, Mankato"
+const adminUserOrganization = "Rania's School of Design"
 const adminUserPassword = "admin1"
 
 writeNewUserToDatabase(adminUserEmail,adminUserRole,adminUserPassword,adminUserOrganization);

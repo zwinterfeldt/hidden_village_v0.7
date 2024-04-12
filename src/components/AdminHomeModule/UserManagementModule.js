@@ -6,7 +6,7 @@ import { green, neonGreen, black, blue, white, pink, orange, red, transparent, t
 import Button from "../Button";
 import RectButton from "../RectButton";
 import { getConjectureDataByUUID } from "../../firebase/database";
-import {getUsersByOrganizationFromDatabase, writeCurrentUserToDatabaseNewUser} from "../../firebase/userDatabase";
+import {getUsersByOrganizationFromDatabase, getUserOrganizationFromDatabase} from "../../firebase/userDatabase";
 
 import UserList from './UserList';
 
@@ -23,7 +23,9 @@ const UserManagementModule = (props) => {
 
     const refreshUserList = async () => {
         try {
-            const organization = "Minnesota State University, Mankato";
+
+            const organization = await getUserOrganizationFromDatabase();
+            console.log(organization)
             setLoading(true);
 
             const users = await getUsersByOrganizationFromDatabase(organization);

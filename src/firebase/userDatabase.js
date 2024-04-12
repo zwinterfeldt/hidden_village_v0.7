@@ -36,6 +36,7 @@ export const writeNewUserToDatabase = async (userEmail, userRole) => {
     // Log information about the current user, if one exists
     const currentUser = auth.currentUser;
 
+    const newOrg = await getUserOrganizationFromDatabase();
 
     await createUserWithEmailAndPassword(auth, userEmail, "welcome")
     .then((userCredential) => {
@@ -52,6 +53,7 @@ export const writeNewUserToDatabase = async (userEmail, userRole) => {
         const newEmail = user.email;
         const newRole = userRole;
         // lets addd user to the realtime database now
+    
     
         writeCurrentUserToDatabaseNewUser(newID, newEmail, newRole, newOrg);
         alert("User Created")
@@ -146,6 +148,21 @@ export const getUserRoleFromDatabase = async (props) => {
     if (userSnapshot.exists()) {
         // User exists, return the user's role
         return userSnapshot.val().userRole;
+    } else {
+        // User does not exist in the database
+        return null;
+    }
+};
+
+export const getUserOrganizationFromDatabase = async (props) => {
+    const userPath = `Users/${userId}`;
+
+    // Get the user snapshot from the database
+    const userSnapshot = await get(ref(db, userPath));
+
+    if (userSnapshot.exists()) {
+        // User exists, return the user's role
+        return userSnapshot.val().userOrg;
     } else {
         // User does not exist in the database
         return null;
