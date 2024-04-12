@@ -32,24 +32,29 @@ const UserList = (props) => {
         const displayedUsers = users.slice(startIndex, startIndex + usersPerPage);
     
 
+        // height={height * 0.13}
+        // width={width * 0.26}
+        // x={width * 0.4}
+        // y={height * 0.93}
+
     return (
         <>
             <Graphics
-                x = {width* .3}
-                y = {height * 2.25}
+                x = {width *0.1}
+                y = {height *0.265}
                 draw={(g) => {
                     // rectangle
                     g.beginFill(0xe0c755);
-                    g.drawRect(0, 0, width * 2, ( (displayedUsers.length + 1) * 25) + 10);
+                    g.drawRect(0, 0, width*.5, ( (displayedUsers.length + 1) * 25) + 10);
                     g.endFill();
                     // border
                     g.lineStyle(4, 0x000000, 1);
-                    g.drawRect(0, 0, width * 2, ( (displayedUsers.length + 1) * 25) + 10);
+                    g.drawRect(0, 0, width*0.5, ( (displayedUsers.length + 1) * 25) + 10);
                 }}
             />
             <Text
-                x={width * .3}
-                y={height * 1.5}
+                x={width * 0.1}
+                y={height* 0.2}
                 text={`User`}
                 style={
                     new TextStyle({
@@ -63,8 +68,8 @@ const UserList = (props) => {
                 }
             />
             <Text
-                x={width * 1.5}
-                y={height * 1.5}
+                x={width * 0.4}
+                y={height * 0.2}
                 text={`Role`}
                 style={
                     new TextStyle({
@@ -82,8 +87,8 @@ const UserList = (props) => {
             {displayedUsers.map((user, index) => (
                 <UserObject
                     key={index} 
-                    width={width * .3}
-                    height={height}
+                    width={width * 0.1}
+                    height={height* 0.6}
                     x={x}
                     y={y * 0.2 + (index + 1.2) * 25}  // Adjust the y position based on index
                     index={index}
@@ -95,12 +100,12 @@ const UserList = (props) => {
             ))}
             {/* // < Button // */}
             <RectButton
-                height={height * 1}
-                width={width * .5}
-                x={width * 1.8}
-                y={height * 6.5}
+                height={height * 0.1}
+                width={width * .1}
+                x={width * .5}
+                y={height*.22}
                 color={green}
-                fontSize={width * .1}
+                fontSize={width * .02}
                 fontColor={white}
                 text={"<"}
                 fontWeight={800}
@@ -110,12 +115,12 @@ const UserList = (props) => {
             />
             {/* // > Button // */}
             <RectButton
-                height={height * 1}
-                width={width * .5}
-                x={width * 2}
-                y={height * 6.5}
+                height={height * 0.1}
+                width={width * .1}
+                x={width * .55}
+                y={height*.22}
                 color={green}
-                fontSize={width * .1}
+                fontSize={width * .02}
                 fontColor={white}
                 text={">"}
                 fontWeight={800}
