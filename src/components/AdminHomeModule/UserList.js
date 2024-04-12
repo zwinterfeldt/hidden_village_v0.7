@@ -63,8 +63,8 @@ const UserList = (props) => {
                 }
             />
             <Text
-                x={width * 0.5}
-                y={height * 0.2}
+                x={width * 1.5}
+                y={height * 1.5}
                 text={`Role`}
                 style={
                     new TextStyle({
@@ -95,12 +95,12 @@ const UserList = (props) => {
             ))}
             {/* // < Button // */}
             <RectButton
-                height={height * 0.1}
-                width={width * .1}
-                x={width * .5}
-                y={height*.71}
+                height={height * .7}
+                width={width * .4}
+                x={width * 1.9}
+                y={height*6}
                 color={green}
-                fontSize={width * .1}
+                fontSize={width * .07}
                 fontColor={white}
                 text={"<"}
                 fontWeight={800}
@@ -110,12 +110,12 @@ const UserList = (props) => {
             />
             {/* // > Button // */}
             <RectButton
-                height={height * 0.1}
-                width={width * .1}
-                x={width * .55}
-                y={height*.71}
+                height={height * 0.7}
+                width={width * .4}
+                x={width * 2.1}
+                y={height*6}
                 color={green}
-                fontSize={width * .1}
+                fontSize={width * .07}
                 fontColor={white}
                 text={">"}
                 fontWeight={800}

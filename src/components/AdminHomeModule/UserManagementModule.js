@@ -88,7 +88,7 @@ const UserManagementModule = (props) => {
         {usersList.length !== 0 && (
             <UserList 
                 users={usersList} 
-                height={height * 0.13}
+                height={height * 0.12}
                 width={width * 0.26}
                 x={width * 0.4}
                 y={height * 0.93}
