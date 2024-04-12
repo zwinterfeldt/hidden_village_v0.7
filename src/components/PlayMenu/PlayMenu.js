@@ -194,7 +194,11 @@ const PlayMenu = (props) => {
               if (!getPlayGame()) // edit game
                 send("NEWGAME");
               else
-                send("PLAY"); 
+                send("PLAY"); // TODO: connect to the new play game module
+                // 1. send to play game using state machine here
+                // 2. for the main menu button (up above), do something like:  {text: "Play Game", callback: () => (setPlayGame(true), send("GAMESELECT")), color: powderBlue}
+                // 3. import Curriculum from CurricularModule.js in the game playing module
+                // 4. Should be able to use Curriculum.getCurrentConjectures() to get a list of UUIDs and Curriculum.getCurrentUUID() to get the UUID of the game
             }}
             mainCallback={() => {send("MAIN")}}
           />
