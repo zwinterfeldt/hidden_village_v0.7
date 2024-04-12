@@ -68,7 +68,7 @@ const UserList = (props) => {
                 }
             />
             <Text
-                x={width * 0.4}
+                x={width * 0.5}
                 y={height * 0.2}
                 text={`Role`}
                 style={
@@ -103,7 +103,7 @@ const UserList = (props) => {
                 height={height * 0.1}
                 width={width * .1}
                 x={width * .5}
-                y={height*.22}
+                y={height*.71}
                 color={green}
                 fontSize={width * .02}
                 fontColor={white}
@@ -118,7 +118,7 @@ const UserList = (props) => {
                 height={height * 0.1}
                 width={width * .1}
                 x={width * .55}
-                y={height*.22}
+                y={height*.71}
                 color={green}
                 fontSize={width * .02}
                 fontColor={white}
