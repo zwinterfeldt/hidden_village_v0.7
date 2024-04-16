@@ -42,6 +42,8 @@ export const PlayMenuMachine = createMachine({
       on: {
         MAIN: "main", // move to home
         EDIT: "edit", // move to edit
+        NEWGAME: "newGame", // Go back to Game editor after previewing a level
+        LEVELSELECT: "levelSelect", // Go back to Game editor after previewing a level from the +Add Conjecture part
       },
     },
     edit: {
@@ -52,8 +54,8 @@ export const PlayMenuMachine = createMachine({
     newGame : {
       on: {
         MAIN: "main", // move to home
-        EDIT: "edit", // move to edit
         LEVELSELECT: "levelSelect", // move to conjecture selector
+        NEWLEVEL: "newLevel", // preview a level in the game editor
       },
     },
     levelSelect: {

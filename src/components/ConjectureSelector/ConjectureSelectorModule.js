@@ -7,7 +7,7 @@ import { ConjectureSelectorBoxes } from "./ConjectureSelectorModuleBoxes";
 import { useMachine } from "@xstate/react";
 import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
 import {Curriculum} from "../CurricularModule/CurricularModule";
-import {currentConjecture} from "../ConjectureModule/ConjectureModule"
+import {currentConjecture, setEditLevel, setGoBackFromLevelEdit} from "../ConjectureModule/ConjectureModule"
 
 import InputBox from '../InputBox';
 
@@ -34,6 +34,21 @@ export function handlePIN(conjecture, message = "Please Enter the PIN."){ // thi
     return handlePIN(conjecture, message = "Incorrect PIN, please try again.");
   }
   return false; // do nothing if cancel is clicked
+}
+
+function handleLevelClicked(conjecture, conjectureCallback){
+  if(addToCurricular){ // if the user wants to preview a level before adding it to the game in the game editor
+    setEditLevel(false);
+    setGoBackFromLevelEdit("LEVELSELECT");
+    currentConjecture.setConjecture(conjecture);
+    conjectureCallback(conjecture);
+  }
+  else if(handlePIN(conjecture)){ // when the user pulls up the list of levels in the level editor
+    setEditLevel(true);
+    setGoBackFromLevelEdit("MAIN");
+    currentConjecture.setConjecture(conjecture);
+    conjectureCallback(conjecture);
+  }
 }
 
 const ConjectureSelectModule = (props) => {
@@ -105,12 +120,7 @@ const ConjectureSelectModule = (props) => {
             fontColor={blue}
             text={conjecture["Text Boxes"]["Author Name"]}
             fontWeight="bold"
-            callback = {() => {
-              if(handlePIN(conjecture)){
-                currentConjecture.setConjecture(conjecture);
-                conjectureCallback(conjecture);
-              }
-            }}
+            callback = {() => handleLevelClicked(conjecture, conjectureCallback)}
           />
         ))}
 
@@ -126,12 +136,7 @@ const ConjectureSelectModule = (props) => {
             fontColor={blue}
             text={conjecture["Text Boxes"]["Conjecture Name"]}
             fontWeight="bold"
-            callback = {() => {
-              if(handlePIN(conjecture)){
-                currentConjecture.setConjecture(conjecture);
-                conjectureCallback(conjecture);
-              }
-            }}
+            callback = {() => handleLevelClicked(conjecture, conjectureCallback)}
           />
         
         ))}
@@ -148,16 +153,11 @@ const ConjectureSelectModule = (props) => {
             fontColor={blue}
             text={conjecture["Text Boxes"]["Conjecture Keywords"]}
             fontWeight="bold"
-            callback = {() => {
-              if(handlePIN(conjecture)){
-                currentConjecture.setConjecture(conjecture);
-                conjectureCallback(conjecture);
-              }
-            }}
+            callback = {() => handleLevelClicked(conjecture, conjectureCallback)}
           />
         ))}
 
-        {/* only show these in the curricular editor (disabled when just editing conjecture) */}
+        {/* only show these in the game editor (disabled when just selecting a level to edit) */}
         {addToCurricular ? (
           currentConjectures.map((conjecture, index) => (
             <RectButton
@@ -190,12 +190,7 @@ const ConjectureSelectModule = (props) => {
               fontColor={blue}
               text={conjecture["isFinal"] ? "X" : " "}
               fontWeight="bold"
-              callback = {() => {
-                if(handlePIN(conjecture)){
-                  currentConjecture.setConjecture(conjecture);
-                  conjectureCallback(conjecture);
-                }
-              }}
+              callback = {() => handleLevelClicked(conjecture, conjectureCallback)}
             />
           ))
             

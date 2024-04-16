@@ -35,6 +35,18 @@ export function handlePIN(curricular, message = "Please Enter the PIN."){ // thi
   return false; // do nothing if cancel is clicked
 }
 
+function handleGameClicked(curricular, curricularCallback){
+  if(playGame){ // don't need a PIN to play the game
+    Curriculum.setCurricularEditor(curricular);
+    curricularCallback();
+  }
+  else if(handlePIN(curricular) && !playGame){
+    Curriculum.setCurrentUUID(curricular["UUID"]);
+    Curriculum.setCurricularEditor(curricular);
+    curricularCallback();
+  }
+}
+
 const CurricularSelectModule = (props) => {
   
   const { height, width, mainCallback, curricularCallback} = props;
@@ -91,13 +103,7 @@ const CurricularSelectModule = (props) => {
             fontColor={blue}
             text={curricular["CurricularAuthor"]}
             fontWeight="bold"
-            callback = {() => {
-              if(handlePIN(curricular)){
-                Curriculum.setCurrentUUID(curricular["UUID"]);
-                Curriculum.setCurricularEditor(curricular);
-                curricularCallback();
-              }
-            }}
+            callback = {() => {handleGameClicked(curricular, curricularCallback)}}
           />
         ))}
 
@@ -113,13 +119,7 @@ const CurricularSelectModule = (props) => {
             fontColor={blue}
             text={curricular["CurricularName"]}
             fontWeight="bold"
-            callback = {() => {
-              if(handlePIN(curricular)){
-                Curriculum.setCurrentUUID(curricular["UUID"]);
-                Curriculum.setCurricularEditor(curricular);
-                curricularCallback();
-              }
-            }}
+            callback = {() => {handleGameClicked(curricular, curricularCallback)}}
           />
         
         ))}
@@ -136,13 +136,7 @@ const CurricularSelectModule = (props) => {
             fontColor={blue}
             text={curricular["CurricularKeywords"]}
             fontWeight="bold"
-            callback = {() => {
-              if(handlePIN(curricular)){
-                Curriculum.setCurrentUUID(curricular["UUID"]);
-                Curriculum.setCurricularEditor(curricular);
-                curricularCallback();
-              }
-            }}
+            callback = {() => {handleGameClicked(curricular, curricularCallback)}}
           />
         ))}
 
@@ -159,13 +153,7 @@ const CurricularSelectModule = (props) => {
               fontColor={blue}
               text={curricular["isFinal"] ? "X" : " "}
               fontWeight="bold"
-              callback = {() => {
-                if(handlePIN(curricular)){
-                  Curriculum.setCurrentUUID(curricular["UUID"]);
-                  Curriculum.setCurricularEditor(curricular);
-                  curricularCallback();
-                }
-              }}
+              callback = {() => {handleGameClicked(curricular, curricularCallback)}}
             />
           ))
             

@@ -3,6 +3,7 @@ import { Graphics, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import { yellow, blue, green, white, red, black } from "../../utils/colors";
 import InputBox from "../InputBox";
+import { getEditLevel } from './ConjectureModule';
 
 function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, inputCallback) {
   const text = localStorage.getItem(textKey)?.slice(0, charLimit) +
@@ -27,7 +28,8 @@ function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yM
       fontWeight={500}
       outlineColor={black}
       callback={() => {
-        inputCallback(textKey);
+        if(getEditLevel())
+          inputCallback(textKey);
       }}
     />
   );
@@ -63,7 +65,7 @@ export const NameBox = (props) => {
       {createTextElement("AUTHOR:", 0.41+ 0.062, 0.155-0.05, 0.018, width, height)}
       {createTextElement("CURRENT M-CLIP:", 0.45, 0.305, 0.018, width, height)}
       {createTextElement("MULTIPLE CHOICE", 0.45, 0.533, 0.018, width, height)}
-      {createTextElement("Conjecture Editor", 0.45, 0.05, 0.025, width, height)}
+      {createTextElement("Level Editor", 0.45, 0.05, 0.025, width, height)}
       {createTextElement("NAME:", 0.108+ 0.062, 0.155-0.05, 0.018, width, height)}
 
     </>

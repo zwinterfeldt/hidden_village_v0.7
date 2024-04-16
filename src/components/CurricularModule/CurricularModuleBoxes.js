@@ -4,10 +4,9 @@ import { TextStyle } from "@pixi/text";
 import { white, black } from "../../utils/colors";
 import InputBox from "../InputBox";
 import RectButton from "../RectButton";
-import { getConjectureList,getConjectureDataByAuthorID } from "../../firebase/database";
 import { blue, red, green, orange } from "../../utils/colors";
 import {Curriculum} from "./CurricularModule"
-
+import { setEditLevel, setGoBackFromLevelEdit, currentConjecture } from '../ConjectureModule/ConjectureModule';
 
 // Handler functions
 function handleCurricularName(key) {
@@ -20,7 +19,7 @@ function handleCurricularName(key) {
 
 function handleCurricularKeywords(key) {
   const existingValue = localStorage.getItem(key);
-  const newValue = prompt("Keywords make your research easier:", existingValue);
+  const newValue = prompt("Keywords make your search easier:", existingValue);
   if (newValue !== null) {
     localStorage.setItem(key, newValue);
   }
@@ -41,6 +40,13 @@ function handlePinInput(key) {
   } else if (pin !== null) {
     alert("PIN must be numeric.");
   }
+}
+
+function handleLevelClicked(conjecture, conjectureCallback){
+    setEditLevel(false);
+    setGoBackFromLevelEdit("NEWGAME");
+    currentConjecture.setConjecture(conjecture);
+    conjectureCallback(conjecture);
 }
 
 // Function to create input boxes for curricular content
@@ -92,7 +98,7 @@ function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, t
 }
 
 
-function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) {
+function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight, conjectureCallback) {
   const conjectureList = Curriculum.getCurrentConjectures();
   //use to get a fixed number of conjectures per page and to navigate between the pages
   const conjecturesPerPage = 6;
@@ -133,10 +139,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           fontColor={blue}
           text={conjecture["Text Boxes"]["Author Name"]}
           fontWeight="bold"
-          callback = {() => { 
-            console.log("conjecture: ", conjecture);
-            console.log("curriculum: ", conjectureList);
-          }}
+          callback = {() => handleLevelClicked(conjecture, conjectureCallback)}
         />
       ))}
       {currentConjectures.map((conjecture, index) => (
@@ -151,10 +154,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           fontColor={blue}
           text={conjecture["Text Boxes"]["Conjecture Name"]}
           fontWeight="bold"
-          callback = {() => {
-            console.log("conjecture: ", conjecture["Text Boxes"]["Conjecture Name"]);
-            console.log("curriculum: ", conjectureList);
-          }}
+          callback = {() => handleLevelClicked(conjecture, conjectureCallback)}
         />
       ))}
       {currentConjectures.map((conjecture, index) => (
@@ -169,10 +169,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
           fontColor={blue}
           text={conjecture["Text Boxes"]["Conjecture Keywords"]}
           fontWeight="bold"
-          callback = {() => {
-            console.log("conjecture: ", conjecture["Text Boxes"]["Conjecture Keywords"]);
-            console.log("curriculum: ", conjectureList);
-          }}
+          callback = {() => handleLevelClicked(conjecture, conjectureCallback)}
         />
       ))}
       {currentConjectures.map((conjecture, index) => (
@@ -257,7 +254,7 @@ function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth
 }
 
 export const CurricularContentEditor = (props) => {
-  const { height, width } = props;
+  const { height, width, conjectureCallback } = props;
 
   return (
     <>
@@ -278,7 +275,7 @@ export const CurricularContentEditor = (props) => {
       {createTextElement("Conjecture Name", 0.275, 0.32, 0.015, width, height)}
       {createTextElement("Keywords", 0.58, 0.32, 0.015, width, height)}
 
-      {drawCurriculum(0.1, 0.3, 0.018, width, height)}
+      {drawCurriculum(0.1, 0.3, 0.018, width, height, conjectureCallback)}
     </>
   );
 };

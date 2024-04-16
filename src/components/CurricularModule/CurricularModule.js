@@ -58,10 +58,11 @@ export const Curriculum = {
   },
 
   removeConjectureByIndex(index){ // remove a particular conjecture based on its index in the list
-    this.CurrentConjectures.pop(index);
+    this.CurrentConjectures.splice(index, 1);;
   },
 
   async setCurricularEditor(curricular){ // fill in curriculum data
+    this.CurrentConjectures = []; // remove previous list of levels
     if(curricular["ConjectureUUIDs"]){ // only fill in existing values
       for(i=0; i < curricular["ConjectureUUIDs"].length; i++){
         conjectureList = await getConjectureDataByUUID(curricular["ConjectureUUIDs"][i]); //getConjectureDataByUUID returns a list
@@ -76,11 +77,15 @@ export const Curriculum = {
         localStorage.setItem('CurricularPIN', curricular["CurricularPIN"]);
       }
   },
+
+  clearCurriculum(){
+    this.CurrentConjectures = []; // remove previous list of levels
+    this.setCurrentUUID(null); // remove UUID
+  },
 };
 
 const CurricularModule = (props) => {
-  const { height, width, mainCallback, conjectureSelectCallback } = props;
-  const [state, send] = useMachine(CurricularContentEditorMachine);
+  const { height, width, mainCallback, conjectureSelectCallback, conjectureCallback } = props;
 
   // Reset Function
   const resetCurricularValues = () => {
@@ -88,7 +93,7 @@ const CurricularModule = (props) => {
     localStorage.removeItem('CurricularAuthor');
     localStorage.removeItem('CurricularKeywords');
     localStorage.removeItem('CurricularPIN');
-    Curriculum.setCurrentUUID(null);
+    Curriculum.clearCurriculum();
   };
 
   // Reset Function
@@ -215,7 +220,7 @@ const CurricularModule = (props) => {
         fontWeight={800}
         callback={() => {publishAndReset(Curriculum.getCurrentUUID())}} // Enhanced to include reset
       />
-      <CurricularContentEditor height={height} width={width} />
+      <CurricularContentEditor height={height} width={width} conjectureCallback={() => conjectureCallback()}/>
     </>
   );
 };

@@ -10,6 +10,22 @@ import { writeToDatabaseConjecture, writeToDatabaseConjectureDraft, keysToPush, 
 import { useMachine } from "@xstate/react";
 import { ConjectureEditorMachine } from "../../machines/conjectureEditorMachine";
 
+let editLevel = true;
+export function setEditLevel(trueOrFalse){
+  editLevel = trueOrFalse;
+}
+export function getEditLevel(){
+  return editLevel;
+}
+
+let goBack = "MAIN";
+export function setGoBackFromLevelEdit(previous){
+  goBack = previous;
+}
+export function getGoBackFromLevelEdit(){
+  return goBack;
+}
+
 export const currentConjecture = {
   CurrentConjecture: [],
   CurrentUUID: [],
@@ -64,7 +80,7 @@ function setLocalStorage(){
 }
 
 const ConjectureModule = (props) => {
-  const { height, width, poseData, columnDimensions, rowDimensions, editCallback, mainCallback } = props;
+  const { height, width, poseData, columnDimensions, rowDimensions, editCallback, backCallback } = props;
   const [state, send] = useMachine(ConjectureEditorMachine);
   const [isSaved, setIsSaved] = useState(false);
   setLocalStorage();
@@ -77,19 +93,6 @@ const ConjectureModule = (props) => {
       <StartBox height={height * 0.5} width={width * 0.5} x={5} y={4.6} boxState={null} similarityScores={null} inCE={true} />
       <IntermediateBox height={height * 0.5} width={width * 0.5} x={9} y={1.906} boxState={null} similarityScores={null} inCE={true} />
       <EndBox height={height * 0.5} width={width * 0.5} x={13} y={1.2035} boxState={null} similarityScores={null} inCE={true} />
-      {/* Button to Pose Editor */}
-      <Button
-        height={height * 0.12}
-        width={width * 0.0950}
-        x={width * 0.17}
-        y={height * 0.42}
-        color={blue}
-        fontSize={21}
-        fontColor={white}
-        text={"POSE EDITOR"}
-        fontWeight={800}
-        callback={editCallback}
-      />
       <Button
         height={height * 0.14}
         width={width * 0.04}
@@ -138,54 +141,76 @@ const ConjectureModule = (props) => {
         fontWeight={800}
         callback={null}
       />
-      {/* Save Button */}
-      <RectButton
-        height={height * 0.13}
-        width={width * 0.26}
-        x={width * 0.58}
-        y={height * 0.93}
-        color={neonGreen}
-        fontSize={width * 0.014}
-        fontColor={white}
-        text={"SAVE DRAFT"}
-        fontWeight={800}
-        callback={ () =>{
-          writeToDatabaseConjectureDraft(currentConjecture.getCurrentUUID());
-          setIsSaved(true);
-          
-        }}/>
-      {/* Cancel Button */}
-      <RectButton
-        height={height * 0.13}
-        width={width * 0.26}
-        x={width * 0.71}
-        y={height * 0.93}
-        color={red}
-        fontSize={width * 0.015}
-        fontColor={white}
-        text={"CANCEL"}
-        fontWeight={800}
-        callback={() => {
-          localStorage.clear();
-          mainCallback();
-        }}  // Exit Back To Home
-      />
-      {/* Publish Button */}
-      <RectButton
-        height={height * 0.13}
-        width={width * 0.26}
-        x={width * 0.45}
-        y={height * 0.93}
-        color={blue}
-        fontSize={width * 0.015}
-        fontColor={white}
-        text={"PUBLISH"}
-        fontWeight={800}
-        callback={ () =>{
-          writeToDatabaseConjecture(currentConjecture.getCurrentUUID());
-          setIsSaved(true);
-          } // publish to database
-        }/>
+
+      {/* Only show the pose editor, save, publish, and cancel buttons if the user is editing */}
+      {getEditLevel() ? (
+        <>
+        {/* Button to Pose Editor */}
+        <Button
+          height={height * 0.12}
+          width={width * 0.0950}
+          x={width * 0.17}
+          y={height * 0.42}
+          color={blue}
+          fontSize={21}
+          fontColor={white}
+          text={"POSE EDITOR"}
+          fontWeight={800}
+          callback={editCallback}
+        />
+        {/* Save button */}
+        <RectButton
+          height={height * 0.13}
+          width={width * 0.26}
+          x={width * 0.58}
+          y={height * 0.93}
+          color={neonGreen}
+          fontSize={width * 0.014}
+          fontColor={white}
+          text={"SAVE DRAFT"}
+          fontWeight={800}
+          callback={ () =>{
+            writeToDatabaseConjectureDraft(currentConjecture.getCurrentUUID());
+            setIsSaved(true);
+          }}/>
+        {/* Cancel button */}
+        <RectButton
+          height={height * 0.13}
+          width={width * 0.26}
+          x={width * 0.71}
+          y={height * 0.93}
+          color={red}
+          fontSize={width * 0.015}
+          fontColor={white}
+          text={"CANCEL"}
+          fontWeight={800}
+          callback={() => {
+            localStorage.clear();
+            mainCallback(); // Exit Back the main menu
+          }}
+        />
+        {/* Publish button */}
+        <RectButton
+          height={height * 0.13}
+          width={width * 0.26}
+          x={width * 0.45}
+          y={height * 0.93}
+          color={blue}
+          fontSize={width * 0.015}
+          fontColor={white}
+          text={"PUBLISH"}
+          fontWeight={800}
+          callback={ () =>{
+            writeToDatabaseConjecture(currentConjecture.getCurrentUUID());
+            setIsSaved(true);
+            } // publish to database
+          }
+        />
+        </>
+        )
+        :(null) // don't show any of the above things during a preview
+      }
+
       {/* Back Button */}
       <Button
         height={height * 0.32}
@@ -198,18 +223,21 @@ const ConjectureModule = (props) => {
         text={"BACK"}
         fontWeight={800}
         callback={() => {
-          if (!isSaved) {
+          if(editLevel){
+            setGoBackFromLevelEdit("MAIN"); //ensures that the back button works correctly 
+          }
+          if (!isSaved && editLevel) {
             // If data hasn't been saved
             const confirmLeave = window.confirm("You didnt save your work. Are you sure you want to leave?");
             if (confirmLeave) {
               // if User confirmed, clear local storage and go back
               localStorage.clear();
-              mainCallback();
+              backCallback();
             }
           } else {
             // If it is saved, just go back
             localStorage.clear();
-            mainCallback();
+            backCallback();
           }
         }}
       />
@@ -225,8 +253,10 @@ const ConjectureModule = (props) => {
         text={localStorage.getItem("Correct Answer") === "A" ? " X" : " "}
         fontWeight={600}
         callback={() => {
-          send("OPTIONA");
-          localStorage.setItem("Correct Answer", "A");
+          if(editLevel){
+            send("OPTIONA");
+            localStorage.setItem("Correct Answer", "A");
+          }
         }}
       />
       <InputBox
@@ -240,8 +270,10 @@ const ConjectureModule = (props) => {
         text={localStorage.getItem("Correct Answer") === "B" ? " X" : " "}
         fontWeight={600}
         callback={() => {
-          send("OPTIONB");
-          localStorage.setItem("Correct Answer", "B");
+          if(editLevel){
+            send("OPTIONB");
+            localStorage.setItem("Correct Answer", "B");
+          }
         }}
       />
       <InputBox
@@ -255,8 +287,10 @@ const ConjectureModule = (props) => {
         text={localStorage.getItem("Correct Answer") === "C" ? " X" : " "}
         fontWeight={600}
         callback={() => {
-          send("OPTIONC");
-          localStorage.setItem("Correct Answer", "C");
+          if(editLevel){
+            send("OPTIONC");
+            localStorage.setItem("Correct Answer", "C");
+          }
         }}
       />
       <InputBox
@@ -270,8 +304,10 @@ const ConjectureModule = (props) => {
         text={localStorage.getItem("Correct Answer") === "D" ? " X" : " "}
         fontWeight={600}
         callback={() => {
-          send("OPTIOND");
-          localStorage.setItem("Correct Answer", "D");
+          if(editLevel){
+            send("OPTIOND");
+            localStorage.setItem("Correct Answer", "D");
+          }
         }}
       />
     </>
