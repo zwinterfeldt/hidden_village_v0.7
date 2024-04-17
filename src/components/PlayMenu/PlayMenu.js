@@ -69,10 +69,10 @@ const PlayMenu = (props) => {
                 {text: "Play Game", callback: () => (setPlayGame(true), send("GAMESELECT")), color: royalBlue},
                 {text: "New Level", callback: () => (setEditLevel(true), send("NEWLEVEL")), color: dodgerBlue},
                 {text: "Edit Level", callback: () => (setAddtoCurricular(false),send("LEVELSELECT")), color: steelBlue},
-                {text: "Settings", callback: () => send("SETTINGS"), color: cornflowerBlue},
+                {text: "Settings", callback: () => console.log("Settings clicked"), color: cornflowerBlue},
             );
         } else if (role === "Student"){
-            list.push({text: "Play", callback: () => console.log("Play"), color: royalBlue}, {text: "Settings", callback: () => send("SETTINGS"), color: cornflowerBlue})
+            list.push({text: "Play", callback: () => (setPlayGame(true), send("GAMESELECT")), color: royalBlue}, {text: "Settings", callback: () => console.log("Settings clicked"), color: cornflowerBlue})
         } else if (role === "Teacher"){
             list.push(
                 {text: "New Game", callback: () => send("NEWGAME"), color: purple},
@@ -80,7 +80,7 @@ const PlayMenu = (props) => {
                 {text: "Play", callback: () => send("PLAY"), color: royalBlue},
                 {text: "New Level", callback: () => (setEditLevel(true), send("NEWLEVEL")), color: dodgerBlue},
                 {text: "Edit Level", callback: () => (setAddtoCurricular(false),send("LEVELSELECT")), color: steelBlue},
-                {text: "Settings", callback: () => send("SETTINGS"), color: cornflowerBlue},
+                {text: "Settings", callback: () => console.log("Settings clicked"), color: cornflowerBlue},
             );
         }
             setButtonList(list);
