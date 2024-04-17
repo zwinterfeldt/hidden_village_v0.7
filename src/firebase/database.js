@@ -1,6 +1,12 @@
 // Firebase Init
-import { ref, push, getDatabase, set } from "firebase/database";
+import { ref, push, getDatabase, set, query, equalTo, get, orderByChild, orderByKey } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+import { Curriculum } from "../components/CurricularModule/CurricularModule";
+
+
+// Import the uuid library
+const { v4: uuidv4 } = require('uuid');
 
 const db = getDatabase();
 
@@ -16,6 +22,28 @@ onAuthStateChanged(auth, (user) => {
   userId = user.uid;
 });
 
+// Define data keys for the text inputs of conjectures
+export const keysToPush = [
+  "Conjecture Name",
+  "Author Name",
+  "PIN",
+  "Conjecture Keywords",
+  "Conjecture Description",
+  "Multiple Choice 1",
+  "Multiple Choice 2",
+  "Multiple Choice 3",
+  "Multiple Choice 4",
+  "Correct Answer",
+];
+
+// text boxes for the curricular editor
+export const curricularTextBoxes = [ 
+  "CurricularName", // if these are renamed, keep the order the same
+  "CurricularAuthor", 
+  "CurricularKeywords",
+  "CurricularPIN",
+]
+
 // Export a function named writeToDatabase
 export const writeToDatabase = async (poseData, conjectureId, frameRate) => {
   // Create a new date object to get a timestamp
@@ -26,7 +54,7 @@ export const writeToDatabase = async (poseData, conjectureId, frameRate) => {
   const dbRef = ref(db, "/Experimental_Data");
 
   // Create an object to send to the database
-  // This object includes the userId, poseData, conjectureId, frameRate, and timestamp
+  // This object includes the userId, poseData, conjectureId, frameRate, and timestamp and
   const dataToSend = {
     userId,
     poseData: JSON.stringify(poseData),
@@ -67,26 +95,23 @@ export const writeToDatabasePoseAuth = async (poseData, state, tolerance) => {
   return promise;
 };
 
-export const writeToDatabaseConjecture = async () => {
+export const writeToDatabaseConjecture = async (existingUUID) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
+  let conjectureID;
+
+  // define the UUID based on whether it exists already or not
+  if(existingUUID == null){
+    conjectureID = uuidv4();
+  }
+  else{
+    conjectureID = existingUUID;
+  }
+  
 
   // Initialize empty object to store the data inside
   const dataToPush = {};
-
-  // Define data keys for the text inputs 
-  const keysToPush = [
-    "Conjecture Name",
-    "Author Name",
-    "PIN",
-    "Conjecture Keywords",
-    "Conjecture Description",
-    "Multiple Choice 1",
-    "Multiple Choice 2",
-    "Multiple Choice 3",
-    "Multiple Choice 4",
-  ];
 
   // Fetch values from local storage for each key inside keysToPush 
   const isAnyKeyNullOrUndefined = keysToPush.some((key) => {
@@ -96,7 +121,7 @@ export const writeToDatabaseConjecture = async () => {
 
   // if any text values are not there alert message and exit
   if (isAnyKeyNullOrUndefined) {
-    return alert("One or more text values are empty. Cannot publish conjecture to database.");
+    return alert("One or more text values are empty. Cannot publish conjecture to database."), false;
   }
 
   // Check if any of the pose data is null before proceeding
@@ -115,7 +140,7 @@ export const writeToDatabaseConjecture = async () => {
     const endPoseData = await createPoseObjects(endJson, 'EndPose', localStorage.getItem('End Tolerance'));
 
     // Define the database path
-    const conjecturePath = `Final/Conjecture: ${localStorage.getItem("Conjecture Name")}`;
+    const conjecturePath = `Level/${conjectureID}`;
 
     // Fetch values from local storage for each key inside keysToPush 
     await Promise.all(keysToPush.map(async (key) => {
@@ -128,51 +153,87 @@ export const writeToDatabaseConjecture = async () => {
       }
     }));
 
+
+    // searrcxh words
+    const searchWordsToPush = {
+      "Author Name": dataToPush["Author Name"],
+      "Conjecture Description": dataToPush["Conjecture Description"],
+      "Conjecture Keywords": dataToPush["Conjecture Keywords"],
+      "Conjecture Name": dataToPush["Conjecture Name"]
+    };
+    console.log(searchWordsToPush)
+
+    // Extracting values from searchWordsToPush object
+    const searchWordsValues = Object.values(searchWordsToPush);
+    // Concatenating search words into a single lowercase string
+    const concatenatedSearchWords = searchWordsValues.join(" ").toLowerCase();
+
+    // Splitting the concatenated string into individual words
+    const wordsArray = concatenatedSearchWords.split(" ");
+
+    // Initializing an empty object to store search words
+    const searchWordsToPushToDatabase = {};
+
+    // Loop through the words array and set each word as a key in the searchWordsToPushToDatabase object with the word itself as its value
+    wordsArray.forEach(word => {
+      if (word !== undefined) {
+        searchWordsToPushToDatabase[word] = word;
+      }
+    });
+
+    console.log(searchWordsToPushToDatabase)
+
     // creates promises to push all of the data to the database 
     // uses set to overwrite the random firebaseKeys with easier to read key names
     const promises = [
       set(ref(db, `${conjecturePath}/Time`), timestamp),
+      set(ref(db, `${conjecturePath}/AuthorID`), userId),
+      set(ref(db, `${conjecturePath}/UUID`),conjectureID),
+      set(ref(db, `${conjecturePath}/PIN`), localStorage.getItem("PIN")),
       set(ref(db, `${conjecturePath}/Start Pose`), startPoseData),
       set(ref(db, `${conjecturePath}/Intermediate Pose`), intermediatePoseData),
       set(ref(db, `${conjecturePath}/End Pose`), endPoseData),
       set(ref(db, `${conjecturePath}/Text Boxes`), dataToPush),
+      set(ref(db, `${conjecturePath}/isFinal`), true),
+      set(ref(db,`${conjecturePath}/Search Words`), searchWordsToPushToDatabase)
     ];
 
     return promises && alert("Conjecture successfully published to database.");
   } else {
-    return alert("One or more poses are missing. Cannot publish conjecture to database.");
+    return alert("One or more poses are missing. Cannot publish conjecture to database."), false;
   }
 };
 
-export const writeToDatabaseDraft = async () => {
+// save a draft of the current conjecture so it can be published later
+export const writeToDatabaseConjectureDraft = async (existingUUID) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
+  let conjectureID;
+
+  // define the UUID based on whether it exists already or not
+  if(existingUUID == null){
+    conjectureID = uuidv4();
+  }
+  else{
+    conjectureID = existingUUID;
+  }
 
   // Initialize empty object to store the data inside
   const dataToPush = {};
-
-  // Define data keys for the text inputs 
-  const keysToPush = [
-    "Conjecture Name",
-    "Author Name",
-    "PIN",
-    "Conjecture Keywords",
-    "Conjecture Description",
-    "Multiple Choice 1",
-    "Multiple Choice 2",
-    "Multiple Choice 3",
-    "Multiple Choice 4",
-  ];
+  let noName = false;
 
   // Fetch values from local storage for each key inside KeysToPush 
   await Promise.all(keysToPush.map(async (key) => {
     const value = localStorage.getItem(key);
     Object.assign(dataToPush, await createTextObjects(key, value));
 
-    // If the valye is undefined assign the value as undefined in firebase
+    // If the value is undefined assign the value as undefined in firebase
     if(value == undefined){
       Object.assign(dataToPush, await createTextObjects(key, "undefined"));
+      if(key == "Conjecture Name"){
+        noName = true;
+      }
     }
   }));
 
@@ -181,8 +242,13 @@ export const writeToDatabaseDraft = async () => {
   const intermediatePoseData = await createPoseObjects(localStorage.getItem('intermediate.json'), 'IntermediatePose', localStorage.getItem('Intermediate Tolerance'));
   const endPoseData = await createPoseObjects(localStorage.getItem('end.json'), 'EndPose', localStorage.getItem('End Tolerance'));
 
+  // if the level isn't named, alert message and exit
+  if (noName) {
+    return alert("Please name your level before saving a draft."), false;
+  }
+
   // Define the database path
-  const conjecturePath = `Draft/Draft: ${localStorage.getItem("Conjecture Name")}`;
+  const conjecturePath = `Level/${conjectureID}`;
 
   // creates promises to push all of the data to the database 
   // uses set to overwrite the random firebaseKeys with easier to read key names
@@ -192,12 +258,14 @@ export const writeToDatabaseDraft = async () => {
     set(ref(db, `${conjecturePath}/Intermediate Pose`), intermediatePoseData),
     set(ref(db, `${conjecturePath}/End Pose`), endPoseData),
     set(ref(db, `${conjecturePath}/Text Boxes`), dataToPush),
+    set(ref(db, `${conjecturePath}/UUID`),conjectureID),
+    set(ref(db, `${conjecturePath}/isFinal`), false),
   ];
 
   return promises && alert("Draft saved");
 };
 
-// Helper function to create pose objects for the writeToDatabaseConjecture fucntion 
+// Helper function to create pose objects for the writeToDatabaseConjecture function 
 const createPoseObjects = async (poseData, state, tolerance) => {
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
@@ -214,7 +282,7 @@ const createPoseObjects = async (poseData, state, tolerance) => {
   return dataToSend;
 }
 
-// Helper function to create text objects for the writeToDatabaseConjecture fucntion 
+// Helper function to create text objects for the writeToDatabaseConjecture function 
 const createTextObjects = async (key, value) => {
   const dataToSend = {
     [key]: value,
@@ -287,4 +355,322 @@ const countRejectedPromises = async (promises) => {
 
   // Return the total number of rejected promises
   return rejectedCount;
+};
+
+
+// save a draft of a collection of conjectures to be published later
+export const writeToDatabaseCurricularDraft = async (UUID) => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+
+  let CurricularID; // set the UUID based on whether creating new game or editing existing game
+  if(UUID == null){
+    CurricularID = uuidv4();
+  }
+  else{
+    CurricularID = UUID;
+  }
+
+  //get the UUID of each conjecture
+  const conjectureList = Curriculum.getCurrentConjectures();
+  let conjectures = [];
+  for (let i = 0; i < conjectureList.length; i++){
+    conjectures.push(conjectureList[i]["UUID"]);
+  }
+
+  const dataToPush = {}
+  // Fetch values from local storage for each key inside  curricularTextBoxes
+  await Promise.all(curricularTextBoxes.map(async (key) => {
+    const value = localStorage.getItem(key);
+    Object.assign(dataToPush, await createTextObjects(key, value));
+
+    // If the value is undefined assign the value as undefined in firebase
+    if(value == undefined){
+      Object.assign(dataToPush, await createTextObjects(key, "undefined"));
+    }
+  }));
+
+  //if no name: alert message and exit
+  if (dataToPush.CurricularName == undefined) {
+    return alert("Please name the game first.");
+  }
+
+  const CurricularPath = `Game/${CurricularID}`;
+
+  // creates promises to push all of the data to the database 
+  // uses set to overwrite the random firebaseKeys with easier to read key names
+  const promises = [
+    set(ref(db, `${CurricularPath}`), dataToPush),
+    set(ref(db, `${CurricularPath}/ConjectureUUIDs`), conjectures),
+    set(ref(db, `${CurricularPath}/Time`), timestamp),
+    set(ref(db, `${CurricularPath}/UUID`), CurricularID),
+    set(ref(db, `${CurricularPath}/isFinal`), false),
+  ];
+
+  return promises && alert("Game Draft saved");
+}
+
+
+// publish a completed game
+export const writeToDatabaseCurricular = async (UUID) => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+
+  let CurricularID; // set the UUID based on whether creating new game or editing existing game
+  if(UUID == null){
+    CurricularID = uuidv4();
+  }
+  else{
+    CurricularID = UUID;
+  }
+
+  //get the UUID of each conjecture
+  const conjectureList = Curriculum.getCurrentConjectures();
+  let conjectures = [];
+  for (let i = 0; i < conjectureList.length; i++){
+    conjectures.push(conjectureList[i]["UUID"]);
+  }
+
+  const dataToPush = {}
+  let hasUndefined = false;
+  // Fetch values from local storage for each key inside  curricularTextBoxes
+  await Promise.all(curricularTextBoxes.map(async (key) => {
+    const value = localStorage.getItem(key);
+    Object.assign(dataToPush, await createTextObjects(key, value));
+
+    // If the value is undefined assign the value as undefined in firebase
+    if(value == undefined){
+      Object.assign(dataToPush, await createTextObjects(key, "undefined"));
+      hasUndefined = true;
+    }
+  }));
+
+  // if anything is missing return an alert and exit
+  if(hasUndefined){
+    //alert("One or more text values are empty. Cannot publish game to database.");
+    return alert("One or more text values are empty. Cannot publish game to database.");
+  }
+  if(conjectureList.length == 0){
+    return alert("Please add at least 1 level to your game before publishing.");
+  }
+
+  const CurricularPath = `Game/${CurricularID}`;
+
+  // creates promises to push all of the data to the database 
+  // uses set to overwrite the random firebaseKeys with easier to read key names
+  const promises = [
+    set(ref(db, `${CurricularPath}`), dataToPush),
+    set(ref(db, `${CurricularPath}/ConjectureUUIDs`), conjectures),
+    set(ref(db, `${CurricularPath}/Time`), timestamp),
+    set(ref(db, `${CurricularPath}/UUID`), CurricularID),
+    set(ref(db, `${CurricularPath}/isFinal`), true),
+  ];
+
+  return alert("Game Published"), promises; //returns the promises and alerts that the game has been published
+}
+
+
+// Define a function to retrieve a conjecture based on UUID
+export const getConjectureDataByUUID = async (conjectureID) => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Level');
+    // query to find data with the UUID
+    const q = query(dbRef, orderByChild('UUID'), equalTo(conjectureID));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      const data = querySnapshot.val();
+      return data; // return the data if its good
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
+
+// Define a function to retrieve a conjecture based on UUID
+export const getCurricularDataByUUID = async (curricularID) => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Game');
+    // query to find data with the UUID
+    const q = query(dbRef, orderByChild('UUID'), equalTo(curricularID));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      const data = querySnapshot.val();
+      return data; // return the data if its good
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
+
+// Define a function to retrieve an array of conjectures based on AuthorID
+export const getConjectureDataByAuthorID = async (authorID) => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Level');
+    // query to find data with the AuthorID
+    const q = query(dbRef, orderByChild('AuthorID'), equalTo(authorID));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      // get all the conjectures in an array
+      const conjectures = [];
+      querySnapshot.forEach((conjectureSnapshot) => {
+        conjectures.push(conjectureSnapshot.val());
+      });
+      return conjectures; // return the data if its good
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
+
+// Define a function to retrieve an array of conjectures based on PIN
+export const getConjectureDataByPIN = async (PIN) => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Level');
+    // query to find data with the PIN
+    const q = query(dbRef, orderByChild('PIN'), equalTo(PIN));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      // get all the conjectures in an array
+      const conjectures = [];
+      querySnapshot.forEach((conjectureSnapshot) => {
+        conjectures.push(conjectureSnapshot.val());
+      });
+      return conjectures; // return the data if its good
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
+
+// get a list of all the levels
+export const getConjectureList = async (final) => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Level');
+
+    // query to find data
+    let q;
+    if (final){ //return only the final (complete) conjectures
+      q = query(dbRef, orderByChild('isFinal'), equalTo(final));
+    }
+    else{ // return both final conjectures (complete) and drafts of conjectures (incomplete)
+      q = query(dbRef, orderByChild('isFinal'));
+    }
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      // get all the conjectures in an array
+      const conjectures = [];
+      querySnapshot.forEach((conjectureSnapshot) => {
+        conjectures.push(conjectureSnapshot.val());
+      });
+      return conjectures; // return the data if its good
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
+
+
+// get a list of all the games
+export const getCurricularList = async (final) => {
+  try {
+    // ref the realtime db
+    const dbRef = ref(db, 'Game');
+
+    // query to find data
+    let q;
+    if (final){ //return only the final (complete) conjectures
+      q = query(dbRef, orderByChild('isFinal'), equalTo(final));
+    }
+    else{ // return both final conjectures (complete) and drafts of conjectures (incomplete)
+      q = query(dbRef, orderByChild('isFinal'));
+    }
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // check the snapshot
+    if (querySnapshot.exists()) {
+      // get all the conjectures in an array
+      const curricular = [];
+      querySnapshot.forEach((curricularSnapshot) => {
+        curricular.push(curricularSnapshot.val());
+      });
+      return curricular; // return the data if its good
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
+
+export const searchConjecturesByWord = async (searchWord) => {
+  try {
+    // Reference the realtime db
+    const dbRef = ref(db, 'Level');
+
+    // Query to find data
+    const q = query(dbRef, orderByChild('Search Words'));
+
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // Array to store matching conjectures
+    const matchingConjectures = [];
+
+    // This takes forever..............
+    querySnapshot.forEach((snapshot) => {
+      // Check if snapshot data contains searchWord as a key
+      const searchData = snapshot.val();
+      if (searchData && searchData['Search Words'] && searchData['Search Words'][searchWord]) {
+        // Found searchWord key in this snapshot
+        // Add this snapshot's data to the list of matching conjectures
+        matchingConjectures.push(searchData);
+      }
+    });
+
+    // Return the list of matching conjectures
+    return matchingConjectures;
+  } catch (error) {
+    console.error('Error searching conjectures:', error);
+    // Handle error appropriately
+    return []; // Return an empty array in case of error
+  }
 };

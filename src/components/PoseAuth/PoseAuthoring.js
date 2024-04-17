@@ -58,7 +58,7 @@ const PoseAuthoring = (props) => {
 
     // function to start the on screen timer once the capture button is pressed
     const startTimer = () => {
-      setTimer(10);
+      setTimer(2);
       setShowTimer(true);
       const timerInterval = setInterval(() => {
         setTimer((prevTimer) => {
@@ -180,8 +180,8 @@ const PoseAuthoring = (props) => {
     useEffect(() => {
       if (props.poseData && props.poseData.poseLandmarks) {
         const depth = calculateFaceDepth(props.poseData.poseLandmarks);
-        // console.log lets you see the depth in youre browsers console; ctrl + shift + i
-        console.log(depth)
+        // console.log lets you see the depth in your browsers console; ctrl + shift + i
+        // console.log(depth)
         if (depth < -2) { // You can change the negative integer lower for closer range
           console.warn("Warning: You are too close to the camera!");
           localStorage.setItem('user_depth', depth);  // Logs current depth so that it can be used to generate text
@@ -359,7 +359,7 @@ const PoseAuthoring = (props) => {
         fontColor={blue}
         text={"Done"}
         fontWeight={800}
-        callback={props.conjectureCallback} // Exit Back To Conjecture Module
+        callback={conjectureCallback} // Exit Back To Conjecture Module
       />
         {/* Reset Button build */}
         <RectButton

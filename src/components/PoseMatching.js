@@ -25,7 +25,12 @@ const PoseMatching = (props) => {
   const [poseMatchData, setPoseMatchData] = useState({});
   const [poseSimilarity, setPoseSimilarity] = useState([]);
   const textColor = white;
-
+  const matchConfig = [
+    {"segment": "RIGHT_BICEP", "data": "poseLandmarks"}, 
+    {"segment": "RIGHT_FOREARM", "data": "poseLandmarks"},
+    {"segment": "LEFT_BICEP", "data": "poseLandmarks"}, 
+    {"segment": "LEFT_FOREARM", "data": "poseLandmarks"}
+  ]
   // on mount, create an array of the poses that will be used in the tutorial
   useEffect(() => {
     setPoses(posesToMatch);
@@ -41,27 +46,19 @@ const PoseMatching = (props) => {
         setFirstPose(false);
       }
       const currentPoseData = poses.shift();
-      const matchData = currentPoseData.matchingConfig.map((config) => {
+      const matchData = matchConfig.map((config) => {
         return {
           ...config,
           landmarks: matchSegmentToLandmarks(
             config,
-            currentPoseData.landmarks,
+            currentPoseData,
             modelColumn
           ),
         };
       });
-      setCurrentPose(enrichLandmarks(currentPoseData.landmarks));
+      setCurrentPose(enrichLandmarks(currentPoseData));
       setPoseMatchData(matchData);
       setPoses(poses);
-    }
-    if (poses.length === 0 && !firstPose) {
-      setText("Great!");
-      const timer = setTimeout(() => {
-        console.log("moved to next step");
-        onComplete();
-      }, 2000);
-      return () => clearTimeout(timer);
     }
   }, [poses, transition]);
 
@@ -111,7 +108,12 @@ const PoseMatching = (props) => {
   // next state. If not, stay in the same state
   useEffect(() => {
     if (!firstPose) {
-      const similarityThreshold = 45;
+      let similarityThreshold = 45;
+      // if there is a tolerance for the pose, use that as the threshold
+      if (currentPose.tolerance != null && !isNaN(currentPose.tolerance)) {
+        similarityThreshold = currentPose.tolerance;
+      }
+      console.log(similarityThreshold)
       const similarityScore = poseSimilarity.reduce(
         (previousValue, currentValue) => {
           // all segments need to be over the threshold -- will only return true if
@@ -123,14 +125,28 @@ const PoseMatching = (props) => {
         true
       );
       if (similarityScore) {
+        console.log(poses.length)
+        console.log(firstPose)
         // move to next state and reset pose similarity
-        setTransition(true);
-        setPoseSimilarity([{ similarityScore: 0 }]);
-        setText("Great!");
-        setTimeout(() => {
-          setText("Match the pose on the left!");
-          setTransition(false);
+        if (poses.length === 0 && !firstPose) {
+          setTransition(true);
+          setPoseSimilarity([{ similarityScore: 0 }]);
+          setText("Great!");
+          setTimeout(() => {
+            console.log("moved to next step");
+            setTransition(false);
+            onComplete();
+          }, 1000);
+        }
+        else {
+          setTransition(true);
+          setPoseSimilarity([{ similarityScore: 0 }]);
+          setText("Great!");
+          setTimeout(() => {
+            setText("Match the pose on the left!");
+            setTransition(false);
         }, 1000);
+        }
       }
     }
   }, [poseSimilarity]);
@@ -158,7 +174,7 @@ const PoseMatching = (props) => {
         <Pose
           poseData={props.poseData}
           colAttr={playerColumn}
-          similarityScores={poseSimilarity}
+          similarityScores={poseSimilarity}   
         />
       </ErrorBoundary>
     </Container>

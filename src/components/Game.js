@@ -14,6 +14,8 @@ const reorder = (array, indices) => {
 };
 
 const context = {
+  
+
   context: {
     conjectures: [0, 1, 2, 3, 4, 5, 6, 7],
     currentConjectureIdx: 0,
@@ -24,6 +26,7 @@ const selectCurrentConjectureIdx = (state) =>
   state.context.currentConjectureIdx;
 
 const Game = (props) => {
+
   const { columnDimensions, rowDimensions, poseData, height, width } = props;
   const [chapterConjecture, setChapterConjecture] = useState([]);
 
