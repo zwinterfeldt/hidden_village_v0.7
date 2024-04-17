@@ -57,7 +57,7 @@ const ExperimentalTask = (props) => {
         // Call the writeToDatabase function with the current poseData, conjecture index,
         // and fps parameter. Push the resulting promise object to the promises array.
         promises.push(
-          writeToDatabase(poseData, currentConjectureIdx, fpsUrlParam)
+          writeToDatabase(poseData, fpsUrlParam)
         );
         // Call the promiseChecker function to detect any data loss in the promises array
         // and trigger an alert if necessary.
