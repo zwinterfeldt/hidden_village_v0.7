@@ -359,7 +359,7 @@ const PoseAuthoring = (props) => {
         fontColor={blue}
         text={"Done"}
         fontWeight={800}
-        callback={props.conjectureCallback} // Exit Back To Conjecture Module
+        callback={conjectureCallback} // Exit Back To Conjecture Module
       />
         {/* Reset Button build */}
         <RectButton

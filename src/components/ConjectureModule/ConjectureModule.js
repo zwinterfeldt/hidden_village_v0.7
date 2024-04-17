@@ -1,6 +1,6 @@
 import Background from "../Background";
 import React, { useState} from 'react';
-import { green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
+import { powderBlue, skyBlue, cornflowerBlue, green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
 import Button from "../Button";
 import RectButton from "../RectButton";
 import InputBox from "../InputBox";
@@ -97,6 +97,7 @@ function setLocalStorage(){
 
 const ConjectureModule = (props) => {
   const { height, width, poseData, columnDimensions, rowDimensions, editCallback, backCallback } = props;
+
   const [state, send] = useMachine(ConjectureEditorMachine);
   const [isSaved, setIsSaved] = useState(false);
   setLocalStorage();
@@ -329,5 +330,6 @@ const ConjectureModule = (props) => {
     </>
   );
 };
+
   
 export default ConjectureModule;

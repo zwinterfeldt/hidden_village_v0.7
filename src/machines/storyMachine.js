@@ -21,7 +21,7 @@ export const StoryMachine = createMachine({
     },
     test: {
       on: {
-        HOME: "ready", // move to home
+        CONJECT: "conjecture", // move to home
       }
     },
     pose: {
@@ -37,6 +37,7 @@ export const StoryMachine = createMachine({
       on: {
         AUTHOR: "edit", // move to poseauthoring
         HOME: "ready", // move to home
+        TEST: "test"
       }
     },
     edit: {

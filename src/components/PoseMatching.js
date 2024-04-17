@@ -110,9 +110,10 @@ const PoseMatching = (props) => {
     if (!firstPose) {
       let similarityThreshold = 45;
       // if there is a tolerance for the pose, use that as the threshold
-      if (currentPose.tolerance != null) {
+      if (currentPose.tolerance != null && !isNaN(currentPose.tolerance)) {
         similarityThreshold = currentPose.tolerance;
       }
+      console.log(similarityThreshold)
       const similarityScore = poseSimilarity.reduce(
         (previousValue, currentValue) => {
           // all segments need to be over the threshold -- will only return true if
