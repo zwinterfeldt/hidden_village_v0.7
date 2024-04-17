@@ -22,13 +22,14 @@ import NewUserModule from "../AdminHomeModule/NewUserModule";
 import PoseAuthoring from "../PoseAuth/PoseAuthoring";
 import ConjecturePoseContainer from "../TestConjectureModule/ConjecturePoseContainer";
 import PlayGame from "../PlayGameModule/PlayGame";
+import PoseTest from "../ConjectureModule/PoseTest";
 
 const PlayMenu = (props) => {
     const {width, height, poseData, columnDimensions, rowDimensions, role} = props;
     const [buttonList, setButtonList] = useState([]);
     const [distanceBetweenButtons, setDistanceBetweenButtons] = useState();
     const [startingX, setStartingX] = useState();
-    const[state, send] = useMachine(PlayMenuMachine);
+    const [state, send] = useMachine(PlayMenuMachine);
     const [userRole, setUserRole] = useState(null);
     
     const fetchData = async () => {
@@ -68,10 +69,10 @@ const PlayMenu = (props) => {
                 {text: "Play Game", callback: () => (setPlayGame(true), send("GAMESELECT")), color: royalBlue},
                 {text: "New Level", callback: () => (setEditLevel(true), send("NEWLEVEL")), color: dodgerBlue},
                 {text: "Edit Level", callback: () => (setAddtoCurricular(false),send("LEVELSELECT")), color: steelBlue},
-                {text: "Settings", callback: () => send("SETTINGS"), color: cornflowerBlue},
+                {text: "Settings", callback: () => console.log("Settings clicked"), color: cornflowerBlue},
             );
         } else if (role === "Student"){
-            list.push({text: "Play", callback: () => console.log("Play"), color: royalBlue}, {text: "Settings", callback: () => send("SETTINGS"), color: cornflowerBlue})
+            list.push({text: "Play", callback: () => (setPlayGame(true), send("GAMESELECT")), color: royalBlue}, {text: "Settings", callback: () => console.log("Settings clicked"), color: cornflowerBlue})
         } else if (role === "Teacher"){
             list.push(
                 {text: "New Game", callback: () => send("NEWGAME"), color: purple},
@@ -79,7 +80,7 @@ const PlayMenu = (props) => {
                 {text: "Play", callback: () => send("PLAY"), color: royalBlue},
                 {text: "New Level", callback: () => (setEditLevel(true), send("NEWLEVEL")), color: dodgerBlue},
                 {text: "Edit Level", callback: () => (setAddtoCurricular(false),send("LEVELSELECT")), color: steelBlue},
-                {text: "Settings", callback: () => send("SETTINGS"), color: cornflowerBlue},
+                {text: "Settings", callback: () => console.log("Settings clicked"), color: cornflowerBlue},
             );
         }
             setButtonList(list);
@@ -104,6 +105,16 @@ const PlayMenu = (props) => {
                 callback={button.callback}
             />
         ))}
+        {state.value === "test" && (
+          <PoseTest
+            width={width}
+            height={height}
+            poseData={poseData}
+            columnDimensions={columnDimensions}
+            rowDimensions={rowDimensions}
+            conjectureCallback={() => send("NEWLEVEL")}
+          />
+        )}
         {state.value === "newLevel" && (
             <ConjectureModule
                 width={width}
@@ -113,6 +124,7 @@ const PlayMenu = (props) => {
                 editCallback={() => send("EDIT")}
                 // getGoBackFromLevelEdit should be "MAIN", "LEVELSELECT", or "NEWGAME"
                 backCallback={() => send(getGoBackFromLevelEdit())}
+                testCallback={() => send("TEST")}
             />
         )}
         {state.value === "edit" && (
