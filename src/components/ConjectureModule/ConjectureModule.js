@@ -49,8 +49,24 @@ export const currentConjecture = {
     else{
       return null;
     }
-  }
+  },
+
+  clearConjecture(){
+    this.setConjecture(null); // remove previous list of levels
+    this.setCurrentUUID(null); // remove UUID
+  },
 }
+
+  // Reset Function
+  const resetConjectureValues = () => {
+    for (i = 0; i < keysToPush.length; i++){
+      localStorage.removeItem(keysToPush[i]); 
+    }
+    localStorage.removeItem('start.json');
+    localStorage.removeItem('intermediate.json');
+    localStorage.removeItem('end.json');
+    currentConjecture.clearConjecture();
+  };
 
 // fill in local storage using currentConjecture if an existing conjecture is selected
 // currentConjecture receives the value when the conjecture is clicked from ConjectureSelectorModule
@@ -231,12 +247,12 @@ const ConjectureModule = (props) => {
             const confirmLeave = window.confirm("You didnt save your work. Are you sure you want to leave?");
             if (confirmLeave) {
               // if User confirmed, clear local storage and go back
-              localStorage.clear();
+              resetConjectureValues();
               backCallback();
             }
           } else {
             // If it is saved, just go back
-            localStorage.clear();
+            resetConjectureValues();
             backCallback();
           }
         }}
