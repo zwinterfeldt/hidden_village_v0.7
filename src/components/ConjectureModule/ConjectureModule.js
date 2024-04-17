@@ -96,7 +96,7 @@ function setLocalStorage(){
 }
 
 const ConjectureModule = (props) => {
-  const { height, width, poseData, columnDimensions, rowDimensions, editCallback, backCallback } = props;
+  const { height, width, poseData, columnDimensions, rowDimensions, editCallback, backCallback, testCallback } = props;
 
   const [state, send] = useMachine(ConjectureEditorMachine);
   const [isSaved, setIsSaved] = useState(false);
@@ -174,6 +174,18 @@ const ConjectureModule = (props) => {
           text={"POSE EDITOR"}
           fontWeight={800}
           callback={editCallback}
+        />
+        {/* Test Button */}
+        <Button
+          width={width * 0.1}
+          x={width * 0.86}
+          y={height * 0.17}
+          color={blue}
+          fontSize={width * 0.015}
+          fontColor={white}
+          text={"TEST POSES"}
+          fontWeight={800}
+          callback={testCallback} // Go to test button
         />
         {/* Save button */}
         <RectButton

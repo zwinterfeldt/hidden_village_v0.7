@@ -22,13 +22,14 @@ import NewUserModule from "../AdminHomeModule/NewUserModule";
 import PoseAuthoring from "../PoseAuth/PoseAuthoring";
 import ConjecturePoseContainer from "../TestConjectureModule/ConjecturePoseContainer";
 import PlayGame from "../PlayGameModule/PlayGame";
+import PoseTest from "../ConjectureModule/PoseTest";
 
 const PlayMenu = (props) => {
     const {width, height, poseData, columnDimensions, rowDimensions, role} = props;
     const [buttonList, setButtonList] = useState([]);
     const [distanceBetweenButtons, setDistanceBetweenButtons] = useState();
     const [startingX, setStartingX] = useState();
-    const[state, send] = useMachine(PlayMenuMachine);
+    const [state, send] = useMachine(PlayMenuMachine);
     const [userRole, setUserRole] = useState(null);
     
     const fetchData = async () => {
@@ -104,6 +105,16 @@ const PlayMenu = (props) => {
                 callback={button.callback}
             />
         ))}
+        {state.value === "test" && (
+          <PoseTest
+            width={width}
+            height={height}
+            poseData={poseData}
+            columnDimensions={columnDimensions}
+            rowDimensions={rowDimensions}
+            conjectureCallback={() => send("NEWLEVEL")}
+          />
+        )}
         {state.value === "newLevel" && (
             <ConjectureModule
                 width={width}
@@ -113,6 +124,7 @@ const PlayMenu = (props) => {
                 editCallback={() => send("EDIT")}
                 // getGoBackFromLevelEdit should be "MAIN", "LEVELSELECT", or "NEWGAME"
                 backCallback={() => send(getGoBackFromLevelEdit())}
+                testCallback={() => send("TEST")}
             />
         )}
         {state.value === "edit" && (

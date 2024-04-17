@@ -14,8 +14,13 @@ export const PlayMenuMachine = createMachine({
         ADMIN: "admin", // move to admin
         NEWGAME: "newGame", //move to new game
         LEVELSELECT: "levelSelect", //move to edit level
-        GAMESELECT: "gameSelect",
+        GAMESELECT: "gameSelect"
       },
+    },
+    test: {
+      on: {
+        NEWLEVEL: "newLevel"
+      }
     },
     settings: {
       on: {
@@ -44,6 +49,7 @@ export const PlayMenuMachine = createMachine({
         EDIT: "edit", // move to edit
         NEWGAME: "newGame", // Go back to Game editor after previewing a level
         LEVELSELECT: "levelSelect", // Go back to Game editor after previewing a level from the +Add Conjecture part
+        TEST: "test"
       },
     },
     edit: {
