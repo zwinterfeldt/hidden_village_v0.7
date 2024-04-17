@@ -36,6 +36,7 @@ export const writeNewUserToDatabase = async (userEmail, userRole) => {
     // Log information about the current user, if one exists
     const currentUser = auth.currentUser;
 
+    const newOrg = await getUserOrganizationFromDatabase();
 
     await createUserWithEmailAndPassword(auth, userEmail, "welcome")
     .then((userCredential) => {
@@ -53,7 +54,8 @@ export const writeNewUserToDatabase = async (userEmail, userRole) => {
         const newRole = userRole;
         // lets addd user to the realtime database now
     
-        writeCurrentUserToDatabaseNewUser(newID, newEmail, newRole);
+    
+        writeCurrentUserToDatabaseNewUser(newID, newEmail, newRole, newOrg);
         alert("User Created")
 
 
@@ -68,7 +70,7 @@ export const writeNewUserToDatabase = async (userEmail, userRole) => {
 
 };
 
-export const writeCurrentUserToDatabaseNewUser = async (newID,newEmail,newRole) => {
+export const writeCurrentUserToDatabaseNewUser = async (newID,newEmail,newRole, newOrg) => {
     // Create a new date object to get a timestamp
     const dateObj = new Date();
     const timestamp = dateObj.toISOString();
@@ -82,7 +84,7 @@ export const writeCurrentUserToDatabaseNewUser = async (newID,newEmail,newRole) 
     const userRole = newRole;
     console.log(`User Role: ${userRole}`)
 
-    const userOrg = "Minnesota State University, Mankato"
+    const userOrg = newOrg
     console.log(`User Org: ${userOrg}`)
 
    // Extract username from email
@@ -152,6 +154,21 @@ export const getUserRoleFromDatabase = async (props) => {
     }
 };
 
+export const getUserOrganizationFromDatabase = async (props) => {
+    const userPath = `Users/${userId}`;
+
+    // Get the user snapshot from the database
+    const userSnapshot = await get(ref(db, userPath));
+
+    if (userSnapshot.exists()) {
+        // User exists, return the user's role
+        return userSnapshot.val().userOrg;
+    } else {
+        // User does not exist in the database
+        return null;
+    }
+};
+
 export const getUserNameFromDatabase = async (props) => {
     const userPath = `Users/${userId}`;
 
@@ -184,6 +201,23 @@ export const getUserNameFromDatabase = async (props) => {
 };
 
 export const changeUserRoleInDatabase = async (userId, newRole) => {
+
+    // const user = auth.currentUser;
+
+    // if (user) {
+    //     // User is signed in.
+    //     const CurrentUserId = user.uid;
+    //     console.log('User ID:', userId);
+    // } else {
+    //     // No user signed in.
+    //     console.log('No user signed in.');
+    // }
+
+    // if(userId == CurrentUserId){
+    //     console.log("This is working I promise")
+    // }
+    
+
     console.log(userId)
     const userPath = `Users/${userId}`;
 
@@ -191,7 +225,7 @@ export const changeUserRoleInDatabase = async (userId, newRole) => {
     const userSnapshot = await get(ref(db, userPath));
 
     if (userSnapshot.val() === null) {
-        // User does not exist, handle accordingly
+        // User does not exist
         alert("User does not exist in the database.");
         return false;
     }

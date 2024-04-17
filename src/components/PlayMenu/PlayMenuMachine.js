@@ -12,6 +12,9 @@ export const PlayMenuMachine = createMachine({
         PLAY: "play", // move to play
         SETTINGS: "settings", // move to settings
         ADMIN: "admin", // move to admin
+        NEWGAME: "newGame", //move to new game
+        LEVELSELECT: "levelSelect", //move to edit level
+        GAMESELECT: "gameSelect",
       },
     },
     settings: {
@@ -39,13 +42,35 @@ export const PlayMenuMachine = createMachine({
       on: {
         MAIN: "main", // move to home
         EDIT: "edit", // move to edit
+        NEWGAME: "newGame", // Go back to Game editor after previewing a level
+        LEVELSELECT: "levelSelect", // Go back to Game editor after previewing a level from the +Add Conjecture part
       },
     },
     edit: {
       on: {
         NEWLEVEL: "newLevel", // move to new level
       },
+    },
+    newGame : {
+      on: {
+        MAIN: "main", // move to home
+        LEVELSELECT: "levelSelect", // move to conjecture selector
+        NEWLEVEL: "newLevel", // preview a level in the game editor
+      },
+    },
+    levelSelect: {
+      on: {
+        NEWLEVEL: "newLevel", // move to new level
+        NEWGAME: "newGame", // move to new game
+        MAIN: "main", // move to home
       }
-    }
-    }
-);
+    },
+    gameSelect: {
+      on: {
+        NEWGAME: "newGame", // move to new game
+        MAIN: "main", // move to home
+        PLAY: "play",
+      }
+    },
+  }
+});

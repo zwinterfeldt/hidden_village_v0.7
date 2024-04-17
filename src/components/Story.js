@@ -16,6 +16,7 @@ import PoseAuthoring from "./PoseAuth/PoseAuthoring.js";
 import ConjectureModule from "./ConjectureModule/ConjectureModule.js";
 import CurricularModule from "./CurricularModule/CurricularModule.js";
 import TestConjectureModule from "./TestConjectureModule/TestConjectureModule.js";
+import ConjectureSelectorModule from "./ConjectureSelector/ConjectureSelectorModule.js";
 import UserManagementModule from "./AdminHomeModule/UserManagementModule.js";
 import NewUserModule from "./AdminHomeModule/NewUserModule.js";
 import ConjecturePoseMatch from "./TestConjectureModule/ConjecturePoseMatch.js";
@@ -129,7 +130,9 @@ const Story = () => {
             width={width}
             height={height}
             startCallback={() => send("TOGGLE")}  // goes to the game
-            conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
+            conjectureCallback={() => {
+              send("CONJECT");}
+              }  // goes to the Conjecture Module
             logoutCallback={() => firebase.auth().signOut()} // logs the user out
             poseCallback={() => send("POSE")} // goes to the Pose tester
             curricularCallback={() => send("CURRICULAR")}
@@ -151,6 +154,17 @@ const Story = () => {
             rowDimensions={rowDimensions}
             conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
             mainCallback={() => send("HOME")} // goes to Home
+            conjectureSelectCallback={() => send("CONJECTURESELECT")}
+          />
+        )}
+        {state.value === "conjectureSelect" && (
+          <ConjectureSelectorModule
+            width={width}
+            height={height}
+            columnDimensions={columnDimensions}
+            rowDimensions={rowDimensions}
+            conjectureCallback={() => send("CONJECT")}  // goes to the Conjecture Module
+            curricularCallback={() => send("CURRICULAR")}
           />
         )}
         {state.value === "pose" && (

@@ -1,5 +1,6 @@
 import { createMachine, assign } from "xstate";
 
+
 export const StoryMachine = createMachine({
   initial: "ready",
   context: {
@@ -48,6 +49,13 @@ export const StoryMachine = createMachine({
       on: {
         CONJECT: "conjecture", // move to conjecture editor
         HOME: "ready", // move to home
+        CONJECTURESELECT: "conjectureSelect",
+      }
+    },
+    conjectureSelect: {
+      on: {
+        CONJECT: "conjecture", // move to conjecture editor
+        CURRICULAR: "curricular",
       }
     },
     userManagementSettings:{

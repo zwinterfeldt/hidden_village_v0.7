@@ -1,189 +1,228 @@
+// AKA Game module
+import React from 'react';
 import Background from "../Background";
-import { green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
+import { blue, white, red, green, indigo, hotPink, purple } from "../../utils/colors";
 import Button from "../Button";
 import RectButton from "../RectButton";
-import InputBox from "../InputBox";
-import { ConjectureBox, KeywordsBox, NameBox, PINBox } from "../CurricularModule/CurricularModuleBoxes";
-import { EndBox, IntermediateBox, StartBox } from "../PoseAuth/PoseAuthoringBoxes";
-//import { writeToDatabaseConjecture, writeToDatabaseDraft } from "../../firebase/database";
+import { writeToDatabaseCurricular, writeToDatabaseCurricularDraft, getConjectureDataByUUID } from "../../firebase/database";
+import { CurricularContentEditor } from "../CurricularModule/CurricularModuleBoxes";
 import { useMachine } from "@xstate/react";
-import { CurricularEditorMachine } from "../../machines/curricularEditorMachine";
+import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
+import { setAddtoCurricular } from '../ConjectureSelector/ConjectureSelectorModule';
+
+
+// stores a list of conjectures
+export const Curriculum = {
+  CurrentConjectures: [],
+  CurrentUUID: null, // null if using new game. Same UUID from database if editing existing game.
+
+  addConjecture(conjecture) { // add the entire conjecture object to a list
+    this.CurrentConjectures.push(conjecture);
+  },
+
+  getCurrentConjectures() { // return the game (list of conjectures)
+    return this.CurrentConjectures;
+  },
+
+  getConjecturebyIndex(index) { // return a specific conjecture
+    return this.CurrentConjectures[index];
+  },
+
+  getCurrentUUID(){ //return the UUID if editing an existing game
+    if(this.CurrentUUID != null && this.CurrentUUID != ""){
+      return this.CurrentUUID;
+    }
+    else{
+      return null;
+    }
+  },
+
+  setCurrentUUID(newUUID){
+    this.CurrentUUID = newUUID;
+  },
+
+  moveConjectureUpByIndex(index){ // swaps 2 elements so the index rises up the list
+    if(index > 0) {
+      const temp = this.CurrentConjectures[index - 1];
+      this.CurrentConjectures[index - 1] = this.CurrentConjectures[index];
+      this.CurrentConjectures[index] = temp;
+    }
+  },
+
+  moveConjectureDownByIndex(index){ // swaps 2 elements so the index falls down the list
+    if(index < this.CurrentConjectures.length - 1){
+      const temp = this.CurrentConjectures[index + 1];
+      this.CurrentConjectures[index + 1] = this.CurrentConjectures[index];
+      this.CurrentConjectures[index] = temp;
+    }
+  },
+
+  removeConjectureByIndex(index){ // remove a particular conjecture based on its index in the list
+    this.CurrentConjectures.splice(index, 1);;
+  },
+
+  async setCurricularEditor(curricular){ // fill in curriculum data
+    this.CurrentConjectures = []; // remove previous list of levels
+    if(curricular["ConjectureUUIDs"]){ // only fill in existing values
+      for(i=0; i < curricular["ConjectureUUIDs"].length; i++){
+        conjectureList = await getConjectureDataByUUID(curricular["ConjectureUUIDs"][i]); //getConjectureDataByUUID returns a list
+        conjecture = conjectureList[curricular["ConjectureUUIDs"][i]]; // get the specific conjecture from that list
+        this.CurrentConjectures.push(conjecture);
+      }
+    }
+      localStorage.setItem('CurricularName', curricular["CurricularName"]);
+      localStorage.setItem('CurricularAuthor', curricular["CurricularAuthor"]);
+      localStorage.setItem('CurricularKeywords', curricular["CurricularKeywords"]);
+      if(curricular["CurricularPIN"] != "undefined" && curricular["CurricularPIN"] != null){
+        localStorage.setItem('CurricularPIN', curricular["CurricularPIN"]);
+      }
+  },
+
+  clearCurriculum(){
+    this.CurrentConjectures = []; // remove previous list of levels
+    this.setCurrentUUID(null); // remove UUID
+  },
+};
 
 const CurricularModule = (props) => {
-  const { height, width, poseData, columnDimensions, rowDimensions, conjectureCallback, mainCallback } = props;
-  const [state, send] = useMachine(CurricularEditorMachine);
-    return (
-      <>
-        <Background height={height * 1.1} width={width} />
-        <NameBox height={height} width={width} boxState={state.value} />
-        <PINBox height={height} width={width} />
-        <StartBox height={height * 0.5} width={width * 0.5} x={5} y={4.6} boxState={null} similarityScores={null} inCE={true} />
-        <IntermediateBox height={height * 0.5} width={width * 0.5} x={9} y={1.906} boxState={null} similarityScores={null} inCE={true} />
-        <EndBox height={height * 0.5} width={width * 0.5} x={13} y={1.2035} boxState={null} similarityScores={null} inCE={true} />
-        {/* Button to Pose Editor */}
-        <Button
-          height={height * 0.12}
-          width={width * 0.0950}
-          x={width * 0.85}
-          y={height * 0.15}
-          color={blue}
-          fontSize={18}
-          fontColor={white}
-          text={"Conjecture Editor"}
-          fontWeight={800}
-          callback={conjectureCallback}
-        />
-          <Button
-            height={height * 0.14}
-            width={width * 0.04}
-            x={width * 0.10}
-            y={height * 0.61}
-            color={blue}
-            fontSize={40}
-            fontColor={white}
-            text={"A"}
-            fontWeight={800}
-            callback={null}
-        />
-          <Button
-            height={height * 0.14}
-            width={width * 0.04}
-            x={width * 0.10}
-            y={height * 0.70}
-            color={blue}
-            fontSize={40}
-            fontColor={white}
-            text={"B"}
-            fontWeight={800}
-            callback={null}
-        />
-          <Button
-            height={height * 0.14}
-            width={width * 0.04}
-            x={width * 0.10}
-            y={height * 0.79}
-            color={blue}
-            fontSize={40}
-            fontColor={white}
-            text={"C"}
-            fontWeight={800}
-            callback={null}
-        />
-          <Button
-            height={height * 0.14}
-            width={width * 0.04}
-            x={width * 0.10}
-            y={height * 0.88}
-            color={blue}
-            fontSize={40}
-            fontColor={white}
-            text={"D"}
-            fontWeight={800}
-            callback={null}
-        />
-        {/* Save Button */}
-        {/* <RectButton
-          height={height * 0.13}
-          width={width * 0.26}
-          x={width * 0.58}
-          y={height * 0.93}
-          color={neonGreen}
-          fontSize={width * 0.014}
-          fontColor={white}
-          text={"SAVE DRAFT"}
-          fontWeight={800}
-          callback={ () => writeToDatabaseDraft() } // Implement Save feature
-        /> */}
-        {/* Cancel Button */}
-        <RectButton
-          height={height * 0.13}
-          width={width * 0.26}
-          x={width * 0.71}
-          y={height * 0.93}
-          color={red}
-          fontSize={width * 0.015}
-          fontColor={white}
-          text={"CANCEL"}
-          fontWeight={800}
-          callback={mainCallback} // Exit Back To Home
-        />
-        {/* Publish Button */}
-        {/* <RectButton
-          height={height * 0.13}
-          width={width * 0.26}
-          x={width * 0.45}
-          y={height * 0.93}
-          color={blue}
-          fontSize={width * 0.015}
-          fontColor={white}
-          text={"PUBLISH"}
-          fontWeight={800}
-          callback={ () => writeToDatabaseConjecture() } // publish to database
-        /> */}
-        {/* Back Button */}
-        <Button
-          height={height * 0.32}
-          width={width * 0.07}
-          x={width * 0.06}
-          y={height * 0.15}
-          color={red}
-          fontSize={width * 0.015}
-          fontColor={white}
-          text={"BACK"}
-          fontWeight={800}
-          callback={mainCallback} // Exit Back To Home
-        />
-        {/* 'X' Buttons for the mutliple choice boxes */}
-        <InputBox
-          height={height * 0.14}
-          width={width * 0.07}
-          x={width * 0.735}
-          y={height * 0.58}
-          color={white}
-          fontSize={width * 0.024}  //  Dynamically modify font size based on screen width
-          fontColor={black}
-          text={localStorage.getItem("OptionA Checkmark")}
-          fontWeight={600}
-          callback={() => send("OPTIONA")}
-        />
-        <InputBox
-          height={height * 0.14}
-          width={width * 0.07}
-          x={width * 0.735}
-          y={height * 0.67}
-          color={white}
-          fontSize={width * 0.024}  //  Dynamically modify font size based on screen width
-          fontColor={black}
-          text={localStorage.getItem("OptionB Checkmark")}
-          fontWeight={600}
-          callback={() => send("OPTIONB")}
-        />
-        <InputBox
-          height={height * 0.14}
-          width={width * 0.07}
-          x={width * 0.735}
-          y={height * 0.76}
-          color={white}
-          fontSize={width * 0.024}  //  Dynamically modify font size based on screen width
-          fontColor={black}
-          text={localStorage.getItem("OptionC Checkmark")}
-          fontWeight={600}
-          callback={() => send("OPTIONC")}
-        />
-        <InputBox
-          height={height * 0.14}
-          width={width * 0.07}
-          x={width * 0.735}
-          y={height * 0.85}
-          color={white}
-          fontSize={width * 0.024}  //  Dynamically modify font size based on screen width
-          fontColor={black}
-          text={localStorage.getItem("OptionD Checkmark")}
-          fontWeight={600}
-          callback={() => send("OPTIOND")}
-        />
-      </>
-    );
+  const { height, width, mainCallback, conjectureSelectCallback, conjectureCallback } = props;
+
+  // Reset Function
+  const resetCurricularValues = () => {
+    localStorage.removeItem('CurricularName');
+    localStorage.removeItem('CurricularAuthor');
+    localStorage.removeItem('CurricularKeywords');
+    localStorage.removeItem('CurricularPIN');
+    Curriculum.clearCurriculum();
   };
-  
-  export default CurricularModule;
+
+  // Reset Function
+  const enhancedMainCallback = () => {
+    resetCurricularValues(); // Reset values before going back
+    mainCallback(); //use the callbackfunction
+  };
+
+  // Publish function that includes reset
+  async function publishAndReset(currentUUID)  {
+      promise = await writeToDatabaseCurricular(currentUUID);
+      if (promise != undefined){ // promise is undefined if the game cannot be published
+        resetCurricularValues();
+        Curriculum.CurrentConjectures = [];
+      }
+  };
+
+  return (
+    <>
+      <Background height={height * 1.1} width={width} />
+
+      <RectButton
+        height={height *0.13}
+        width={width * 0.5}
+        x={width * 0.1}
+        y={height * 0.23}
+        color={red}
+        fontSize={width * 0.013}
+        fontColor={white}
+        text={"SET GAME OPTIONS"}
+        fontWeight={800}
+        callback={null}
+      />
+
+      <RectButton
+        height={height *0.13}
+        width={width * 0.5}
+        x={width * 0.4}
+        y={height * 0.23}
+        color={hotPink}
+        fontSize={width * 0.013}
+        fontColor={white}
+        text={"STORY EDITOR"}
+        fontWeight={800}
+        callback={null}
+      />
+
+      <RectButton
+        height={height *0.13}
+        width={width * 0.5}
+        x={width * 0.7}
+        y={height * 0.23}
+        color={purple}
+        fontSize={width * 0.013}
+        fontColor={white}
+        text={"INSTRUCTIONS"}
+        fontWeight={800}p
+        callback={()=> (alert("Click +Add Conjecture to add a level to the game.\nPress Save Draft to save an incomplete game.\nPress Publish to save a completed game."))}
+      />
+
+      <RectButton
+        height={height * 0.13}
+        width={width * 0.26}
+        x={width * 0.85}
+        y={height * 0.93}
+        color={red}
+        fontSize={width * 0.013}
+        fontColor={white}
+        text={"BACK"}
+        fontWeight={800}
+        callback={enhancedMainCallback} //this will reset everything once you leave the page
+      />
+
+      <RectButton
+        height={height * 0.13}
+        width={width * 0.26}
+        x={width * 0.85}
+        y={height * 0.93}
+        color={red}
+        fontSize={width * 0.013}
+        fontColor={white}
+        text={"BACK"}
+        fontWeight={800}
+        callback={enhancedMainCallback} //this will reset everything once you leave the page
+      />
+
+      <RectButton
+        height={height * 0.13}
+        width={width * 0.45}
+        x={width *0.3}
+        y={height *0.93}
+        color={indigo}
+        fontSize={width * 0.014}
+        fontColor={white}
+        text={"+Add Conjecture"}
+        fontWeight={800}
+        callback={() => {
+          setAddtoCurricular(true); //conjecture selector is being accessed from the curricular module
+          conjectureSelectCallback();
+        }}
+      />
+
+      <RectButton
+        height={height * 0.13}
+        width={width * 0.26}
+        x={width * 0.55}
+        y={height * 0.93}
+        color={green}
+        fontSize={width * 0.013}
+        fontColor={white}
+        text={"SAVE DRAFT"}
+        fontWeight={800}
+        callback={() => {writeToDatabaseCurricularDraft(Curriculum.getCurrentUUID()) }}
+      />
+      <RectButton
+        height={height * 0.13}
+        width={width * 0.26}
+        x={width * 0.73}
+        y={height * 0.93}
+        color={blue}
+        fontSize={width * 0.015}
+        fontColor={white}
+        text={"PUBLISH"}
+        fontWeight={800}
+        callback={() => {publishAndReset(Curriculum.getCurrentUUID())}} // Enhanced to include reset
+      />
+      <CurricularContentEditor height={height} width={width} conjectureCallback={() => conjectureCallback()}/>
+    </>
+  );
+};
+
+export default CurricularModule;

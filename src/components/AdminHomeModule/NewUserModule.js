@@ -133,7 +133,7 @@ const NewUserModule = (props) => {
             color={green}
             fontSize={width * 0.015}
             fontColor={white}
-            text={"Test New User"}
+            text={"Add New User"}
             fontWeight={800}
             callback={() => {
                 writeNewUserToDatabase(email, userRole);

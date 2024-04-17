@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const serviceAccount = require('Path To Firebase SDK'); // Change this to your Firebase SDK path
+const serviceAccount = require('/Users/natebursch/Desktop/hvov0-5-firebase-adminsdk-ilvsw-dd09467f0d.json'); // Change this to your Firebase SDK path
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const fs = require('fs');
 const path = require('path');
@@ -7,7 +7,7 @@ const path = require('path');
 // Initialize Firebase Admin SDK with service account configuration and databaseURL
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'URL' // Set this to your Firebase project URL
+    databaseURL: 'https://hvov0-5-default-rtdb.firebaseio.com' // Set this to your Firebase project URL
 });
 
 // Reference to your Firebase Realtime Database

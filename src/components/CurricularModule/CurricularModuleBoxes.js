@@ -1,8 +1,55 @@
-import { Graphics, Text } from "@inlet/react-pixi";
+import React, { useState, useEffect } from 'react';
+import { Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
-import { yellow, blue, green, white, red, black } from "../../utils/colors";
+import { white, black } from "../../utils/colors";
 import InputBox from "../InputBox";
+import RectButton from "../RectButton";
+import { blue, red, green, orange } from "../../utils/colors";
+import {Curriculum} from "./CurricularModule"
+import { setEditLevel, setGoBackFromLevelEdit, currentConjecture } from '../ConjectureModule/ConjectureModule';
 
+// Handler functions
+function handleCurricularName(key) {
+  const existingValue = localStorage.getItem(key);
+  const newValue = prompt("Please name your Game:", existingValue);
+  if (newValue !== null) {
+    localStorage.setItem(key, newValue);
+  }
+}
+
+function handleCurricularKeywords(key) {
+  const existingValue = localStorage.getItem(key);
+  const newValue = prompt("Keywords make your search easier:", existingValue);
+  if (newValue !== null) {
+    localStorage.setItem(key, newValue);
+  }
+}
+
+function handleCurricularAuthor(key) {
+  const existingValue = localStorage.getItem(key);
+  const newValue = prompt("Please add an Author name:", existingValue);
+  if (newValue !== null) {
+    localStorage.setItem(key, newValue);
+  }
+}
+
+function handlePinInput(key) {
+  let pin = prompt("Enter a code PIN", localStorage.getItem(key));
+  if (pin && !isNaN(pin)) {
+    localStorage.setItem(key, pin);
+  } else if (pin !== null) {
+    alert("PIN must be numeric.");
+  }
+}
+
+function handleLevelClicked(conjecture, conjectureCallback){
+    setEditLevel(false);
+    setGoBackFromLevelEdit("NEWGAME");
+    currentConjecture.setConjecture(conjecture);
+    conjectureCallback(conjecture);
+}
+
+// Function to create input boxes for curricular content
 function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, callback) {
   const text = localStorage.getItem(textKey)?.slice(0, charLimit) +
                (localStorage.getItem(textKey)?.length > charLimit ? '...' : '');
@@ -14,6 +61,7 @@ function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yM
 
   return (
     <InputBox
+      key={textKey}
       height={height}
       width={width}
       x={x}
@@ -29,87 +77,10 @@ function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yM
   );
 }
 
-export const NameBox = (props) => {
-  const { height, width } = props;
-
-  function handleBoxInput(key) {
-    const existingValue = localStorage.getItem(key);
-    const newValue = prompt(`Please Enter Your Value for ${key}`, existingValue);
-
-    if (newValue !== null) {
-      localStorage.setItem(key, newValue);
-    }
-  }
-
-  // Makes sure that on startup, the checkmark boxes start empty
-  function intializeCheckmarkBoxes() {
-    startup = true
-    if (startup === true) {
-      startup = false
-      localStorage.setItem("OptionA Checkmark", " ")
-      localStorage.setItem("OptionB Checkmark", " ")
-      localStorage.setItem("OptionC Checkmark", " ")
-      localStorage.setItem("OptionD Checkmark", " ")
-    }
-  }
-  
-    return (
-      <>
-        {/* charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, callback*/}
-        {createInputBox(220, 0.19, 1.595, 0.134, 0.57, 'Multiple Choice 1', width, height, handleBoxInput)}
-        {createInputBox(220, 0.19, 1.595, 0.134, 0.66, 'Multiple Choice 2', width, height, handleBoxInput)}
-        {createInputBox(220, 0.19, 1.595, 0.134, 0.75, 'Multiple Choice 3', width, height, handleBoxInput)}
-        {createInputBox(220, 0.19, 1.595, 0.134, 0.84, 'Multiple Choice 4', width, height, handleBoxInput)}
-        {createInputBox(60, 0.10, 0.54, 0.143+ 0.062, 0.136-.050, 'Conjecture Name', width, height, handleBoxInput)}
-        {createInputBox(220, 0.10, .3, 0.46+ 0.062, 0.136-.050, 'Author Name', width, height, handleBoxInput)}
-        {createInputBox(220, 0.30, 1.595, 0.134, 0.175-.050, 'Conjecture Description', width, height, handleBoxInput)}
-        {createInputBox(220, 0.10, 1.268, 0.203 + 0.062, 0.295-.050, 'Conjecture Keywords', width, height, handleBoxInput)}
-
-        {/* text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight */}
-        {createTextElement("KEYWORDS:", 0.137+ 0.062, 0.315-0.05, 0.018, width, height)}
-        {createTextElement("PIN:", 0.605+ 0.062, 0.155-0.05, 0.018, width, height)}
-        {createTextElement("AUTHOR:", 0.41+ 0.062, 0.155-0.05, 0.018, width, height)}
-        {createTextElement("CURRENT M-CLIP:", 0.45, 0.305, 0.018, width, height)}
-        {createTextElement("MULTIPLE CHOICE", 0.45, 0.55, 0.018, width, height)}
-        {createTextElement("Curricular Content Editor", 0.45, 0.05, 0.025, width, height)}
-        {createTextElement("NAME:", 0.108+ 0.062, 0.155-0.05, 0.018, width, height)}
-
-        {intializeCheckmarkBoxes()}
-        {/* If the user clicks multiple choice button A, then only A is marked and the rest are empty */}
-        {props.boxState === "optiona" && (
-          localStorage.setItem("OptionA Checkmark", " X"),
-          localStorage.setItem("OptionB Checkmark", " "),
-          localStorage.setItem("OptionC Checkmark", " "),
-          localStorage.setItem("OptionD Checkmark", " ")
-        )}
-        {/* If the user clicks multiple choice button B, then only B is marked and the rest are empty */}
-        {props.boxState === "optionb" && (
-          localStorage.setItem("OptionA Checkmark", " "),
-          localStorage.setItem("OptionB Checkmark", " X"),
-          localStorage.setItem("OptionC Checkmark", " "),
-          localStorage.setItem("OptionD Checkmark", " ")
-        )}
-        {/* If the user clicks multiple choice button C, then only C is marked and the rest are empty */}
-        {props.boxState === "optionc" && (
-          localStorage.setItem("OptionA Checkmark", " "),
-          localStorage.setItem("OptionB Checkmark", " "),
-          localStorage.setItem("OptionC Checkmark", " X"),
-          localStorage.setItem("OptionD Checkmark", " ")
-        )}
-        {/* If the user clicks multiple choice button D, then only D is marked and the rest are empty */}
-        {props.boxState === "optiond" && (
-          localStorage.setItem("OptionA Checkmark", " "),
-          localStorage.setItem("OptionB Checkmark", " "),
-          localStorage.setItem("OptionC Checkmark", " "),
-          localStorage.setItem("OptionD Checkmark", " X")
-        )}
-      </>
-    );
-  }
-
 function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight) {
   return (
     <Text
+      key={text}
       text={text}
       x={totalWidth * xMultiplier}
       y={totalHeight * yMultiplier}
@@ -118,64 +89,193 @@ function createTextElement(text, xMultiplier, yMultiplier, fontSizeMultiplier, t
           align: "left",
           fontFamily: "Arial",
           fontSize: totalWidth * fontSizeMultiplier,
-          fontWeight: 800,
+          fontWeight: "bold",
           fill: [blue],
-          letterSpacing: 0,
         })
       }
-      anchor={0.5}
     />
   );
 }
 
-export const YourComponent = (props) => {
+
+function drawCurriculum(xMultiplier, yMultiplier, fontSizeMultiplier, totalWidth, totalHeight, conjectureCallback) {
+  const conjectureList = Curriculum.getCurrentConjectures();
+  //use to get a fixed number of conjectures per page and to navigate between the pages
+  const conjecturesPerPage = 6;
+  const totalPages = Math.ceil(conjectureList.length / conjecturesPerPage);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  if (conjectureList.length == 0){
+    return;
+  }
+
+  const nextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const prevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // use to determine the subset of conjectures to display based on the current page
+  const startIndex = currentPage * conjecturesPerPage;
+  const currentConjectures = conjectureList.slice(startIndex, startIndex + conjecturesPerPage);
+
+
   return (
     <>
-      {createTextElement("KEYWORDS:", 0.1275, 0.322, 0.018, width, height)}
-      {createTextElement("PIN:", 0.797, 0.13, 0.018, width, height)}
-      {createTextElement("AUTHOR:", 0.6, 0.13, 0.018, width, height)}
-      {createTextElement("CURRENT M-CLIP:", 0.50, 0.37, 0.018, width, height)}
-      {createTextElement("MULTIPLE CHOICE", 0.50, 0.52, 0.018, width, height)}
-      {createTextElement("Conjecture Editor", 0.5, 0.05, 0.025, width, height)}
-      {createTextElement("NAME:", 0.102, 0.13, 0.018, width, height)}
-      {/* ... other Text elements ... */}
+      {currentConjectures.map((conjecture, index) => (
+        <RectButton
+          key={conjecture["Text Boxes"]["Author Name"] + index}
+          height={totalHeight /2 * yMultiplier}
+          width={totalWidth * xMultiplier *4}
+          x={totalWidth * xMultiplier * 0.25}
+          y={totalHeight * (index+1) * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
+          color={white}
+          fontSize={totalWidth * fontSizeMultiplier/1.3}
+          fontColor={blue}
+          text={conjecture["Text Boxes"]["Author Name"]}
+          fontWeight="bold"
+          callback = {() => handleLevelClicked(conjecture, conjectureCallback)}
+        />
+      ))}
+      {currentConjectures.map((conjecture, index) => (
+        <RectButton
+          key={conjecture["Text Boxes"]["Conjecture Name"] + index}
+          height={totalHeight /2 * yMultiplier}
+          width={totalWidth * xMultiplier *7}
+          x={totalWidth * xMultiplier * 1.9}
+          y={totalHeight * (index+1) * 4 * fontSizeMultiplier + totalHeight * yMultiplier}
+          color={white}
+          fontSize={totalWidth * fontSizeMultiplier/1.3}
+          fontColor={blue}
+          text={conjecture["Text Boxes"]["Conjecture Name"]}
+          fontWeight="bold"
+          callback = {() => handleLevelClicked(conjecture, conjectureCallback)}
+        />
+      ))}
+      {currentConjectures.map((conjecture, index) => (
+        <RectButton
+          key={conjecture["Text Boxes"]["Conjecture Keywords"] + index}
+          height={totalHeight /2 * yMultiplier}
+          width={totalWidth * xMultiplier * 7}
+          x={totalWidth * xMultiplier * 4.75} 
+          y={totalHeight * (index+1) * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
+          color={white}
+          fontSize={totalWidth * fontSizeMultiplier/1.3}
+          fontColor={blue}
+          text={conjecture["Text Boxes"]["Conjecture Keywords"]}
+          fontWeight="bold"
+          callback = {() => handleLevelClicked(conjecture, conjectureCallback)}
+        />
+      ))}
+      {currentConjectures.map((conjecture, index) => (
+        <RectButton
+          key={index + " up"}
+          height={totalHeight /2 * yMultiplier}
+          width={totalWidth * xMultiplier * 0.8}
+          x={totalWidth * xMultiplier * 7.6} 
+          y={totalHeight * yMultiplier + totalHeight * (index+1) * 4 * fontSizeMultiplier} 
+          color={green}
+          fontSize={totalWidth * fontSizeMultiplier}
+          fontColor={white}
+          text={"^"}
+          fontWeight="bold"
+          callback = {() => {
+            Curriculum.moveConjectureUpByIndex(index);
+          }}
+        />
+      ))}
+      {currentConjectures.map((conjecture, index) => (
+        <RectButton
+          key={index+ " down"}
+          height={totalHeight /2 * yMultiplier}
+          width={totalWidth * xMultiplier * 0.8}
+          x={totalWidth * xMultiplier * 8} 
+          y={totalHeight * (index+1) * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
+          color={red}
+          fontSize={totalWidth * fontSizeMultiplier/1.3}
+          fontColor={white}
+          text={"v"}
+          fontWeight="bold"
+          callback = {() => {
+            Curriculum.moveConjectureDownByIndex(index);
+          }}
+        />
+      ))}
+      {currentConjectures.map((conjecture, index) => (
+        <RectButton
+          key={index + " remove"}
+          height={totalHeight /2 * yMultiplier}
+          width={totalWidth * xMultiplier *1.6}
+          x={totalWidth * xMultiplier * 8.4} 
+          y={totalHeight * (index+1) * 4 * fontSizeMultiplier + totalHeight * yMultiplier} 
+          color={orange}
+          fontSize={totalWidth * fontSizeMultiplier/1.3}
+          fontColor={white}
+          text={"Remove"}
+          fontWeight="bold"
+          callback = {() => {
+            Curriculum.removeConjectureByIndex(index);
+          }}
+        />
+      ))}
+      
+      <RectButton
+        height={totalHeight * 0.13}
+        width={totalWidth * 0.26}
+        x={totalWidth * 0.02}
+        y={totalHeight * 0.93}
+        color={blue}
+        fontSize={totalWidth * 0.014}
+        fontColor={white}
+        text={"PREVIOUS"}
+        fontWeight={800}
+        callback={prevPage}
+      />
+
+      <RectButton
+        height={totalHeight * 0.13}
+        width={totalWidth * 0.26}
+        x={totalWidth * 0.14}
+        y={totalHeight * 0.93}
+        color={blue}
+        fontSize={totalWidth * 0.014}
+        fontColor={white}
+        text={"NEXT"}
+        fontWeight={800}
+        callback={nextPage}
+      />
     </>
   );
 }
 
-
-export const PINBox = (props) => {
-  const { height, width } = props;
-
-  // Creates a popup in which the user can set a pin for their conjecture
-  function pinBoxInput() {
-    const existingPin = localStorage.getItem('PIN');
-    let pin = prompt("Please Enter Your PIN", existingPin);
-
-    if (!isNaN(pin) && pin !== null) {
-      localStorage.setItem('PIN', pin);
-    } else if (pin !== null) {
-      alert('PIN must be numeric');
-    }
-  }
+export const CurricularContentEditor = (props) => {
+  const { height, width, conjectureCallback } = props;
 
   return (
-      <>
-      {/* PINBox InputBox */}
-      <InputBox
-        height={height * 0.10}
-        width={width * 0.2}
-        x={width * 0.6910}
-        y={height * 0.085}
-        color={white}
-        fontSize={width * 0.015}
-        fontColor={black}
-        text={
-          localStorage.getItem('PIN') || ' ' // Show existing PIN if available
-        }
-        fontWeight={300}
-        callback={pinBoxInput} // Create Popup
-      />
-      </>
-  )
-}
+    <>
+      {createInputBox(60, 0.10, 0.55, 0.123+ 0.10, 0.136-.030, 'CurricularName', width, height, handleCurricularName)}
+      {createInputBox(180, 0.10, 1, 0.210, 0.17, 'CurricularKeywords', width, height, handleCurricularKeywords)}
+      {createInputBox(220, 0.10, .8, 0.46+ 0.09, 0.136-.030, 'CurricularAuthor', width, height, handleCurricularAuthor)}
+      {createInputBox(4, 0.10, .3, 0.730, 0.175, 'CurricularPIN', width, height, handlePinInput)}
+
+      {/* For the text input boxes */}
+      {createTextElement("Game Editor", 0.43, 0.030, 0.025, width, height)}
+      {createTextElement("Keywords:", 0.110, 0.17, 0.018, width, height)}
+      {createTextElement("Pin:", 0.690, 0.17, 0.018, width, height)}
+      {createTextElement("Author:", 0.480, 0.105, 0.018, width, height)}
+      {createTextElement("Game Name:",0.110, 0.100, 0.018, width, height)}
+
+      {/* To label the conjectures */}
+      {createTextElement("Author", 0.0825, 0.32, 0.015, width, height)}
+      {createTextElement("Conjecture Name", 0.275, 0.32, 0.015, width, height)}
+      {createTextElement("Keywords", 0.58, 0.32, 0.015, width, height)}
+
+      {drawCurriculum(0.1, 0.3, 0.018, width, height, conjectureCallback)}
+    </>
+  );
+};

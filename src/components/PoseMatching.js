@@ -60,14 +60,6 @@ const PoseMatching = (props) => {
       setPoseMatchData(matchData);
       setPoses(poses);
     }
-    if (poses.length === 0 && !firstPose) {
-      setText("Great!");
-      const timer = setTimeout(() => {
-        console.log("moved to next step");
-        onComplete();
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
   }, [poses, transition]);
 
   // if there is a pose to match, calculate the similarity between the player's current
@@ -133,14 +125,28 @@ const PoseMatching = (props) => {
         true
       );
       if (similarityScore) {
+        console.log(poses.length)
+        console.log(firstPose)
         // move to next state and reset pose similarity
-        setTransition(true);
-        setPoseSimilarity([{ similarityScore: 0 }]);
-        setText("Great!");
-        setTimeout(() => {
-          setText("Match the pose on the left!");
-          setTransition(false);
+        if (poses.length === 0 && !firstPose) {
+          setTransition(true);
+          setPoseSimilarity([{ similarityScore: 0 }]);
+          setText("Great!");
+          setTimeout(() => {
+            console.log("moved to next step");
+            setTransition(false);
+            onComplete();
+          }, 1000);
+        }
+        else {
+          setTransition(true);
+          setPoseSimilarity([{ similarityScore: 0 }]);
+          setText("Great!");
+          setTimeout(() => {
+            setText("Match the pose on the left!");
+            setTransition(false);
         }, 1000);
+        }
       }
     }
   }, [poseSimilarity]);

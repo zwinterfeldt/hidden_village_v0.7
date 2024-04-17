@@ -6,7 +6,7 @@ import { green, neonGreen, black, blue, white, pink, orange, red, transparent, t
 import Button from "../Button";
 import RectButton from "../RectButton";
 import { getConjectureDataByUUID } from "../../firebase/database";
-import {getUsersByOrganizationFromDatabase, writeCurrentUserToDatabaseNewUser} from "../../firebase/userDatabase";
+import {getUsersByOrganizationFromDatabase, getUserOrganizationFromDatabase} from "../../firebase/userDatabase";
 
 import UserList from './UserList';
 
@@ -23,16 +23,18 @@ const UserManagementModule = (props) => {
 
     const refreshUserList = async () => {
         try {
-        const organization = "Minnesota State University, Mankato";
-        setLoading(true);
 
-        const users = await getUsersByOrganizationFromDatabase(organization);
-        console.log('User:', JSON.stringify(users[0], null, 2));
-        setUsersList(users);
+            const organization = await getUserOrganizationFromDatabase();
+            console.log(organization)
+            setLoading(true);
+
+            const users = await getUsersByOrganizationFromDatabase(organization);
+            console.log('User:', JSON.stringify(users[0], null, 2));
+            setUsersList(users);
         } catch (error) {
-        console.error('Error fetching users:', error);
+            console.error('Error fetching users:', error);
         } finally {
-        setLoading(false);
+            setLoading(false);
         }
     }
 
@@ -86,7 +88,7 @@ const UserManagementModule = (props) => {
         {usersList.length !== 0 && (
             <UserList 
                 users={usersList} 
-                height={height * 0.13}
+                height={height * 0.12}
                 width={width * 0.26}
                 x={width * 0.4}
                 y={height * 0.93}

@@ -4,16 +4,33 @@ import { TextStyle } from "@pixi/text";
 import RectButton from '../RectButton';  // Replace with your actual UI library
 import UserObject from './UserObject'
 import { green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
+import { useState } from 'react';
 
-// import { ScrollView } from '@react-native';
 
 const UserList = (props) => {
     const { width, height, x, y, users, refreshUserListCallback } = props;
 
-    const displayedUsers = users.slice(0, users.length);
+        const [startIndex, setStartIndex] = useState(0);
 
-
-
+        const usersPerPage = 15;
+    
+        // Function to handle incrementing the start index
+        const handleNextPage = () => {
+            if (startIndex + usersPerPage < users.length) {
+                setStartIndex(startIndex + usersPerPage);
+            }
+        };
+    
+        // Function to handle decrementing the start index
+        const handlePrevPage = () => {
+            if (startIndex - usersPerPage >= 0) {
+                setStartIndex(startIndex - usersPerPage);
+            }
+        };
+    
+        // Slice the users based on the current start index and number of users per page
+        const displayedUsers = users.slice(startIndex, startIndex + usersPerPage);
+    
 
     return (
         <>
@@ -23,11 +40,11 @@ const UserList = (props) => {
                 draw={(g) => {
                     // rectangle
                     g.beginFill(0xe0c755);
-                    g.drawRect(0, 0, width * 2, ( users.length * 25) + 10);
+                    g.drawRect(0, 0, width * 2, ( (displayedUsers.length + 1) * 25) + 10);
                     g.endFill();
                     // border
                     g.lineStyle(4, 0x000000, 1);
-                    g.drawRect(0, 0, width * 2, ( users.length * 25) + 10);
+                    g.drawRect(0, 0, width * 2, ( (displayedUsers.length + 1) * 25) + 10);
                 }}
             />
             <Text
@@ -68,7 +85,7 @@ const UserList = (props) => {
                     width={width * .3}
                     height={height}
                     x={x}
-                    y={y * 0.2 + (index + 1) * 25}  // Adjust the y position based on index
+                    y={y * 0.2 + (index + 1.2) * 25}  // Adjust the y position based on index
                     index={index}
                     username={user.userName}
                     role={user.userRole}
@@ -76,20 +93,36 @@ const UserList = (props) => {
                     refreshUserListCallback = {refreshUserListCallback}
                 />              
             ))}
-            {/* </ScrollView> */}
-            {/* Display User Names */}
-            {/* {users.map((user, index) => (
-                <RectButton
-                    height={height * 0.13}
-                    width={width * 0.26}
-                    x={width * 0.58}
-                    y={height * 0.93}
-                    color={neonGreen}
-                    fontSize={width * 0.014}
-                    fontColor={white}
-                    text={user.userRole}
-                />              
-            ))} */}
+            {/* // < Button // */}
+            <RectButton
+                height={height * .7}
+                width={width * .4}
+                x={width * 1.9}
+                y={height*6}
+                color={green}
+                fontSize={width * .07}
+                fontColor={white}
+                text={"<"}
+                fontWeight={800}
+                callback={() => {
+                    handlePrevPage();
+                }}
+            />
+            {/* // > Button // */}
+            <RectButton
+                height={height * 0.7}
+                width={width * .4}
+                x={width * 2.1}
+                y={height*6}
+                color={green}
+                fontSize={width * .07}
+                fontColor={white}
+                text={">"}
+                fontWeight={800}
+                callback={() => {
+                    handleNextPage();
+                }}
+            />
         </>
     );
 };
