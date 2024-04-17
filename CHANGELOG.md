@@ -1,6 +1,81 @@
 # Hidden Village Project Changelog - Version 0.5
 Classes: [ADDED, FIXED, CHANGED, UPDATED, REMOVED]
 
+## Final Update 4/20/2024 - v0.5.8 (Final Update)
+## All Changes And Additions
+
+### Home Screen
+- Created a Playing As UI Element
+- Created a log out button at the start
+- Redirects to the new Main Menu
+
+### Main Menu
+- Added Buttons to route to:
+  - Play Game
+  - Settings (not implemented)
+
+### Admin Module
+- **New, Edit Game**
+- **New, Edit Level**
+- Created a screen to see all users in players' organizations
+- Allows admins to edit users' roles
+- Has a button to redirect to New User Module
+
+### New User Module
+- Ability to add a new user to the organization
+- Has a script to add an admin to a new organization
+- `CreateAdmin.mjs`
+
+### New Level
+- Updated from the old Conjecture Editor
+- Added a button to direct to a Test Pose
+- Tests the selected pose to ensure it works
+- New Level saves to the database with new values
+- Cancel, deletes cached values
+- Publish saves to the database and deletes cached values
+
+### Edit Level
+- Added this new Module
+- Can select Levels that are drafted or published into saved database, to edit with Pin
+- Can search using a search bar
+- Can see what levels are published
+- Can see all levels in the database, using next and previous buttons
+- Clicking a level redirects to the Level Editor (New Level) Module
+
+### New Game
+- New Module to allow users to add levels to a game.
+- Set Game Options, Story Editor are placeholders
+- Instructions provide a brief description
+- Add Game Name, Author, and Keywords to a new game
+- Save or Publish
+- Add Conjecture, takes you to a Level Select Screen
+
+### Level Select Screen
+- Allows users to search for needed levels
+- Select by clicking the green plus
+- Cycle through all levels with previous and next
+- Click level to preview
+- Ok - placeholder
+- Back goes to the Game Editor
+- When a level is added you can:
+  - Preview the level
+  - Move level position
+  - Remove Level
+
+### Edit Game Module
+- Brings up all of the Game modules
+- Click one of the games to edit
+- Needs to Pin to edit
+
+### Play Game Button
+- Brings up the Game Select Screen
+- Once a Game is selected, goes into the play game sequence
+- Play Game Sequence will play all the Levels in the Game
+- Presents a back button when complete
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+
 ## Update: 2/24/2024 - v0.5.7.1 (Week #7)
 ### Database Comparison
 - [ADDED](https://github.com/T0rt13/hidden_village_v0.5/pull/11): Pose matching module that takes in a conjecture UUID and uses the database function to initiate pose matching
