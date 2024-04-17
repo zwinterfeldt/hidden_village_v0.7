@@ -59,64 +59,16 @@ const Home = (props) => {
         callback={startCallback}
       />
       <Button
-        height={height * 0.205}
-        width={width * 0.105}
-        x={width * 0.15}
-        y={height * 0.75}
-        color={green}
-        fontSize={18}
-        fontColor={white}
-        text={"Pose Test"}
-        fontWeight={800}
-        callback={poseCallback}
-      />
-      {/* <Button
-        height={height * 0.205}
-        width={width * 0.105}
-        x={width * 0.85}
-        y={height * 0.75}
-        color={red}
-        fontSize={18}
-        fontColor={green}
-        text={"Pose Matching"}
-        fontWeight={800}
-        callback={poseCallback}
-      /> */}
-      <Button
-        height={height * 0.205}
-        width={width * 0.105}
-        x={width * 0.85}
-        y={height * 0.105}
-        color={red}
-        fontSize={18}
-        fontColor={white}
-        text={"Conjecture Editor"}
-        fontWeight={800}
-        callback={conjectureCallback}
-      />
-      <Button
-        height={height * 0.2}
-        width={width * 0.1}
-        x={width * 0.15}
+        height={height * 0.01}
+        width={width * 0.05}
+        x={width * 0.05}
         y={height * 0.1}
         color={red}
-        fontSize={24}
+        fontSize={14}
         fontColor={white}
         text={"Log Out"}
         fontWeight={800}
         callback={logoutCallback}
-      />
-      <Button
-        height={height * 0.2}
-        width={width * 0.1}
-        x={width *0.85}
-        y={height *0.9}
-        color={red}
-        fontSize={24}
-        fontColor={white}
-        text={"Curricular Content Editor"}
-        fontWeight={800}
-        callback={curricularCallback}
       />
       <Text
         text={"Hidden Village"}
@@ -150,20 +102,6 @@ const Home = (props) => {
         }
         anchor={0.5}
       />
-      {/*Admin Button */}
-      <Button
-        height={height * 0.2}
-        width={width * 0.1}
-        x={width *0.3}
-        y={height *0.09}
-        color={0x471aa1}
-        fontSize={40}
-        fontColor={yellow}
-        text={"ADMIN"}
-        fontWeight={800}
-        callback={UserManagementCallback}
-      />
-
     </>
   );
 };
