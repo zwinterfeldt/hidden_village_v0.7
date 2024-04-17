@@ -201,8 +201,8 @@ const ConjectureModule = (props) => {
           text={"CANCEL"}
           fontWeight={800}
           callback={() => {
-            localStorage.clear();
-            mainCallback(); // Exit Back the main menu
+            resetConjectureValues();
+            backCallback(); // Exit Back the main menu
           }}
         />
         {/* Publish button */}
