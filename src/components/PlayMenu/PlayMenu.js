@@ -60,7 +60,6 @@ const PlayMenu = (props) => {
         //get user role
         let role = userRole;
         let list = [];
-        //console.log(role);
         if(role === "Admin" || role === "Developer"){ // if user is not a student
             list.push(
                 {text: "Admin", callback: () => send("ADMIN"), color: babyBlue},

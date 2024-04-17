@@ -49,7 +49,6 @@ const LevelPlay = (props) => {
 }, []);
 
 useEffect(() => {
-  console.log("conjectureData:", conjectureData);
   if (conjectureData != null) {
     const startPose = JSON.parse(conjectureData[UUID]['Start Pose']['poseData']);
     const intermediatePose = JSON.parse(conjectureData[UUID]['Intermediate Pose']['poseData']);

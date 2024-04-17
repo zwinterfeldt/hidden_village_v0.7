@@ -113,7 +113,6 @@ const PoseMatching = (props) => {
       if (currentPose.tolerance != null && !isNaN(currentPose.tolerance)) {
         similarityThreshold = currentPose.tolerance;
       }
-      console.log(similarityThreshold)
       const similarityScore = poseSimilarity.reduce(
         (previousValue, currentValue) => {
           // all segments need to be over the threshold -- will only return true if
@@ -125,8 +124,6 @@ const PoseMatching = (props) => {
         true
       );
       if (similarityScore) {
-        console.log(poses.length)
-        console.log(firstPose)
         // move to next state and reset pose similarity
         if (poses.length === 0 && !firstPose) {
           setTransition(true);

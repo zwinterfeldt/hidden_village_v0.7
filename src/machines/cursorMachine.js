@@ -5,7 +5,6 @@ const CursorMachine = createMachine(
     initial: "idle",
     context: {
       callback: () => {
-        console.log("called");
       },
       hovering: false,
       canTransition: true,

@@ -51,7 +51,6 @@ const chapterMachine = createMachine(
               target: "loadingNextChapter",
               actions: assign({
                 currentText: (context) => {
-                  console.log(context);
                   return {
                     text: "Hit the next button to load the next chapter...",
                     speaker: "player",

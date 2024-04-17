@@ -137,8 +137,7 @@ const Story = () => {
             poseCallback={() => send("POSE")} // goes to the Pose tester
             curricularCallback={() => send("CURRICULAR")}
             testCallback={() => {
-              send("TEST");
-              console.log("LOL");}
+              send("TEST");}
               } // goes to the Test Module
             UserManagementCallback={() => {
               send("userManagementSettings");
