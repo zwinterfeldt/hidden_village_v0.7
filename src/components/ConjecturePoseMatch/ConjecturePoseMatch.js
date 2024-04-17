@@ -8,7 +8,6 @@ import { getConjectureDataByUUID } from "../../firebase/database";
 import { useCallback } from "react";
 import React, { useState, useEffect } from 'react';
 import { Container } from "postcss";
-import { PoseBox } from "./PoseDisplayBox";
 import { set } from "firebase/database";
 import  PoseMatching  from "../PoseMatching";
 

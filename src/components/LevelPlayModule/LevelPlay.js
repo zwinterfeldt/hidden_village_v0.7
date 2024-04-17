@@ -3,7 +3,7 @@ import { useCallback, useState, useEffect } from "react";
 import ExperimentalTask from "../ExperimentalTask";
 import {red, white} from "../../utils/colors"
 import LevelPlayMachine from "./LevelPlayMachine";
-import ConjecturePoseContainter from "../TestConjectureModule/ConjecturePoseContainer"
+import ConjecturePoseContainter from "../ConjecturePoseMatch/ConjecturePoseContainer"
 import Button from "../Button";
 import CursorMode from "../CursorMode";
 import { getConjectureDataByUUID } from "../../firebase/database";

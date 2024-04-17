@@ -20,7 +20,7 @@ import Settings from "../Settings";
 import UserManagementModule from "../AdminHomeModule/UserManagementModule";
 import NewUserModule from "../AdminHomeModule/NewUserModule";
 import PoseAuthoring from "../PoseAuth/PoseAuthoring";
-import ConjecturePoseContainer from "../TestConjectureModule/ConjecturePoseContainer";
+import ConjecturePoseContainer from "../ConjecturePoseMatch/ConjecturePoseContainer.js";
 import PlayGame from "../PlayGameModule/PlayGame";
 import PoseTest from "../ConjectureModule/PoseTest";
 
