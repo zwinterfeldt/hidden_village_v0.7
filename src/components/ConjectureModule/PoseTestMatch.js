@@ -36,9 +36,9 @@ const PoseTestMatch = (props) => {
     intermediateTolerance = parseInt(localStorage.getItem("Intermediate Tolerance"))
     endTolerance = parseInt(localStorage.getItem("End Tolerance"))
     if (startPose != null && endPose != null && intermediatePose != null) {
-      startPose["tolerance"] = startTolerance
-      intermediatePose["tolerance"] = intermediateTolerance;
-      endPose["tolerance"] = endTolerance;
+      startPose["tolerance"] = startTolerance || 45
+      intermediatePose["tolerance"] = intermediateTolerance || 45;
+      endPose["tolerance"] = endTolerance || 45;
       setPoses([startPose, intermediatePose, endPose])
     }
 }, []);
@@ -46,8 +46,11 @@ const PoseTestMatch = (props) => {
 return(
   <> 
       {poses != null && (
+        
+        <Graphics draw={drawModalBackground} >
+        
         <>
-          <PoseMatching
+        <PoseMatching
           poseData={poseData}
           posesToMatch={[
             poses,
@@ -57,7 +60,6 @@ return(
           columnDimensions={columnDimensions}
           onComplete={conjectureCallback}
         />
-        <Graphics draw={drawModalBackground} />
         {/* Back Button */}
         <RectButton
           height={height * 0.13}
@@ -72,6 +74,8 @@ return(
           callback={conjectureCallback}
         />
         </>
+        </Graphics>
+        
       )}
       {poses == null &&
       <>

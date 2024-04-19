@@ -12,7 +12,7 @@ const UserList = (props) => {
 
         const [startIndex, setStartIndex] = useState(0);
 
-        const usersPerPage = Math.floor((height/113) * 15);
+        const usersPerPage = Math.floor(height/8)
     
         // Function to handle incrementing the start index
         const handleNextPage = () => {
