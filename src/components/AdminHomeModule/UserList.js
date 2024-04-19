@@ -12,7 +12,7 @@ const UserList = (props) => {
 
         const [startIndex, setStartIndex] = useState(0);
 
-        const usersPerPage = 15;
+        const usersPerPage = Math.floor((height/113) * 15);
     
         // Function to handle incrementing the start index
         const handleNextPage = () => {
@@ -36,7 +36,7 @@ const UserList = (props) => {
         <>
             <Graphics
                 x = {width* .3}
-                y = {height * 2.25}
+                y = {height * 2.4}
                 draw={(g) => {
                     // rectangle
                     g.beginFill(0xe0c755);
@@ -50,7 +50,7 @@ const UserList = (props) => {
             <Text
                 x={width * .3}
                 y={height * 1.5}
-                text={`User`}
+                text={'User'}
                 style={
                     new TextStyle({
                         align: 'center',
