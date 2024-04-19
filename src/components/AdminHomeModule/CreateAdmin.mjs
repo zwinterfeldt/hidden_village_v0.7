@@ -7,12 +7,13 @@ const UserPermissions = {
     Student: 'Student',
 };
 
-const adminUserEmail = "RSD2Admin@email.com"
+const adminUserEmail = "admin@email.com"
 const adminUserRole = UserPermissions.Admin
-const adminUserOrganization = "Rania's School of Design Two"
+const adminUserOrganization = "admin orgnization"
 const adminUserPassword = "admin1"
 
 writeNewUserToDatabase(adminUserEmail,adminUserRole,adminUserPassword,adminUserOrganization);
 
+// Terminal Commands
 // node src/components/AdminHomeModule/CreateAdmin.mjs
 // ctrl c <- once complete

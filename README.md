@@ -1,10 +1,10 @@
 # Hidden Village Project
 
 ## Getting started
-First, we need to clone the repository (`git clone git@github.com:UW-MAGIC-lab/hidden_village.git`). We recommend you clone using SSH. If you don't have SSH configured to work with github, you can follow [these instructions](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+First, we need to clone the repository (`git clone git@github.com:T0rt13/hidden_village_v0.5.git`). We recommend you clone using SSH. If you don't have SSH configured to work with github, you can follow [these instructions](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
 
 ## WINDOWS INSTRUCTIONS
-Please install [WSL](https://docs.microsoft.com/en-us/windows/wsl/install) before proceeding.
+Please install [WSL](https://docs.microsoft.com/en-us/windows/wsl/install) before proceeding. (Sometimes this is not needed)
 
 ## Create a development build of the app
 
@@ -13,12 +13,10 @@ There are few prerequisite pieces of software you will need to get started:
  - [installation of node](https://github.com/nvm-sh/nvm#usage)
 
 
- 
 
 After you installed yarn, you `change directory` or `cd` into the hidden_village directory (if you're not already there) and run:
 
-<span style="color:red">NOTE: The Yarn package handler version within the repo has become depreciated and doesn't work. You'll be able to run files and commands using node's npm command. Previous yarn download link:
-https://yarnpkg.com/getting-started/install </span>
+You'll be able to run files and commands using node's npm command.
 ```
 npm install
 ```
@@ -34,6 +32,9 @@ To serve the app locally, run `npm run dev`, you can then visit any of these URL
  This is the default local app URL. Recording of conjecture data will not happen, and the framerate (FPS) will be set to the default (which is normally 30)
  
  ```
+
+These currently do not work with the new format of playing the game.
+
  [http://localhost:1234/?recording=true](#http://localhost:1234/?recording=true)
  ```
  This will record conjecture data to firebase at the default FPS (usually 30)
