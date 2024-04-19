@@ -5,7 +5,6 @@ import RectButton from "../RectButton";
 import { getCurricularList } from "../../firebase/database";
 import { CurricularSelectorBoxes } from "./CurricularSelectorModuleBoxes";
 import { useMachine } from "@xstate/react";
-import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
 import {Curriculum} from "../CurricularModule/CurricularModule";
 
 export let playGame = false; // keep track of whether the curricular content list is being used to edit or play games.
@@ -52,8 +51,6 @@ const CurricularSelectModule = (props) => {
   const { height, width, mainCallback, curricularCallback} = props;
   const [curricularList, setCurricularList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-
-  const [state, send] = useMachine(CurricularContentEditorMachine);
 
   useEffect(() => {
     const fetchData = async () => {

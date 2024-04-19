@@ -5,7 +5,6 @@ import RectButton from "../RectButton";
 import { getConjectureList, searchConjecturesByWord } from "../../firebase/database";
 import { ConjectureSelectorBoxes } from "./ConjectureSelectorModuleBoxes";
 import { useMachine } from "@xstate/react";
-import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
 import {Curriculum} from "../CurricularModule/CurricularModule";
 import {currentConjecture, setEditLevel, setGoBackFromLevelEdit} from "../ConjectureModule/ConjectureModule"
 
@@ -56,8 +55,6 @@ const ConjectureSelectModule = (props) => {
   const { height, width, conjectureCallback, backCallback, curricularCallback} = props;
   const [conjectureList, setConjectureList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-
-  const [state, send] = useMachine(CurricularContentEditorMachine);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -7,7 +7,6 @@ import RectButton from "../RectButton";
 import { writeToDatabaseCurricular, writeToDatabaseCurricularDraft, getConjectureDataByUUID } from "../../firebase/database";
 import { CurricularContentEditor } from "../CurricularModule/CurricularModuleBoxes";
 import { useMachine } from "@xstate/react";
-import { CurricularContentEditorMachine } from "../../machines/curricularEditorMachine";
 import { setAddtoCurricular } from '../ConjectureSelector/ConjectureSelectorModule';
 
 
