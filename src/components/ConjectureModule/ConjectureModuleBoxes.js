@@ -38,6 +38,12 @@ function createInputBox(charLimit, scaleFactor, widthMultiplier, xMultiplier, yM
 export const NameBox = (props) => {
   const { height, width } = props;
 
+  let titleText = "";
+  if(getEditLevel())
+    titleText = "Level Editor";
+  else
+    titleText = "Level Preview";
+
   function handleBoxInput(key) {
     const existingValue = localStorage.getItem(key);
     const newValue = prompt(`Please Enter Your Value for ${key}`, existingValue);
@@ -46,7 +52,7 @@ export const NameBox = (props) => {
       localStorage.setItem(key, newValue);
     }
   }
-  
+
   return (
     <>
       {/* charLimit, scaleFactor, widthMultiplier, xMultiplier, yMultiplier, textKey, totalWidth, totalHeight, callback*/}
@@ -65,7 +71,7 @@ export const NameBox = (props) => {
       {createTextElement("AUTHOR:", 0.41+ 0.062, 0.155-0.05, 0.018, width, height)}
       {createTextElement("CURRENT M-CLIP:", 0.45, 0.305, 0.018, width, height)}
       {createTextElement("MULTIPLE CHOICE", 0.45, 0.533, 0.018, width, height)}
-      {createTextElement("Level Editor", 0.45, 0.05, 0.025, width, height)}
+      {createTextElement(titleText, 0.45, 0.05, 0.025, width, height)}
       {createTextElement("NAME:", 0.108+ 0.062, 0.155-0.05, 0.018, width, height)}
 
     </>
@@ -98,13 +104,15 @@ export const PINBox = (props) => {
 
   // Creates a popup in which the user can set a pin for their conjecture
   function pinBoxInput() {
-    const existingPin = localStorage.getItem('PIN');
-    let pin = prompt("Please Enter Your PIN", existingPin);
+    if(getEditLevel()){
+      const existingPin = localStorage.getItem('PIN');
+      let pin = prompt("Please Enter Your PIN", existingPin);
 
-    if (!isNaN(pin) && pin !== null) {
-      localStorage.setItem('PIN', pin);
-    } else if (pin !== null) {
-      alert('PIN must be numeric');
+      if (!isNaN(pin) && pin !== null) {
+        localStorage.setItem('PIN', pin);
+      } else if (pin !== null) {
+        alert('PIN must be numeric');
+      }
     }
   }
 
