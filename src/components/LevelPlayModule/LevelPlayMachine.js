@@ -1,4 +1,4 @@
-import { createMachine, assign } from "xstate";
+import { createMachine } from "xstate";
 
 const LevelPlayMachine =
   createMachine(

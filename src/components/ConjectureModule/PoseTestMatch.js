@@ -16,6 +16,7 @@ const PoseTestMatch = (props) => {
   const { height, width, columnDimensions, conjectureCallback, poseData} = props;
   const [poses, setPoses] = useState(null);
 
+  // Background for Pose Matching
   const drawModalBackground = useCallback((g) => {
     g.beginFill(darkGray, 0.9);
     g.drawRect(0, 0, window.innerWidth, window.innerHeight);
@@ -28,13 +29,17 @@ const PoseTestMatch = (props) => {
     g.endFill();
   }, []);
 
+  // Get pose data from local storage
   useEffect(() => {
     startPose = JSON.parse(localStorage.getItem("start.json"))
     intermediatePose = JSON.parse(localStorage.getItem("intermediate.json"))
     endPose = JSON.parse(localStorage.getItem("end.json"))
+    // Get Tolerance from local storage
     startTolerance = parseInt(localStorage.getItem("Start Tolerance"))
     intermediateTolerance = parseInt(localStorage.getItem("Intermediate Tolerance"))
     endTolerance = parseInt(localStorage.getItem("End Tolerance"))
+    // If the poses are all there, set tolerance and poses variable
+    // TODO: Make this more efficient
     if (startPose != null && endPose != null && intermediatePose != null) {
       startPose["tolerance"] = startTolerance || 45
       intermediatePose["tolerance"] = intermediateTolerance || 45;
@@ -45,10 +50,9 @@ const PoseTestMatch = (props) => {
 
 return(
   <> 
+  {/* If poses is not null then start pose matching to test */}
       {poses != null && (
-        
         <Graphics draw={drawModalBackground} >
-        
         <>
         <PoseMatching
           poseData={poseData}
@@ -77,6 +81,7 @@ return(
         </Graphics>
         
       )}
+      {/* Otherwise, prompt to go back and complete all poses */}
       {poses == null &&
       <>
       <Text

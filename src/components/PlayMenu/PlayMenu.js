@@ -32,6 +32,7 @@ const PlayMenu = (props) => {
     const [state, send] = useMachine(PlayMenuMachine);
     const [userRole, setUserRole] = useState(null);
     
+    // On render get user role
     const fetchData = async () => {
         try {
           const role = await getUserRoleFromDatabase();
@@ -58,6 +59,7 @@ const PlayMenu = (props) => {
     
     useEffect(() => {
         //get user role
+        // TODO: Make this more efficient and dynamic, changing based on what the org wants
         let role = userRole;
         let list = [];
         if(role === "Admin" || role === "Developer"){ // if user is not a student

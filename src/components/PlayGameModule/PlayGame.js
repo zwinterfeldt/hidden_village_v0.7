@@ -9,8 +9,10 @@ import { Curriculum } from "../CurricularModule/CurricularModule";
 
 const PlayGame = (props) => {
     const { columnDimensions, rowDimensions, poseData, height, width, backCallback } = props;
+    // Get UUID List and start index at zero
     const uuidsList = Curriculum.getCurrentConjectures();
     const [uuidIDX, setuuidIDX] = useState(0);
+    // Send the UUID list to the playGameMachine for context
     const [state, send] = useMachine(PlayGameMachine, {
         context: {
             uuids: uuidsList
@@ -26,6 +28,7 @@ const PlayGame = (props) => {
         <>
         {state.value === "idle" && uuidsList[0] != undefined && (
         <LevelPlay
+        // Key is important here, as it differentiates what each level is
             key={uuidsList[uuidIDX]['UUID']}
             width={width}
             height={height}
