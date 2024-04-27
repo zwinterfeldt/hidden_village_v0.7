@@ -168,19 +168,6 @@ const CurricularModule = (props) => {
 
       <RectButton
         height={height * 0.13}
-        width={width * 0.26}
-        x={width * 0.85}
-        y={height * 0.93}
-        color={red}
-        fontSize={width * 0.013}
-        fontColor={white}
-        text={"BACK"}
-        fontWeight={800}
-        callback={enhancedMainCallback} //this will reset everything once you leave the page
-      />
-
-      <RectButton
-        height={height * 0.13}
         width={width * 0.45}
         x={width *0.3}
         y={height *0.93}

@@ -5,7 +5,12 @@ import RectButton from '../RectButton';  // Replace with your actual UI library
 import UserObject from './UserObject'
 import { green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
 import { useState } from 'react';
+import { getUserNameFromDatabase } from "../../firebase/userDatabase"
 
+async function getName(){ // Get the username of the current user
+    const name = await getUserNameFromDatabase();
+    return name;
+}
 
 const UserList = (props) => {
     const { width, height, x, y, users, refreshUserListCallback } = props;
@@ -30,21 +35,20 @@ const UserList = (props) => {
     
         // Slice the users based on the current start index and number of users per page
         const displayedUsers = users.slice(startIndex, startIndex + usersPerPage);
-    
 
     return (
         <>
             <Graphics
                 x = {width* .3}
-                y = {height * 2.4}
+                y = {height * 2.2}
                 draw={(g) => {
                     // rectangle
                     g.beginFill(0xe0c755);
-                    g.drawRect(0, 0, width * 2, ( (displayedUsers.length + 1) * 25) + 10);
+                    g.drawRect(0, 0, width * 2, ( (displayedUsers.length) * usersPerPage * 2));
                     g.endFill();
                     // border
                     g.lineStyle(4, 0x000000, 1);
-                    g.drawRect(0, 0, width * 2, ( (displayedUsers.length + 1) * 25) + 10);
+                    g.drawRect(0, 0, width * 2, ( (displayedUsers.length) * usersPerPage * 2));
                 }}
             />
             <Text

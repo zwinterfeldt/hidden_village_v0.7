@@ -3,13 +3,21 @@ import { Container, Sprite, Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
 import RectButton from '../RectButton'; 
 import UserManagementModule from '../../components/AdminHomeModule/UserManagementModule'
-import { changeUserRoleInDatabase } from '../../firebase/userDatabase'
+import { changeUserRoleInDatabase, getUserNameFromDatabase } from '../../firebase/userDatabase'
 
 import { green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
 
+let currentUsername = null; // set currentUsername to null so that while the promise in getUserName() is pending, getUserName() returns null
+async function getUserName(){
+    const promise = getUserNameFromDatabase();
+
+    // Wait for the promise to resolve and get the username
+    currentUsername = await promise;
+    return currentUsername; // return the username of the current user
+}
+
 const UserObject = (props) => {
     const { width, height, x, y, username, index, role, userId, refreshUserListCallback } = props;
-
 
     const UserPermissions = {
         Admin: 'Admin',
@@ -62,7 +70,7 @@ const UserObject = (props) => {
             <Text
                 x={width * 1.1}
                 y={y + 50}  // Move this line inside the style object
-                text={username}
+                text={username} //username
                 style={
                     new TextStyle({
                         fontFamily: 'Futura',
@@ -83,7 +91,13 @@ const UserObject = (props) => {
                     fontColor={white}
                     text={role}
                     fontWeight={800}
-                    callback={handleChangeRole}
+                    callback={() => {
+                        getUserName();
+                        if(username != currentUsername && currentUsername != null){ // users cannot change their own role
+                            console.log("username:", username, " currentUsername:", currentUsername);
+                            handleChangeRole();
+                        }
+                    }}
                 />
         
         </>

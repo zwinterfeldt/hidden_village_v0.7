@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Background from "../Background"
 import { set } from "js-cookie";
 import Button from "../Button";
-import { blue, yellow, purple, babyBlue, powderBlue, cornflowerBlue, steelBlue, dodgerBlue, royalBlue, navyBlue, midnightBlue } from "../../utils/colors";
+import { red, yellow, purple, babyBlue, powderBlue, cornflowerBlue, steelBlue, dodgerBlue, royalBlue, white } from "../../utils/colors";
 import RectButton from "../RectButton";
 import { send } from "xstate";
 import { sendTo } from "xstate/lib/actions";
@@ -13,6 +13,7 @@ import CurricularModule from "../CurricularModule/CurricularModule.js";
 import ConjectureSelectorModule, { getAddToCurricular, setAddtoCurricular } from "../ConjectureSelector/ConjectureSelectorModule.js";
 import CurricularSelectorModule, { getPlayGame, setPlayGame } from "../CurricularSelector/CurricularSelector.js";
 import { getUserRoleFromDatabase } from "../../firebase/userDatabase";
+import firebase from "firebase/compat";
 import { Text } from "@inlet/react-pixi";
 import { Curriculum } from "../CurricularModule/CurricularModule.js";
 import { TextStyle } from "@pixi/text";
@@ -25,7 +26,7 @@ import PlayGame from "../PlayGameModule/PlayGame";
 import PoseTest from "../ConjectureModule/PoseTest";
 
 const PlayMenu = (props) => {
-    const {width, height, poseData, columnDimensions, rowDimensions, role} = props;
+    const {width, height, poseData, columnDimensions, rowDimensions, role, logoutCallback} = props;
     const [buttonList, setButtonList] = useState([]);
     const [distanceBetweenButtons, setDistanceBetweenButtons] = useState();
     const [startingX, setStartingX] = useState();
@@ -90,7 +91,21 @@ const PlayMenu = (props) => {
     return (
         <>
         {state.value === "main" && (
-          <Background height={height} width= {width}/>
+          <>
+            <Background height={height} width= {width}/>
+            <Button
+            height={height * 0.01}
+            width={width * 0.05}
+            x={width * 0.05}
+            y={height * 0.1}
+            color={red}
+            fontSize={14}
+            fontColor={white}
+            text={"Log Out"}
+            fontWeight={800}
+            callback={() => firebase.auth().signOut()}
+          />
+        </>
         )}
         {state.value === "main" && buttonList.map((button, idx) => (
             <Button
