@@ -69,13 +69,13 @@ const UserObject = (props) => {
         <>
             <Text
                 x={width * 1.1}
-                y={y + 50}  // Move this line inside the style object
+                y={y * 1.1 + height *0.25}  // Move this line inside the style object
                 text={username} //username
                 style={
                     new TextStyle({
                         fontFamily: 'Futura',
-                        fontSize: 16,
-                        fontWeight: 400,
+                        fontSize: height/5.5,
+                        fontWeight: height*4,
                     })
                 }
             />
@@ -85,7 +85,7 @@ const UserObject = (props) => {
                     height={55}
                     width={200}
                     x={width * 5}
-                    y={y + 50}
+                    y={y * 1.1 + height *0.25}
                     color={roleColors[role]}
                     fontSize={15}
                     fontColor={white}

@@ -17,7 +17,7 @@ const UserList = (props) => {
 
         const [startIndex, setStartIndex] = useState(0);
 
-        const usersPerPage = height /8;
+        const usersPerPage = Math.floor(height / 9);
     
         // Function to handle incrementing the start index
         const handleNextPage = () => {
@@ -44,11 +44,11 @@ const UserList = (props) => {
                 draw={(g) => {
                     // rectangle
                     g.beginFill(0xe0c755);
-                    g.drawRect(0, 0, width * 2, ( (displayedUsers.length) * usersPerPage * 2));
+                    g.drawRect(width *0.01, height*0.01, width * 2, (  usersPerPage * 30));
                     g.endFill();
                     // border
                     g.lineStyle(4, 0x000000, 1);
-                    g.drawRect(0, 0, width * 2, ( (displayedUsers.length) * usersPerPage * 2));
+                    g.drawRect(width*0.01, height*0.01, width * 2, ( usersPerPage * 30));
                 }}
             />
             <Text
