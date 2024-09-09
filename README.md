@@ -1,7 +1,7 @@
 # Hidden Village Project
 
 ## Getting started
-First, we need to clone the repository (`git clone git@github.com:T0rt13/hidden_village_v0.5.git`). We recommend you clone using SSH. If you don't have SSH configured to work with github, you can follow [these instructions](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+First, we need to clone the repository (`git clone git@github.com:PidgeonBrained/hidden_village_v0.6.git`). We recommend you clone using SSH. If you don't have SSH configured to work with github, you can follow [these instructions](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
 
 ## WINDOWS INSTRUCTIONS
 Please install [WSL](https://docs.microsoft.com/en-us/windows/wsl/install) before proceeding. (Sometimes this is not needed)
@@ -23,7 +23,7 @@ npm install
 
 Npm package handler will install all the dependencies for the project in order to proceed. Downloaded packages from package.json will appear under node_modules. packageLock.json is the 'lock' file which ensures that all package/dependency versions are locked to the same version which ensures everyone is on the same version.
 
-You can add new packages/dependencies to thew package.json file so that they do not need to be installed everytime you open up a new repository of THV.
+You can add new packages/dependencies to the package.json file so that they do not need to be installed everytime you open up a new repository of THV.
 
 ### Run a dev server
 To serve the app locally, run `npm run dev`, you can then visit any of these URLs which influence the behavior of the THV app:  
