@@ -90,7 +90,7 @@ const PlayMenu = (props) => {
 
     return (
         <>
-        {state.value === "main" && (
+        {state.value === "main" && ( // if the state is main, show the log out button
           <>
             <Background height={height} width= {width}/>
             <Button
@@ -107,7 +107,26 @@ const PlayMenu = (props) => {
           />
         </>
         )}
-        {state.value === "main" && buttonList.map((button, idx) => (
+        {state.value === "main" && ( // if the state is main, show the data button
+          <>
+            <Background height={height} width= {width}/>
+            <Button
+            height={height * 0.01}
+            width={width * 0.05}
+            x={width - (width * 0.05)}
+            y={height - (height * 0.1)}
+            color={red}
+            fontSize={14}
+            fontColor={white}
+            text={"Data"}
+            fontWeight={800}
+            callback={() =>  firebase.auth().signOut()}
+          />
+          {/* <DataMenu>
+        </DataMenu> */}
+        </>
+        )}
+        {state.value === "main" && buttonList.map((button, idx) => ( //if the state is main, show the buttons
             <Button
                 fontColor={yellow}
                 key = {idx}
@@ -121,7 +140,7 @@ const PlayMenu = (props) => {
                 callback={button.callback}
             />
         ))}
-        {state.value === "test" && (
+        {state.value === "test" && ( //if the state is test, show the test module
           <PoseTest
             width={width}
             height={height}
@@ -131,7 +150,7 @@ const PlayMenu = (props) => {
             conjectureCallback={() => send("NEWLEVEL")}
           />
         )}
-        {state.value === "newLevel" && (
+        {state.value === "newLevel" && ( //if the state is newLevel, show the Conjecture Module
             <ConjectureModule
                 width={width}
                 height={height}
@@ -143,7 +162,7 @@ const PlayMenu = (props) => {
                 testCallback={() => send("TEST")}
             />
         )}
-        {state.value === "edit" && (
+        {state.value === "edit" && ( //if the state is edit, show the Conjecture Module
             <PoseAuthoring
             width={width}
             height={height}
@@ -227,6 +246,7 @@ const PlayMenu = (props) => {
             mainCallback={() => {send("MAIN")}}
           />
         )}
+        
         </>
     );
 };
