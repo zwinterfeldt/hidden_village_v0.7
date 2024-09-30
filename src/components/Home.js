@@ -6,8 +6,10 @@ import { yellow, blue, green, white, red,turquoise } from "../utils/colors";
 
 import React, { useState, useEffect } from 'react';
 import {writeToDatabaseNewUser, getUserRoleFromDatabase, getUserNameFromDatabase} from "../firebase/userDatabase";
+import {writeToDatabaseLogIn, writeToDatabaseStart} from "../firebase/database";
 import UserManagementModule from '../components/AdminHomeModule/UserManagementModule';
 import { onAuthStateChanged } from "firebase/auth";
+
 
 
 const Home = (props) => {
@@ -24,6 +26,7 @@ const Home = (props) => {
   
         if (name !== null && name !== "USER NOT FOUND") {
           setUserName(name);
+          writeToDatabaseLogIn(name);
           console.log('User found. Set user name.');
         } else if (name === "USER NOT FOUND") {
           console.log('User not found. Stop trying but we will continue.');

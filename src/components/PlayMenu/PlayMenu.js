@@ -24,6 +24,7 @@ import PoseAuthoring from "../PoseAuth/PoseAuthoring";
 import ConjecturePoseContainer from "../ConjecturePoseMatch/ConjecturePoseContainer.js";
 import PlayGame from "../PlayGameModule/PlayGame";
 import PoseTest from "../ConjectureModule/PoseTest";
+import { writeToDatabaseGameStart } from "../../firebase/database";
 
 const PlayMenu = (props) => {
     const {width, height, poseData, columnDimensions, rowDimensions, role, logoutCallback} = props;
@@ -68,7 +69,7 @@ const PlayMenu = (props) => {
                 {text: "Admin", callback: () => send("ADMIN"), color: babyBlue},
                 {text: "New Game", callback: () => send("NEWGAME"), color: purple},
                 {text: "Edit Game", callback: () => (setPlayGame(false), send("GAMESELECT")), color: powderBlue},
-                {text: "Play Game", callback: () => (setPlayGame(true), send("GAMESELECT")), color: royalBlue},
+                {text: "Play Game", callback: () => (setPlayGame(true), send("GAMESELECT"),writeToDatabaseGameStart()), color: royalBlue},
                 {text: "New Level", callback: () => (setEditLevel(true), send("NEWLEVEL")), color: dodgerBlue},
                 {text: "Edit Level", callback: () => (setAddtoCurricular(false),send("LEVELSELECT")), color: steelBlue},
                 {text: "Settings", callback: () => console.log("Settings clicked"), color: cornflowerBlue},
