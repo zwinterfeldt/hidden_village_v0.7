@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Background from "../Background";
 import { blue, white, red, neonGreen,green, black } from "../../utils/colors";
 import RectButton from "../RectButton";
-import { getCurricularList } from "../../firebase/database";
+import { getCurricularList, writeToDatabaseGameSelect } from "../../firebase/database";
 import { CurricularSelectorBoxes } from "./CurricularSelectorModuleBoxes";
 import { useMachine } from "@xstate/react";
 import {Curriculum} from "../CurricularModule/CurricularModule";
@@ -36,6 +36,7 @@ export function handlePIN(curricular, message = "Please Enter the PIN."){ // thi
 
 function handleGameClicked(curricular, curricularCallback){
   if(playGame){ // don't need a PIN to play the game
+    writeToDatabaseGameSelect(curricular["UUID"]);
     Curriculum.setCurricularEditor(curricular);
     curricularCallback();
   }
