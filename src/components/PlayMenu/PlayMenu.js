@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import Background from "../Background"
-import { set } from "js-cookie";
 import Button from "../Button";
 import { red, yellow, purple, babyBlue, powderBlue, cornflowerBlue, steelBlue, dodgerBlue, royalBlue, white } from "../../utils/colors";
-import RectButton from "../RectButton";
-import { send } from "xstate";
-import { sendTo } from "xstate/lib/actions";
 import { useMachine } from "@xstate/react";
 import {PlayMenuMachine} from "./PlayMenuMachine";
 import ConjectureModule , {getEditLevel, setEditLevel, getGoBackFromLevelEdit, setGoBackFromLevelEdit} from "../ConjectureModule/ConjectureModule";
@@ -14,14 +10,11 @@ import ConjectureSelectorModule, { getAddToCurricular, setAddtoCurricular } from
 import CurricularSelectorModule, { getPlayGame, setPlayGame } from "../CurricularSelector/CurricularSelector.js";
 import { getUserRoleFromDatabase } from "../../firebase/userDatabase";
 import firebase from "firebase/compat";
-import { Text } from "@inlet/react-pixi";
 import { Curriculum } from "../CurricularModule/CurricularModule.js";
-import { TextStyle } from "@pixi/text";
 import Settings from "../Settings";
 import UserManagementModule from "../AdminHomeModule/UserManagementModule";
 import NewUserModule from "../AdminHomeModule/NewUserModule";
 import PoseAuthoring from "../PoseAuth/PoseAuthoring";
-import ConjecturePoseContainer from "../ConjecturePoseMatch/ConjecturePoseContainer.js";
 import PlayGame from "../PlayGameModule/PlayGame";
 import PoseTest from "../ConjectureModule/PoseTest";
 import { writeToDatabaseGameStart } from "../../firebase/database";
