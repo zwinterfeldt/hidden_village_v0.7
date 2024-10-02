@@ -25,6 +25,7 @@ import ConjecturePoseContainer from "../ConjecturePoseMatch/ConjecturePoseContai
 import PlayGame from "../PlayGameModule/PlayGame";
 import PoseTest from "../ConjectureModule/PoseTest";
 import { writeToDatabaseGameStart } from "../../firebase/database";
+import DataMenu from "./DataMenu.js";
 
 const PlayMenu = (props) => {
     const {width, height, poseData, columnDimensions, rowDimensions, role, logoutCallback} = props;
@@ -33,6 +34,7 @@ const PlayMenu = (props) => {
     const [startingX, setStartingX] = useState();
     const [state, send] = useMachine(PlayMenuMachine);
     const [userRole, setUserRole] = useState(null);
+    const [isDataMenuVisable, setdataMenuVisable] = useState(true);
     
     // On render get user role
     const fetchData = async () => {
@@ -110,7 +112,6 @@ const PlayMenu = (props) => {
         )}
         {state.value === "main" && ( // if the state is main, show the data button
           <>
-            <Background height={height} width= {width}/>
             <Button
             height={height * 0.01}
             width={width * 0.05}
@@ -121,10 +122,18 @@ const PlayMenu = (props) => {
             fontColor={white}
             text={"Data"}
             fontWeight={800}
-            callback={() =>  firebase.auth().signOut()}
+            callback={() =>  {
+              setdataMenuVisable(!isDataMenuVisable);
+              console.log(isDataMenuVisable);
+            }}
           />
-          {/* <DataMenu>
-        </DataMenu> */}
+          <DataMenu 
+          trigger={isDataMenuVisable} 
+          width={width}
+          height={height}
+          x={0}
+          y={0}
+        />
         </>
         )}
         {state.value === "main" && buttonList.map((button, idx) => ( //if the state is main, show the buttons
