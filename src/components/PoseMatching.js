@@ -8,10 +8,13 @@ import Pose from "./Pose/index.js";
 import { useState, useEffect, useMemo } from "react";
 import { Text, Container } from "@inlet/react-pixi";
 import { white } from "../utils/colors";
+import { writeToDatabasePoseMatch, writeToDatabasePoseStart } from "../firebase/database";
 
 const PoseMatching = (props) => {
   const { posesToMatch, columnDimensions, onComplete } = props;
-  const context = posesToMatch.map((x) => {
+  let poseNumber = 1;
+  const poseNumberStr = "Pose";
+  const context = posesToMatch.map((x) => {    
     return { text: "Match the pose on the left!" };
   });
   const [text, setText] = useState("Match the pose on the left!");
@@ -42,6 +45,7 @@ const PoseMatching = (props) => {
   // update the current pose with nothing
   useEffect(() => {
     if (poses.length > 0 && !transition) {
+      writeToDatabasePoseStart(poseNumberStr + poseNumber);
       if (firstPose) {
         setFirstPose(false);
       }
@@ -124,6 +128,9 @@ const PoseMatching = (props) => {
         true
       );
       if (similarityScore) {
+        // write the match to the database
+        writeToDatabasePoseMatch(poseNumberStr + poseNumber);
+        poseNumber += 1;
         // move to next state and reset pose similarity
         if (poses.length === 0 && !firstPose) {
           setTransition(true);

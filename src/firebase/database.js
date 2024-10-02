@@ -675,24 +675,7 @@ export const searchConjecturesByWord = async (searchWord) => {
   }
 };
 
-// Export a function to write in successful logins
-export const writeToDatabaseLogIn = async (name) => {
-  // Create a new date object to get a timestamp
-  const dateObj = new Date();
-  const timestamp = dateObj.toISOString();
-
-  const userSession = `_UserSessions/Student/${userId}/Startup`;
- // Push data to the database using promises
-  const promises = [
-    set(ref(db, `_UserSessions/Student/${userId}/Name`), name),  
-    set(ref(db, `${userSession}/Login`), "Login" ),
-    set(ref(db, `${userSession}/Login/Time`), timestamp),
-  ];
-
-// Return the promise that push() returns
-  return promises
-};
-
+// Write in start events to database by passing event type in
 export const writeToDatabaseSessionStart = async (event, name) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
@@ -702,33 +685,12 @@ export const writeToDatabaseSessionStart = async (event, name) => {
 
   // Check event for startup
   // Push data to the database using promises
-  if (event === 'Login') {
-    const promises = [
-      set(ref(db, `_UserSessions/Student/${userId}`), name),  
-      set(ref(db, `${userSession}/Login`), "Login" ),
-      set(ref(db, `${userSession}/Login/Time`), timestamp),
-    ];
+  const promises = [
+    set(ref(db, `_UserSessions/Student/${userId}/Name`), name),  
+    set(ref(db, `${userSession}/${event}/Time`), timestamp),
+  ];
 
     return promises;
-
-  } else if(event === 'Start') {
-    const promises = [
-      set(ref(db, `${userSession}/Start`), "Start" ),
-      set(ref(db, `${userSession}/Start/Time`), timestamp),
-    ];
-
-    return promises;
-  } else if(event === 'Main Menu') {
-    const promises = [
-      set(ref(db, `${userSession}/MainMenu`), "Main Menu" ),
-      set(ref(db, `${userSession}/MainMenu/Time`), timestamp),
-    ];
-
-    return promises;
-
-  }
-  return alert("Invalid event");
- 
 };
 
 export const writeToDatabaseGameStart = async () => {
@@ -759,8 +721,42 @@ export const writeToDatabaseGameSelect = async (curricular) => {
 
   // Create an object to send to the database
   const promises = [
-    set(ref(db, `${userSession}/GameSelect`), curricular),
+    set(ref(db, `${userSession}/GameSelect/Name`), curricular),
     set(ref(db, `${userSession}/GameSelect/Time`), timestamp),
+  ];
+
+  // Return the promise that push() returns
+  return promises;
+};
+
+export const writeToDatabasePoseStart = async (poseNumber) => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+
+  // Create a reference to the Firebase Realtime Database
+  const userSession = `_UserSessions/Student/${userId}/GameSession/${poseNumber}`;
+
+  // Create an object to send to the database
+  const promises = [
+    set(ref(db, `${userSession}/Start/Time`), timestamp),
+  ];
+
+  // Return the promise that push() returns
+  return promises;
+};
+
+export const writeToDatabasePoseMatch = async (poseNumber) => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+
+  // Create a reference to the Firebase Realtime Database
+  const userSession = `_UserSessions/Student/${userId}/GameSession/${poseNumber}`;
+
+  // Create an object to send to the database
+  const promises = [
+    set(ref(db, `${userSession}/Match/Time`), timestamp),
   ];
 
   // Return the promise that push() returns
