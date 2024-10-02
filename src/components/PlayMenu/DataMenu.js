@@ -3,6 +3,7 @@ import { Container, Text, Graphics } from '@inlet/react-pixi';
 import { powderBlue, skyBlue, cornflowerBlue, green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
 import RectButton from "../RectButton";
 import { useCallback } from "react";
+import { TextStyle } from "@pixi/text";
 
 
 const DataMenu = (props) => {
@@ -14,6 +15,9 @@ const DataMenu = (props) => {
     trigger
   } = props;
 
+  const innerRectWidth = menuWidth * 0.94;
+  const innerRectHeight = menuHeight * 0.8; 
+  const innerRectMargins = (menuWidth - innerRectWidth) / 2;
 
   const draw = useCallback(
     (g) => {
@@ -21,8 +25,15 @@ const DataMenu = (props) => {
       g.beginFill(cornflowerBlue);
       g.drawRect(x, y, menuWidth, menuHeight);
       g.endFill();
+      g.beginFill(white);
+      g.drawRoundedRect(
+        x + innerRectMargins, 
+        y + menuHeight - innerRectMargins - innerRectHeight,
+        innerRectWidth, 
+        innerRectHeight);
+      g.endFill();
     },
-    [menuWidth, menuHeight, x, y]
+    [menuHeight, menuWidth, x, y]
   );
 
   if (trigger) {
@@ -30,24 +41,39 @@ const DataMenu = (props) => {
     <Container>
       <Graphics
         draw={draw}
-      >
-        <RectButton
-          height={menuHeight * 0.13}
-          width={menuWidth * 0.26}
-          x={menuWidth * 0.58}
-          y={menuHeight * 0.93}
-          color={neonGreen}
-          fontSize={menuWidth * 0.014}
-          fontColor={white}
-          text={"TEST"}
-          fontWeight={800}
-          callback={ () =>{
+        interactive={true}
+      />
+      <Text
+        text={"DOWNLOAD DATA"}                                 // The text to display
+        style={                                     // Define the text's style
+          new TextStyle({
+            align: "center",                        // Center the text
+            fontFamily: "Arial",                   // Set the font family
+            fontSize: 20,                     // Set the font size
+            fontWeight: 1000,                 // Set the font weight
+            fill: [white],                      // Set the font color
+          })
+        }
+        x={x + menuWidth / 2} // Centering text in the button
+        y={y + (menuHeight - innerRectMargins - innerRectHeight) / 2}    // Adjusting the y-position for text
+        anchor={0.5}
+      />
+      {/* <RectButton
+        height={menuHeight}
+        width={menuWidth}
+        x={x}
+        y={y}
+        color={neonGreen}
+        fontSize={menuWidth * 0.014}
+        fontColor={white}
+        text={"TEST"}
+        fontWeight={800}
+        callback={ () =>{
 
-          }}/>
-      </Graphics>
+        }}/> */}
     </Container>
-  )
-  } else {
+    )
+} else {
     return <Container/>;
   }
 }

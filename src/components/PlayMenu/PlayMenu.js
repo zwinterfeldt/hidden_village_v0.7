@@ -27,7 +27,7 @@ const PlayMenu = (props) => {
     const [startingX, setStartingX] = useState();
     const [state, send] = useMachine(PlayMenuMachine);
     const [userRole, setUserRole] = useState(null);
-    const [isDataMenuVisable, setdataMenuVisable] = useState(true);
+    const [isDataMenuVisable, setdataMenuVisable] = useState(false);
     
     // On render get user role
     const fetchData = async () => {
@@ -103,7 +103,21 @@ const PlayMenu = (props) => {
           />
         </>
         )}
-        {state.value === "main" && ( // if the state is main, show the data button
+        {state.value === "main" && buttonList.map((button, idx) => ( //if the state is main, show the buttons
+            <Button
+                fontColor={yellow}
+                key = {idx}
+                width = {width * 0.1}
+                color = {button.color}
+                fontSize = {width * 0.02}
+                fontWeight = {600}
+                text={button.text}
+                x={startingX + (idx * distanceBetweenButtons)}
+                y={height * 0.5}
+                callback={button.callback}
+            />
+        ))}
+                {state.value === "main" && ( // if the state is main, show the data button and the data menu
           <>
             <Button
             height={height * 0.01}
@@ -122,27 +136,13 @@ const PlayMenu = (props) => {
           />
           <DataMenu 
           trigger={isDataMenuVisable} 
-          width={width}
-          height={height}
-          x={0}
-          y={0}
+          menuWidth={width * 0.4}
+          menuHeight={height * 0.5}
+          x={width * 0.5 - (width * 0.4 * 0.5)}
+          y={height * 0.5 - (height * 0.5 * 0.5)}
         />
         </>
         )}
-        {state.value === "main" && buttonList.map((button, idx) => ( //if the state is main, show the buttons
-            <Button
-                fontColor={yellow}
-                key = {idx}
-                width = {width * 0.1}
-                color = {button.color}
-                fontSize = {width * 0.02}
-                fontWeight = {600}
-                text={button.text}
-                x={startingX + (idx * distanceBetweenButtons)}
-                y={height * 0.5}
-                callback={button.callback}
-            />
-        ))}
         {state.value === "test" && ( //if the state is test, show the test module
           <PoseTest
             width={width}
