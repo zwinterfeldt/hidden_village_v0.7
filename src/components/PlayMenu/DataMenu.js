@@ -18,6 +18,15 @@ const DataMenu = (props) => {
   const innerRectWidth = menuWidth * 0.94;
   const innerRectHeight = menuHeight * 0.8; 
   const innerRectMargins = (menuWidth - innerRectWidth) / 2;
+  const fieldTextMarginsFromInnerRect = menuHeight * 0.07;
+  const fieldTextMarginsFromEachOther = menuHeight * 0.13;
+  const fieldText = new TextStyle({
+    align: "center",                    
+    fontFamily: "Arial",                 
+    fontSize: menuWidth * 0.028,                    
+    fontWeight: 1000,                 
+    fill: [black],                      
+  })
 
   const draw = useCallback(
     (g) => {
@@ -44,19 +53,47 @@ const DataMenu = (props) => {
         interactive={true}
       />
       <Text
-        text={"DOWNLOAD DATA"}                                 // The text to display
-        style={                                     // Define the text's style
+        text={"DOWNLOAD DATA"}                                
+        style={                                
           new TextStyle({
-            align: "center",                        // Center the text
-            fontFamily: "Arial",                   // Set the font family
-            fontSize: 20,                     // Set the font size
-            fontWeight: 1000,                 // Set the font weight
-            fill: [white],                      // Set the font color
+            align: "center",                      
+            fontFamily: "Arial",                  
+            fontSize: menuWidth * 0.03,                     
+            fontWeight: 1000,                
+            fill: [white],                     
           })
         }
-        x={x + menuWidth / 2} // Centering text in the button
-        y={y + (menuHeight - innerRectMargins - innerRectHeight) / 2}    // Adjusting the y-position for text
+        x={x + menuWidth / 2} // Center in menu
+        y={y + (menuHeight - innerRectMargins - innerRectHeight) / 2} //Center in top margins
         anchor={0.5}
+      />
+      <Text
+        text={"USER ID"}                             
+        style={fieldText}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect} 
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect}
+        anchor={0}
+      />
+      <Text
+        text={"GAME NAME"}                             
+        style={fieldText}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect} 
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther}
+        anchor={0}
+      />
+      <Text
+        text={"START DATE"}                             
+        style={fieldText}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect} 
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 2}
+        anchor={0}
+      />
+      <Text
+        text={"END DATE"}                             
+        style={fieldText}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect} 
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 3}
+        anchor={0}
       />
       {/* <RectButton
         height={menuHeight}
