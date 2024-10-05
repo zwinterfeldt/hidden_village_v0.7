@@ -763,23 +763,31 @@ export const writeToDatabasePoseMatch = async (poseNumber) => {
   return promises;
 };
 
-export const writeToDatabaseNewSession = async (IdValue, name, SessionId ) => {
+export const writeToDatabaseNewSession = async (IdValue, name) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
-
+  // Create a readable date ex. Janurary 1, 2023
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'full'
+  });
+  const readableDate = formatter.format(dateObj);
   // Create a reference to the Firebase Realtime Database
   const userSession = `_GameID/${IdValue}/Date/${readableDate}/${userId}`;
 
-  // Create a readable date ex. 1/12/2024
-  const readableDate = dateObj.toLocaleDateString();
+  
   // ${userId}/GameSession/${poseNumber}`;
 
   // Create an object to send to the database
   const promises = [
     set(ref(db, `${userSession}/Name`), name),
-    set(ref(db, `${userSession}/Session/SessionId`), SessionId),
+    set(ref(db, `${userSession}/Session/SessionId`), "SessionId"),
     set(ref(db, `${userSession}/Session/SessionId/Start`), timestamp),
+    set(ref(db, `${userSession}/Session/SessionId/DaRep`), 'null'),
+    set(ref(db, `${userSession}/Session/SessionId/Hints/HintEnabled`), "null"),
+    set(ref(db, `${userSession}/Session/SessionId/Hints/HintCount`), "null"),
+    set(ref(db, `${userSession}/Session/SessionId/Hints/HintOrder`), "null"),
+    set(ref(db, `${userSession}/Session/SessionId/LatinSquareOrder`), "null"),
   ];
 
   // Return the promise that push() returns
