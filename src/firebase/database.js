@@ -762,3 +762,26 @@ export const writeToDatabasePoseMatch = async (poseNumber) => {
   // Return the promise that push() returns
   return promises;
 };
+
+export const writeToDatabaseNewSession = async (IdValue, name, SessionId ) => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+
+  // Create a reference to the Firebase Realtime Database
+  const userSession = `_GameID/${IdValue}/Date/${readableDate}/${userId}`;
+
+  // Create a readable date ex. 1/12/2024
+  const readableDate = dateObj.toLocaleDateString();
+  // ${userId}/GameSession/${poseNumber}`;
+
+  // Create an object to send to the database
+  const promises = [
+    set(ref(db, `${userSession}/Name`), name),
+    set(ref(db, `${userSession}/Session/SessionId`), SessionId),
+    set(ref(db, `${userSession}/Session/SessionId/Start`), timestamp),
+  ];
+
+  // Return the promise that push() returns
+  return promises;
+};
