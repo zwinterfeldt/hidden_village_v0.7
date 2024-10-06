@@ -13,6 +13,9 @@ const db = getDatabase();
 // User Id functionality will be added in a different PR
 let userId;
 
+// Session Id for each new user session
+let sessionId;
+
 // Get the Firebase authentication instance
 const auth = getAuth();
 
@@ -20,6 +23,7 @@ const auth = getAuth();
 // and update the userId variable accordingly
 onAuthStateChanged(auth, (user) => {
   userId = user.uid;
+  sessionId = Math.floor(Math.random() * 9999999999999);
 });
 
 // Define data keys for the text inputs of conjectures
@@ -729,40 +733,7 @@ export const writeToDatabaseGameSelect = async (curricular) => {
   return promises;
 };
 
-export const writeToDatabasePoseStart = async (poseNumber) => {
-  // Create a new date object to get a timestamp
-  const dateObj = new Date();
-  const timestamp = dateObj.toISOString();
-
-  // Create a reference to the Firebase Realtime Database
-  const userSession = `_UserSessions/Student/${userId}/GameSession/${poseNumber}`;
-
-  // Create an object to send to the database
-  const promises = [
-    set(ref(db, `${userSession}/Start/Time`), timestamp),
-  ];
-
-  // Return the promise that push() returns
-  return promises;
-};
-
-export const writeToDatabasePoseMatch = async (poseNumber) => {
-  // Create a new date object to get a timestamp
-  const dateObj = new Date();
-  const timestamp = dateObj.toISOString();
-
-  // Create a reference to the Firebase Realtime Database
-  const userSession = `_UserSessions/Student/${userId}/GameSession/${poseNumber}`;
-
-  // Create an object to send to the database
-  const promises = [
-    set(ref(db, `${userSession}/Match/Time`), timestamp),
-  ];
-
-  // Return the promise that push() returns
-  return promises;
-};
-
+// Write a new game select into database under gameid>>date>>studentid>>sessionid
 export const writeToDatabaseNewSession = async (IdValue, name) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
@@ -775,21 +746,52 @@ export const writeToDatabaseNewSession = async (IdValue, name) => {
   // Create a reference to the Firebase Realtime Database
   const userSession = `_GameID/${IdValue}/Date/${readableDate}/${userId}`;
 
-  
-  // ${userId}/GameSession/${poseNumber}`;
-
   // Create an object to send to the database
   const promises = [
     set(ref(db, `${userSession}/Name`), name),
-    set(ref(db, `${userSession}/Session/SessionId`), "SessionId"),
-    set(ref(db, `${userSession}/Session/SessionId/Start`), timestamp),
-    set(ref(db, `${userSession}/Session/SessionId/DaRep`), 'null'),
-    set(ref(db, `${userSession}/Session/SessionId/Hints/HintEnabled`), "null"),
-    set(ref(db, `${userSession}/Session/SessionId/Hints/HintCount`), "null"),
-    set(ref(db, `${userSession}/Session/SessionId/Hints/HintOrder`), "null"),
-    set(ref(db, `${userSession}/Session/SessionId/LatinSquareOrder`), "null"),
+    set(ref(db, `${userSession}/Session/${sessionId}`), "SessionId"),
+    set(ref(db, `${userSession}/Session/${sessionId}/Start`), timestamp),
+    set(ref(db, `${userSession}/Session/${sessionId}/DaRep`), 'null'),
+    set(ref(db, `${userSession}/Session/${sessionId}/Hints/HintEnabled`), "null"),
+    set(ref(db, `${userSession}/Session/${sessionId}/Hints/HintCount`), "null"),
+    set(ref(db, `${userSession}/Session/${sessionId}/Hints/HintOrder`), "null"),
+    set(ref(db, `${userSession}/Session/${sessionId}/LatinSquareOrder`), "null"),
   ];
 
   // Return the promise that push() returns
   return promises;
 };
+
+// export const writeToDatabasePoseStart = async (poseNumber) => {
+//   // Create a new date object to get a timestamp
+//   const dateObj = new Date();
+//   const timestamp = dateObj.toISOString();
+
+//   // Create a reference to the Firebase Realtime Database
+//   const userSession = `_GameID/${IdValue}/Date/${readableDate}/${userId}/Session/${sessionId}/Conjecture/ConjectureId/${poseNumber}`;
+
+//   // Create an object to send to the database
+//   const promises = [
+//     set(ref(db, `${userSession}/Start/Time`), timestamp),
+//   ];
+
+//   // Return the promise that push() returns
+//   return promises;
+// };
+
+// export const writeToDatabasePoseMatch = async (poseNumber) => {
+//   // Create a new date object to get a timestamp
+//   const dateObj = new Date();
+//   const timestamp = dateObj.toISOString();
+
+//   // Create a reference to the Firebase Realtime Database
+//   const userSession = `_GameID/${IdValue}/Date/${readableDate}/${userId}/Session/${sessionId}/Conjecture/ConjectureId/${poseNumber}`;
+
+//   // Create an object to send to the database
+//   const promises = [
+//     set(ref(db, `${userSession}/Match/Time`), timestamp),
+//   ];
+
+//   // Return the promise that push() returns
+//   return promises;
+// };
