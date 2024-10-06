@@ -7,12 +7,12 @@ const path = require('path');
 // Initialize Firebase Admin SDK with service account configuration and databaseURL
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://hvov0-5-default-rtdb.firebaseio.com' // Set this to your Firebase project URL
+    databaseURL: 'https://thv-o-v06-default-rtdb.firebaseio.com' // Set this to your Firebase project URL
 });
 
 // Reference to your Firebase Realtime Database
 const db = admin.database();
-const ref = db.ref('/Experimental_Data'); // Adjust to match the correct realtime database path
+const ref = db.ref('/'); // Adjust to match the correct realtime database path
 
 // This function parses the poseData and separates it into the leftHandLandmarks, rightHandLandmarks, faceLandmarks, and poseLandmarks
 function parsePoseData(poseData) {
@@ -101,11 +101,7 @@ ref.once('value', (snapshot) => {
           const headers = [];
       
           for (let i = 1; i <= landmarkCount; i++) {
-              headers.push(
-                  `${prefix}_X_${i}`,
-                  `${prefix}_Y_${i}`,
-                  `${prefix}_Z_${i}`
-              );
+              headers.push(`${prefix}_X_${i}`, `${prefix}_Y_${i}`, `${prefix}_Z_${i}` );
       
               //Include visibility header only for "poselandmark" since the others dont include this paramater
               if (prefix === "poselandmark") {
@@ -151,10 +147,14 @@ ref.once('value', (snapshot) => {
             { id: 'frameRate', title: 'frameRate' },
             { id: 'timeStamp', title: 'timeStamp' },
             { id: 'userId', title: 'userId' },
-            ...leftHandHeaders.map(header => ({ id: header, title: header })),
-            ...rightHandHeaders.map(header => ({ id: header, title: header })),
-            ...faceLandmarkHeaders.map(header => ({ id: header, title: header })),
-            ...poseLandmarkHeaders.map(header => ({ id: header, title: header })),
+            ...generateLandmarkHeaders('lefthandlandmark', maxLeftHandLandmarkCount).map(header => ({ id: header, title: header })),
+            ...generateLandmarkHeaders('righthandlandmark', maxRightHandLandmarkCount).map(header => ({ id: header, title: header })),
+            ...generateLandmarkHeaders('facelandmark', maxFaceLandmarkCount).map(header => ({ id: header, title: header })),
+            ...generateLandmarkHeaders('poselandmark', maxPoseLandmarkCount).map(header => ({ id: header, title: header })),
+            //...leftHandHeaders.map(header => ({ id: header, title: header })),
+            //...rightHandHeaders.map(header => ({ id: header, title: header })),
+            //...faceLandmarkHeaders.map(header => ({ id: header, title: header })),
+            //...poseLandmarkHeaders.map(header => ({ id: header, title: header })),
         ];
 
         // Format the filenames to include date and time of export
@@ -169,11 +169,11 @@ ref.once('value', (snapshot) => {
         const csvFilePath = path.join(downloadsFolder, csvFileName);
 
         // Write the JSON file to the JSON file created in the correct path
-        fs.writeFileSync(jsonFilePath, JSON.stringify(data, null, 2));
+        fs.writeFileSync(jsonFilePath, JSON.stringify(data, null, 2), 'utf-8');
 
         // Create CSV writer to export data to CSV file
         const csvWriter = createCsvWriter({
-            path: csvFilePath,
+            path: path.join(__dirname, 'exported_data.csv'),//csvFilePath,
             header: csvHeaders,
         });
 
