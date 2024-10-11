@@ -39,7 +39,7 @@ function handleGameClicked(curricular, curricularCallback){
   if(playGame){ // don't need a PIN to play the game
     // write in a new session of the game to firebase
     const name = getUserNameFromDatabase();
-    writeToDatabaseNewSession(curricular["UUID"], name);
+    writeToDatabaseNewSession(curricular["UUID"], curricular["CurricularName"]);
     Curriculum.setCurricularEditor(curricular);
     curricularCallback();
   }
