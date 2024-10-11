@@ -720,7 +720,7 @@ export const writeToDatabaseNewSession = async (CurrId, CurrName) => {
   curricularId = CurrName;
 
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${curricularId}/Date/${readableDate}/${name}`;
+  const userSession = `_GameID/${curricularId}/${readableDate}/${name}`;
 
   // Create an object to send to the database
   const promises = [
@@ -751,7 +751,7 @@ export const writeToDatabasePoseStart = async (poseNumber) => {
   const readableDate = formatter.format(dateObj);
 
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${curricularId}/Date/${readableDate}/${name}/${loginTime}/ConjectureId/${poseNumber}`;
+  const userSession = `_GameID/${curricularId}/${readableDate}/${name}/${loginTime}/ConjectureId/${poseNumber}`;
 
   // Create an object to send to the database
   const promises = [
@@ -776,7 +776,7 @@ export const writeToDatabasePoseMatch = async (poseNumber) => {
   const readableDate = formatter.format(dateObj);
 
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${curricularId}/Date/${readableDate}/${name}/${loginTime}/ConjectureId/${poseNumber}`;
+  const userSession = `_GameID/${curricularId}/${readableDate}/${name}/${loginTime}/ConjectureId/${poseNumber}`;
 
   // Create an object to send to the database
   const promises = [

@@ -40,7 +40,7 @@ const ExperimentalTask = (props) => {
     const queryParameters = new URLSearchParams(window.location.search);
 
     // Get the recording parameter from the URL. If it's not set, default to false.
-    const recordingUrlParam = queryParameters.get("recording") || "true";
+    const recordingUrlParam = queryParameters.get("recording") || "false";
 
     // If the recording param is set to true, begin writing data to the database.
     if (recordingUrlParam.toLowerCase() === "true") {
