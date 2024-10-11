@@ -4,6 +4,8 @@ import { powderBlue, skyBlue, cornflowerBlue, green, neonGreen, black, blue, whi
 import RectButton from "../RectButton";
 import { useCallback } from "react";
 import { TextStyle } from "@pixi/text";
+import InputBox from "../InputBox";
+import { Input } from 'postcss';
 
 
 const DataMenu = (props) => {
@@ -20,10 +22,14 @@ const DataMenu = (props) => {
   const innerRectMargins = (menuWidth - innerRectWidth) / 2;
   const fieldTextMarginsFromInnerRect = menuHeight * 0.07;
   const fieldTextMarginsFromEachOther = menuHeight * 0.13;
+  const fieldHeight = menuWidth * 0.028;
+  const inputBoxHeight = fieldHeight * 3;
+  const inputBoxTextSize = menuWidth * 0.02;
+  const distanceFromFieldTextToField = menuWidth * 0.5;
   const fieldText = new TextStyle({
     align: "center",                    
     fontFamily: "Arial",                 
-    fontSize: menuWidth * 0.028,                    
+    fontSize: fieldHeight,                    
     fontWeight: 1000,                 
     fill: [black],                      
   })
@@ -67,6 +73,7 @@ const DataMenu = (props) => {
         y={y + (menuHeight - innerRectMargins - innerRectHeight) / 2} //Center in top margins
         anchor={0.5}
       />
+      
       <Text
         text={"USER ID"}                             
         style={fieldText}
@@ -89,25 +96,32 @@ const DataMenu = (props) => {
         anchor={0}
       />
       <Text
-        text={"END DATE"}                             
+        text={"END DATE"}              
         style={fieldText}
         x={x + innerRectMargins + fieldTextMarginsFromInnerRect} 
         y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 3}
         anchor={0}
       />
-      {/* <RectButton
-        height={menuHeight}
-        width={menuWidth}
-        x={x}
-        y={y}
-        color={neonGreen}
-        fontSize={menuWidth * 0.014}
-        fontColor={white}
-        text={"TEST"}
-        fontWeight={800}
-        callback={ () =>{
+        <InputBox
+          height={inputBoxHeight}
+          width={(innerRectWidth - distanceFromFieldTextToField - fieldTextMarginsFromInnerRect * 2) / 0.4}
+          x={x + innerRectMargins + fieldTextMarginsFromInnerRect + distanceFromFieldTextToField}
+          y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect}
+          color={white}
+          fontSize={inputBoxTextSize}  //  Dynamically modify font size based on screen width
+          fontColor={black}
+          text={"null"}
+          fontWeight={600}
+        />
+        {/* <input
+        value={email}
+        onChange={handleEmailChange}
+        id="email"
+        className="login-input-input"
+        type="email"
+        autoComplete="on"
+        /> */}
 
-        }}/> */}
     </Container>
     )
 } else {

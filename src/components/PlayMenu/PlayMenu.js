@@ -86,7 +86,7 @@ const PlayMenu = (props) => {
 
     return (
         <>
-        {state.value === "main" && ( // if the state is main, show the log out button
+        {state.value === "main" && ( // if the state is main, show the log out button and background
           <>
             <Background height={height} width= {width}/>
             <Button
@@ -129,10 +129,7 @@ const PlayMenu = (props) => {
             fontColor={white}
             text={"Data"}
             fontWeight={800}
-            callback={() =>  {
-              setdataMenuVisable(!isDataMenuVisable);
-              console.log(isDataMenuVisable);
-            }}
+            callback={() => setdataMenuVisable(!isDataMenuVisable)}
           />
           <DataMenu 
           trigger={isDataMenuVisable} 
