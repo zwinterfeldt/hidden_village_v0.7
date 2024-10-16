@@ -134,6 +134,7 @@ ref.once('value', (snapshot) => {
                 conjectureId: objectData.conjectureId !== undefined ? objectData.conjectureId : 'null',
                 frameRate: objectData.frameRate || 'null',
                 timeStamp: objectData.timestamp || 'null',
+                UTC_Time: objectData.UTC_Time || 'null',
                 userId: objectData.userId || 'null',
                 role: objectData.role || 'null',
                 gameId: objectData.gameId || 'null',
@@ -143,7 +144,6 @@ ref.once('value', (snapshot) => {
                 hintCount: objectData.hintCount || 'null',
                 latinSquareOrder: objectData.latinSquareOrder || 'null',
                 hintOrder: objectData.hintOrder || 'null',
-                conj: objectData.conj || 'null',
                 etss: objectData.etss || 'null',
                 etslo: objectData.etslo || 'null',
                 eventType: objectData.eventType || 'null',
@@ -162,23 +162,21 @@ ref.once('value', (snapshot) => {
             // Push formatted data into the dataArray created before 
             dataArray.push(formattedData);
         });
-        console.log(dataArray); // check data 
+        //console.log(dataArray); // check data 
         // Define the CSV headers
         const csvHeaders = [
-            { id: 'objectId', title: 'objectId' },
-            { id: 'conjectureId', title: 'conjectureId' },
-            { id: 'frameRate', title: 'frameRate' },
-            { id: 'timeStamp', title: 'timeStamp' },
-            { id: 'userId', title: 'userId' },
+            { id: 'UTC_Time', title: 'UTC Time' },
+            { id: 'timeStamp', title: 'UNIX Time Stamp' },
+            { id: 'userId', title: 'ID' },
             { id: 'role', title: 'Role' },
-            { id: 'gameId', title: 'gameId' },
-            { id: 'gameMode', title: 'game Mode' },
-            { id: 'daRep', title: 'DA Rep' },
+            { id: 'gameId', title: 'Game ID' },
+            { id: 'gameMode', title: 'Game Mode' },
+            { id: 'daRep', title: 'DA REP' },
             { id: 'hints', title: 'Hints' },
             { id: 'hintCount', title: 'Hint Count' },
             { id: 'latinSquareOrder', title: 'Latin Square Order' },
             { id: 'hintOrder', title: 'Hint Order' },
-            { id: 'conj', title: 'Conjecture' },
+            { id: 'conjectureId', title: 'Conjecture ID' },
             { id: 'etss', title: 'Duration of Game' },
             { id: 'etslo', title: 'Duration of Event' },
             { id: 'eventType', title: 'Event Type' },
