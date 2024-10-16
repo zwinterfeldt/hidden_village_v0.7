@@ -3,6 +3,8 @@ const serviceAccount = require('/Users/natebursch/Desktop/hvov0-5-firebase-admin
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const fs = require('fs');
 const path = require('path');
+const { object } = require('prop-types');
+const { getEventType } = require('xstate/lib/utils');
 
 // Initialize Firebase Admin SDK with service account configuration and databaseURL
 admin.initializeApp({
@@ -39,26 +41,28 @@ function parsePoseData(poseData) {
 
 // Fucntion to populate the data to its respective header array
 function populateLandmarkData(formattedData, prefix, landmarks, count) {
-  for (let i = 0; i < landmarks.length; i++) {
-      formattedData[`${prefix}_X_${i + 1}`] = landmarks[i].x || 'null';
-      formattedData[`${prefix}_Y_${i + 1}`] = landmarks[i].y || 'null';
-      formattedData[`${prefix}_Z_${i + 1}`] = landmarks[i].z || 'null';
+    //console.log(landmarks); // log to see whats being passed 
+
+    for (let i = 0; i < landmarks.length; i++) {
+        formattedData[`${prefix}_X_${i + 1}`] = landmarks[i].x || 'null';
+        formattedData[`${prefix}_Y_${i + 1}`] = landmarks[i].y || 'null';
+        formattedData[`${prefix}_Z_${i + 1}`] = landmarks[i].z || 'null';
       
       // Check if the landmarks have a visibility parameter
-      if (landmarks[i].visibility) {
-          formattedData[`${prefix}_Visibility_${i + 1}`] = landmarks[i].visibility;
-      } else {
-          formattedData[`${prefix}_Visibility_${i + 1}`] = 'null';
-      }
-  }
+        if (landmarks[i].visibility) {
+            formattedData[`${prefix}_Visibility_${i + 1}`] = landmarks[i].visibility;
+        } else {
+            formattedData[`${prefix}_Visibility_${i + 1}`] = 'null';
+        }
+    }
 
   // Set all data to 'null' if there is no data in firebase 
-  if (landmarks.length === 0) {
-      for (let i = 0; i < count; i++) {
-          formattedData[`${prefix}_X_${i + 1}`] = 'null';
-          formattedData[`${prefix}_Y_${i + 1}`] = 'null';
-          formattedData[`${prefix}_Z_${i + 1}`] = 'null';
-          formattedData[`${prefix}_Visibility_${i + 1}`] = 'null';
+    if (landmarks.length === 0) {
+        for (let i = 0; i < count; i++) {
+            formattedData[`${prefix}_X_${i + 1}`] = 'null';
+            formattedData[`${prefix}_Y_${i + 1}`] = 'null';
+            formattedData[`${prefix}_Z_${i + 1}`] = 'null';
+            formattedData[`${prefix}_Visibility_${i + 1}`] = 'null';
       }
   }
 }
@@ -72,6 +76,7 @@ let maxPoseLandmarkCount = 0;
 // this will fetch the data from the Firebase Realtime Database
 ref.once('value', (snapshot) => {
     const data = snapshot.val(); 
+    //console.log(data); // just to check if data is getting passed through
 
      // If the Firebase Database is empty log the error below
     if (!data) {
@@ -114,12 +119,14 @@ ref.once('value', (snapshot) => {
 
         // Initialize array for the csv data
         const dataArray = [];
+        
 
         // Iterate through each object in the data 
         Object.keys(data).forEach((objectId) => {
             const objectData = data[objectId];
             // Parse the pose data
             const parsedPoseData = parsePoseData(objectData.poseData);
+            //console.log(parsePoseData); // check if data is being passed correctly
 
             // format non-landmark data
             const formattedData = {
@@ -128,6 +135,22 @@ ref.once('value', (snapshot) => {
                 frameRate: objectData.frameRate || 'null',
                 timeStamp: objectData.timestamp || 'null',
                 userId: objectData.userId || 'null',
+                role: objectData.role || 'null',
+                gameId: objectData.gameId || 'null',
+                gameMode: objectData.gameMode || 'null',
+                daRep: objectData.daRep || 'null',
+                hints: objectData.hints || 'null',
+                hintCount: objectData.hintCount || 'null',
+                latinSquareOrder: objectData.latinSquareOrder || 'null',
+                hintOrder: objectData.hintOrder || 'null',
+                conj: objectData.conj || 'null',
+                etss: objectData.etss || 'null',
+                etslo: objectData.etslo || 'null',
+                eventType: objectData.eventType || 'null',
+                tfGivenAnswer: objectData.tfGivenAnswer || 'null',
+                correct: objectData.correct || 'null',
+                mcGivenAnswer: objectData.mcGivenAnswer || 'null',
+                correct: objectData.correct || 'null',
             };
 
             //Populate the data for leftHandLandmarks, rightHandLandmarks, faceLandmarks, and poseLandmarks
@@ -139,7 +162,7 @@ ref.once('value', (snapshot) => {
             // Push formatted data into the dataArray created before 
             dataArray.push(formattedData);
         });
-
+        console.log(dataArray); // check data 
         // Define the CSV headers
         const csvHeaders = [
             { id: 'objectId', title: 'objectId' },
@@ -147,14 +170,30 @@ ref.once('value', (snapshot) => {
             { id: 'frameRate', title: 'frameRate' },
             { id: 'timeStamp', title: 'timeStamp' },
             { id: 'userId', title: 'userId' },
-            ...generateLandmarkHeaders('lefthandlandmark', maxLeftHandLandmarkCount).map(header => ({ id: header, title: header })),
-            ...generateLandmarkHeaders('righthandlandmark', maxRightHandLandmarkCount).map(header => ({ id: header, title: header })),
-            ...generateLandmarkHeaders('facelandmark', maxFaceLandmarkCount).map(header => ({ id: header, title: header })),
-            ...generateLandmarkHeaders('poselandmark', maxPoseLandmarkCount).map(header => ({ id: header, title: header })),
-            //...leftHandHeaders.map(header => ({ id: header, title: header })),
-            //...rightHandHeaders.map(header => ({ id: header, title: header })),
-            //...faceLandmarkHeaders.map(header => ({ id: header, title: header })),
-            //...poseLandmarkHeaders.map(header => ({ id: header, title: header })),
+            { id: 'role', title: 'Role' },
+            { id: 'gameId', title: 'gameId' },
+            { id: 'gameMode', title: 'game Mode' },
+            { id: 'daRep', title: 'DA Rep' },
+            { id: 'hints', title: 'Hints' },
+            { id: 'hintCount', title: 'Hint Count' },
+            { id: 'latinSquareOrder', title: 'Latin Square Order' },
+            { id: 'hintOrder', title: 'Hint Order' },
+            { id: 'conj', title: 'Conjecture' },
+            { id: 'etss', title: 'Duration of Game' },
+            { id: 'etslo', title: 'Duration of Event' },
+            { id: 'eventType', title: 'Event Type' },
+            { id: 'tfGivenAnswer', title: 'True False Answer' },
+            { id: 'correct', title: 'Correct' },
+            { id: 'mcGivenAnswer', title: 'MC Given Answer' },
+            { id: 'correct', title: 'Correct' },
+            //...generateLandmarkHeaders('lefthandlandmark', maxLeftHandLandmarkCount).map(header => ({ id: header, title: header })),
+            //...generateLandmarkHeaders('righthandlandmark', maxRightHandLandmarkCount).map(header => ({ id: header, title: header })),
+            //...generateLandmarkHeaders('facelandmark', maxFaceLandmarkCount).map(header => ({ id: header, title: header })),
+            //...generateLandmarkHeaders('poselandmark', maxPoseLandmarkCount).map(header => ({ id: header, title: header })),
+            ...leftHandHeaders.map(header => ({ id: header, title: header })),
+            ...rightHandHeaders.map(header => ({ id: header, title: header })),
+            ...faceLandmarkHeaders.map(header => ({ id: header, title: header })),
+            ...poseLandmarkHeaders.map(header => ({ id: header, title: header })),
         ];
 
         // Format the filenames to include date and time of export
@@ -173,9 +212,12 @@ ref.once('value', (snapshot) => {
 
         // Create CSV writer to export data to CSV file
         const csvWriter = createCsvWriter({
-            path: path.join(__dirname, 'exported_data.csv'),//csvFilePath,
+            path: csvFilePath,
             header: csvHeaders,
         });
+
+       
+        
 
         // Write the dataArray to the csv file
         csvWriter.writeRecords(dataArray)
