@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import ExperimentalTask from "../ExperimentalTask";
 import LevelPlayMachine from "./LevelPlayMachine";
 import ConjecturePoseContainter from "../ConjecturePoseMatch/ConjecturePoseContainer"
-import { getConjectureDataByUUID } from "../../firebase/database";
+import { getConjectureDataByUUID, writeToDatabaseTrueFalseStart, writeToDatabaseTrueFalseEnd } from "../../firebase/database";
 
 const LevelPlay = (props) => {
   const {
@@ -77,11 +77,13 @@ useEffect(() => {
       setExperimentText(
         `Read the following ALOUD:\n\n${conjectureData[UUID]['Text Boxes']['Conjecture Description']}\n\n Answer: TRUE or FALSE?`
       );
+      writeToDatabaseTrueFalseStart();
     // Insight is explaining why
     } else if (state.value === "insight") {
       setExperimentText(
         `Alright! Explain WHY :\n\n${conjectureData[UUID]['Text Boxes']['Conjecture Description']}\n\n is TRUE or FALSE?`
       );
+      writeToDatabaseTrueFalseEnd();
     }
   }, [state.value]);
 

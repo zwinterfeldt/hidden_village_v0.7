@@ -62,6 +62,7 @@ export const writeToDatabase = async (poseData, frameRate) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
+  const timestampUTC = dateObj.toUTCString();
 
   // Create a reference to the Firebase Realtime Database
   const dbRef = ref(db, "/PoseData");
@@ -71,9 +72,9 @@ export const writeToDatabase = async (poseData, frameRate) => {
   const dataToSend = {
     userId,
     poseData: JSON.stringify(poseData),
-    conjectureId,
     frameRate,
     timestamp,
+    timestampUTC,
   };
 
   // Push the data to the database using the dbRef reference
