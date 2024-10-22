@@ -58,7 +58,7 @@ export const curricularTextBoxes = [
 ]
 
 // Export a function named writeToDatabase
-export const writeToDatabase = async (poseData, conjectureId, frameRate) => {
+export const writeToDatabase = async (poseData, frameRate) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
@@ -688,24 +688,6 @@ export const searchConjecturesByWord = async (searchWord) => {
   }
 };
 
-// Write in start events to database by passing event type in
-export const writeToDatabaseSessionStart = async (event, name) => {
-  // Create a new date object to get a timestamp
-  const dateObj = new Date();
-  const timestamp = dateObj.toISOString();
-
-  const userSession= `_UserSessions/Student/${userId}/Startup`;
-
-  // Check event for startup
-  // Push data to the database using promises
-  const promises = [
-    set(ref(db, `_UserSessions/Student/${userId}/Name`), name),  
-    set(ref(db, `${userSession}/${event}/Time`), timestamp),
-  ];
-
-    return promises;
-};
-
 // Write a new game select into database under gameid>>date>>studentid>>sessionid
 export const writeToDatabaseNewSession = async (CurrId, CurrName) => {
   // Create a new date object to get a timestamp
@@ -756,7 +738,7 @@ export const writeToDatabasePoseStart = async (poseNumber) => {
   // Create an object to send to the database
   const promises = [
     set(ref(db, `${userSession}/Start/`), timestamp),
-    set(ref(db, `${userSession}/StartUTC/`), timestampUTC),
+    set(ref(db, `${userSession}/StartGMT/`), timestampUTC),
   ];
 
   // Return the promise that push() returns
@@ -781,13 +763,62 @@ export const writeToDatabasePoseMatch = async (poseNumber) => {
   // Create an object to send to the database
   const promises = [
     set(ref(db, `${userSession}/Match/`), timestamp),
-    set(ref(db, `${userSession}/MatchUTC/`), timestampUTC),
+    set(ref(db, `${userSession}/MatchGMT/`), timestampUTC),
   ];
 
   // Return the promise that push() returns
   return promises;
 };
 
+export const writeToDatabaseTrueFalseStart = async () => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+  const timestampUTC = dateObj.toUTCString();
+
+  // Readable date format
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'full'
+  });
+  const readableDate = formatter.format(dateObj);
+
+  // Create a reference to the Firebase Realtime Database
+  const userSession = `_GameID/${curricularId}/${readableDate}/${name}/${loginTime}/ConjectureId/TrueFalse`;
+
+  // Create an object to send to the database
+  const promises = [
+    set(ref(db, `${userSession}/Start/`), timestamp),
+    set(ref(db, `${userSession}/StartGMT/`), timestampUTC),
+  ];
+
+  // Return the promise that push() returns
+  return promises;
+};
+
+export const writeToDatabaseTrueFalseEnd = async () => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+  const timestampUTC = dateObj.toUTCString();
+
+  // Readable date format
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'full'
+  });
+  const readableDate = formatter.format(dateObj);
+
+  // Create a reference to the Firebase Realtime Database
+  const userSession = `_GameID/${curricularId}/${readableDate}/${name}/${loginTime}/ConjectureId/TrueFalse`;
+
+  // Create an object to send to the database
+  const promises = [
+    set(ref(db, `${userSession}/End/`), timestamp),
+    set(ref(db, `${userSession}/EndGMT/`), timestampUTC),
+  ];
+
+  // Return the promise that push() returns
+  return promises;
+};
 export const writeToDatabaseFullPoseData = async (poseData) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
