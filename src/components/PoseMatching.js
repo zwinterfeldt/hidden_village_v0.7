@@ -8,7 +8,7 @@ import Pose from "./Pose/index.js";
 import { useState, useEffect, useMemo } from "react";
 import { Text, Container } from "@inlet/react-pixi";
 import { white } from "../utils/colors";
-import { writeToDatabasePoseMatch, writeToDatabasePoseStart } from "../firebase/database";
+import { writeToDatabasePoseMatch, writeToDatabasePoseStart, writeToDatabase } from "../firebase/database";
 
 // Current pose number
 let poseNumber = 1;

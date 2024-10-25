@@ -34,18 +34,19 @@ const ExperimentalTask = (props) => {
 
   // The following code runs once when the component mounts.
   useEffect(() => {
-    // Optional URL parameters for whether motion data recording is enabled
-    // and what the fps is for recording.
-    // Defaults are false and 30.
+    // // Optional URL parameters for whether motion data recording is enabled
+    // // and what the fps is for recording.
+    // // Defaults are false and 30.
     const queryParameters = new URLSearchParams(window.location.search);
 
-    // Get the recording parameter from the URL. If it's not set, default to false.
-    const recordingUrlParam = queryParameters.get("recording") || "false";
-
+    // // Get the recording parameter from the URL. If it's not set, default to false.
+    const recordingUrlParam = "false";
+    //const recordingUrlParam = queryParameters.get("recording") || "false";
+    
     // If the recording param is set to true, begin writing data to the database.
     if (recordingUrlParam.toLowerCase() === "true") {
       // Get the fps parameter from the URL. If it's not set, default to 30.
-      const fpsUrlParam = parseInt(queryParameters.get("fps")) || 12;
+      const fpsUrlParam = 12;
 
       // Empty array to hold the promise objects.
       // This is important so we can assure that all the promises get settled on component unmount.
@@ -62,18 +63,18 @@ const ExperimentalTask = (props) => {
         // Call the promiseChecker function to detect any data loss in the promises array
         // and trigger an alert if necessary.
         promiseChecker(fpsUrlParam, promises);
-      }, 1000 / fpsUrlParam);
+    }, 1000 / fpsUrlParam);
 
       // The code below runs when the component unmounts.
-      return async () => {
+    return async () => {
         // Stop the interval when the component unmounts.
-        clearInterval(intervalId);
+      clearInterval(intervalId);
 
         // Wait until all promises are settled so we don't lose data.
-        await Promise.allSettled(promises);
-      };
-    }
-  }, []);
+      await Promise.allSettled(promises);
+    };
+  } 
+}, []);
 
   useEffect(() => {
     const timeout = setTimeout(
