@@ -31,25 +31,18 @@ const ExperimentalTask = (props) => {
 
   // Database Write Functionality
   // This code runs when the user is participating in a conjecture and recording is enabled.
-
   // The following code runs once when the component mounts.
   useEffect(() => {
-    // // Optional URL parameters for whether motion data recording is enabled
-    // // and what the fps is for recording.
-    // // Defaults are false and 30.
-    const queryParameters = new URLSearchParams(window.location.search);
-
+    // // Defaults recording conditions true and fps = 12.
     // // Get the recording parameter from the URL. If it's not set, default to false.
-    const recordingUrlParam = "false";
-    //const recordingUrlParam = queryParameters.get("recording") || "false";
+    const isRecording = "false";
     
     // If the recording param is set to true, begin writing data to the database.
-    if (recordingUrlParam.toLowerCase() === "true") {
+    if (isRecording === "true") {
       // Get the fps parameter from the URL. If it's not set, default to 30.
       const fpsUrlParam = 12;
 
-      // Empty array to hold the promise objects.
-      // This is important so we can assure that all the promises get settled on component unmount.
+      // Empty array to hold promise objects assures that all the promises get settled on component unmount.
       let promises = [];
 
       // This creates an interval for the writing to the database every n times a second,
