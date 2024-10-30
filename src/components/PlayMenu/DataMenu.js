@@ -9,6 +9,16 @@ import { Input } from 'postcss';
 import { useEffect, useRef } from 'react';
 import { getUserEmailFromDatabase } from "../../firebase/userDatabase"
 
+function setLocalStorage(){
+  localStorage.setItem("game_name", "");
+  localStorage.setItem("start_date", "");
+  localStorage.setItem("end_date", "");
+  localStorage.setItem("all_data", "false");
+  localStorage.setItem("csv", "false");
+  localStorage.setItem("json", "false");
+}
+
+
 const DataMenu = (props) => {
   const {
     menuWidth,
@@ -24,11 +34,11 @@ const DataMenu = (props) => {
   const fieldTextMarginsFromInnerRect = menuHeight * 0.07;
   const fieldTextMarginsFromEachOther = menuHeight * 0.11;
   const fieldHeight = menuWidth * 0.028;
-  const inputBoxHeight = fieldHeight * 2;
+  const inputBoxHeight = fieldHeight * 3;
   const inputBoxTextSize = menuWidth * 0.02;
-  const distanceFromFieldTextToField = menuWidth * 0.4;
+  const distanceFromFieldTextToField = menuWidth * 0.3;
   const checkButtonWidth = menuWidth * 0.07;
-  const checkButtonFont = menuWidth * 0.05;
+  const checkButtonFont = menuWidth * 0.5;
   const fieldText = new TextStyle({
     align: "center",                    
     fontFamily: "Arial",                 
@@ -36,6 +46,9 @@ const DataMenu = (props) => {
     fontWeight: 1000,                 
     fill: [black],                      
   })
+
+  
+
 
   const draw = useCallback(
     (g) => {
@@ -55,6 +68,7 @@ const DataMenu = (props) => {
   );
 
   if (trigger) {
+    setLocalStorage();
     return (
     <Container>
       <Graphics
@@ -84,12 +98,34 @@ const DataMenu = (props) => {
         y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect}
         anchor={0}
       />
+      <InputBox //Box for user ID
+        height={inputBoxHeight}
+        width={(innerRectWidth - distanceFromFieldTextToField - fieldTextMarginsFromInnerRect * 2) / 0.4}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect + distanceFromFieldTextToField}
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect}
+        color={white}
+        fontSize={inputBoxTextSize}  //  Dynamically modify font size based on screen width
+        fontColor={black}
+        text={getUserEmailFromDatabase()}
+        fontWeight={600}
+      />
       <Text
         text={"GAME NAME"}                             
         style={fieldText}
         x={x + innerRectMargins + fieldTextMarginsFromInnerRect} 
         y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther}
         anchor={0}
+      />
+      <InputBox //Box for game name
+        height={inputBoxHeight}
+        width={(innerRectWidth - distanceFromFieldTextToField - fieldTextMarginsFromInnerRect * 2) / 0.4}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect + distanceFromFieldTextToField}
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther}
+        color={white}
+        fontSize={inputBoxTextSize}  //  Dynamically modify font size based on screen width
+        fontColor={black}
+        text={localStorage.getItem("game_name")}
+        fontWeight={600}
       />
       <Text
         text={"START DATE"}                             
@@ -105,18 +141,8 @@ const DataMenu = (props) => {
         y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 3}
         anchor={0}
       />
-        <InputBox
-          height={inputBoxHeight}
-          width={(innerRectWidth - distanceFromFieldTextToField - fieldTextMarginsFromInnerRect * 2) / 0.4}
-          x={x + innerRectMargins + fieldTextMarginsFromInnerRect + distanceFromFieldTextToField}
-          y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect - (fieldHeight / 2)}
-          color={white}
-          fontSize={inputBoxTextSize}  //  Dynamically modify font size based on screen width
-          fontColor={black}
-          text={getUserEmailFromDatabase()}
-          fontWeight={600}
-        />
-      {/* <InputBox
+        
+      <InputBox //Check box for downloading all the data for the user
         height={checkButtonWidth}
         width={checkButtonWidth}
         x={x + innerRectMargins + fieldTextMarginsFromInnerRect}
@@ -124,8 +150,15 @@ const DataMenu = (props) => {
         color={white}
         fontSize={checkButtonFont}
         fontColor={black}
-        text={"X"}
-      /> */}
+        text={localStorage.getItem("all_data") === "true" ? "  X" : " "}
+        callback = {() => {
+          if (localStorage.getItem("all_data") === "true") {
+            localStorage.setItem("all_data", "false");
+          } else {
+            localStorage.setItem("all_data", "true");
+          }
+        }}
+      />
     </Container>
     )
 } else {
