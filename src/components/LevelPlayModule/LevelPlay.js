@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import ExperimentalTask from "../ExperimentalTask";
 import LevelPlayMachine from "./LevelPlayMachine";
 import ConjecturePoseContainter from "../ConjecturePoseMatch/ConjecturePoseContainer"
-import { getConjectureDataByUUID, writeToDatabaseTrueFalseStart, writeToDatabaseTrueFalseEnd } from "../../firebase/database";
+import { getConjectureDataByUUID, writeToDatabaseIntuitionStart, writeToDatabaseIntuitionEnd } from "../../firebase/database";
 
 const LevelPlay = (props) => {
   const {
@@ -17,6 +17,7 @@ const LevelPlay = (props) => {
     height,
     backCallback
   } = props;
+  
   const [state, send] = useMachine(LevelPlayMachine);
   const [experimentText, setExperimentText] = useState(
     `Read the following aloud:\n\nFigure it out? \n\n Answer TRUE or FALSE?`
@@ -47,7 +48,7 @@ const LevelPlay = (props) => {
       };
       fetchData();
     }
-}, []);
+  }, []);
 
 useEffect(() => {
   if (conjectureData != null) {
@@ -77,13 +78,13 @@ useEffect(() => {
       setExperimentText(
         `Read the following ALOUD:\n\n${conjectureData[UUID]['Text Boxes']['Conjecture Description']}\n\n Answer: TRUE or FALSE?`
       );
-      writeToDatabaseTrueFalseStart();
+      writeToDatabaseIntuitionStart();
     // Insight is explaining why
     } else if (state.value === "insight") {
       setExperimentText(
         `Alright! Explain WHY :\n\n${conjectureData[UUID]['Text Boxes']['Conjecture Description']}\n\n is TRUE or FALSE?`
       );
-      writeToDatabaseTrueFalseEnd();
+      writeToDatabaseIntuitionEnd();
     }
   }, [state.value]);
 

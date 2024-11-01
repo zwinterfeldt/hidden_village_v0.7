@@ -10,26 +10,23 @@ const { v4: uuidv4 } = require('uuid');
 
 const db = getDatabase();
 
-// User Id functionality will be added in a different PR; also including user email to generate readable name
-let userId;
-let userEmail;
-let name;
-let tempDate;
-let readableDate;
-
-// Date object for login time
-let loginTime;
-
-// Conjecture ID
-let curricularId;
-
-// Event type for pose data
-let eventType;
-let gameID;
-
 // Get the Firebase authentication instance
 const auth = getAuth();
 
+// Declare variables that change on user change -> these represent paths in the Firebase
+let userId;
+let userEmail;
+let userName;
+let date;
+let readableDate;
+let loginTime;
+
+// Declare variables that change on game state change
+let eventType;
+let gameId;
+let conjectureId;
+
+// Function to Format date into readable format
 const formatter = new Intl.DateTimeFormat('en-US', {
   dateStyle: 'full'
 });
@@ -39,10 +36,10 @@ const formatter = new Intl.DateTimeFormat('en-US', {
 onAuthStateChanged(auth, (user) => {
   userId = user.uid;
   userEmail = user.email;
-  name = userEmail.split('@')[0];
-  tempDate = new Date();
-  loginTime = tempDate.toUTCString();
-  readableDate = formatter.format(tempDate);
+  userName = userEmail.split('@')[0];
+  date = new Date();
+  loginTime = date.toUTCString();
+  readableDate = formatter.format(date);
 });
 
 // Define data keys for the text inputs of conjectures
@@ -74,22 +71,22 @@ export const writeToDatabase = async (poseData, frameRate) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
-  const timestampUTC = dateObj.toUTCString();
+  const timestampGMT = dateObj.toUTCString();
 
   let promise;
   // only runs if event type is established
   if(eventType !== null){
-    const dbRef = ref(db, `_PoseData/${gameID}/${readableDate}/${name}/${eventType}`);
+    const dbRef = ref(db, `_PoseData/${gameId}/${readableDate}/${userName}/${eventType}`);
 
   // Create an object to send to the database
   // This object includes the userId, poseData, conjectureId, frameRate, and timestamp and
     const dataToSend = {
       userId,
-      name,
+      userName,
       poseData: JSON.stringify(poseData),
       eventType,
       timestamp,
-      timestampUTC,
+      timestampGMT,
       frameRate,
       loginTime,
     };
@@ -711,23 +708,20 @@ export const writeToDatabaseNewSession = async (CurrId, CurrName) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
-  // Create a readable date ex. Janurary 1, 2023
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'full'
-  });
-  const readableDate = formatter.format(dateObj);
-  // Change conjecture id appropriately
-  curricularId = CurrName;
-  gameID = CurrName;
+  const timestampGMT = dateObj.toUTCString();
+ 
+  // Change game ID appropriately
+  gameId = CurrName;
 
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${curricularId}/${readableDate}/${name}`;
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}`;
 
   // Create an object to send to the database
   const promises = [
-    set(ref(db, `_GameID/${curricularId}/CurricularID`), CurrId),
+    set(ref(db, `_GameID/${gameId}/CurricularID`), CurrId),
     set(ref(db, `${userSession}/UserId`), userId),
     set(ref(db, `${userSession}/${loginTime}/GameStart`), timestamp),
+    set(ref(db, `${userSession}/${loginTime}/GameStartGMT`), timestampGMT),
     set(ref(db, `${userSession}/${loginTime}/DaRep`), 'null'),
     set(ref(db, `${userSession}/${loginTime}/Hints/HintEnabled`), "null"),
     set(ref(db, `${userSession}/${loginTime}/Hints/HintCount`), "null"),
@@ -743,24 +737,18 @@ export const writeToDatabasePoseStart = async (poseNumber) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
-  const timestampUTC = dateObj.toUTCString();
+  const timestampGMT = dateObj.toUTCString();
 
   // set event type to pose start
   eventType = poseNumber
 
-  // Readable date format
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'full'
-  });
-  const readableDate = formatter.format(dateObj);
-
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${curricularId}/${readableDate}/${name}/${loginTime}/ConjectureId/${poseNumber}`;
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/ConjectureId/${poseNumber}`;
 
   // Create an object to send to the database
   const promises = [
     set(ref(db, `${userSession}/Start/`), timestamp),
-    set(ref(db, `${userSession}/StartGMT/`), timestampUTC),
+    set(ref(db, `${userSession}/StartGMT/`), timestampGMT),
   ];
 
   // Return the promise that push() returns
@@ -771,101 +759,97 @@ export const writeToDatabasePoseMatch = async (poseNumber) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
-  const timestampUTC = dateObj.toUTCString();
-
-  // Readable date format
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'full'
-  });
-  const readableDate = formatter.format(dateObj);
+  const timestampGMT = dateObj.toUTCString();
 
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${curricularId}/${readableDate}/${name}/${loginTime}/ConjectureId/${poseNumber}`;
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/ConjectureId/${poseNumber}`;
 
   // Create an object to send to the database
   const promises = [
     set(ref(db, `${userSession}/Match/`), timestamp),
-    set(ref(db, `${userSession}/MatchGMT/`), timestampUTC),
+    set(ref(db, `${userSession}/MatchGMT/`), timestampGMT),
   ];
 
   // Return the promise that push() returns
   return promises;
 };
 
-export const writeToDatabaseTrueFalseStart = async () => {
+export const writeToDatabaseIntuitionStart = async () => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
-  const timestampUTC = dateObj.toUTCString();
+  const timestampGMT = dateObj.toUTCString();
 
   // event type for pose data
   eventType = "intuition";
 
-  // Readable date format
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'full'
-  });
-  const readableDate = formatter.format(dateObj);
-
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${curricularId}/${readableDate}/${name}/${loginTime}/ConjectureId/TrueFalse`;
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/ConjectureId/Intuition`;
 
   // Create an object to send to the database
   const promises = [
     set(ref(db, `${userSession}/Start/`), timestamp),
-    set(ref(db, `${userSession}/StartGMT/`), timestampUTC),
+    set(ref(db, `${userSession}/StartGMT/`), timestampGMT),
   ];
 
   // Return the promise that push() returns
   return promises;
 };
 
-export const writeToDatabaseTrueFalseEnd = async () => {
+export const writeToDatabaseIntuitionEnd = async () => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
-  const timestampUTC = dateObj.toUTCString();
+  const timestampGMT = dateObj.toUTCString();
 
   // event type for pose data
   eventType = "insight";
-  // Readable date format
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'full'
-  });
-  const readableDate = formatter.format(dateObj);
 
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${curricularId}/${readableDate}/${name}/${loginTime}/ConjectureId/TrueFalse`;
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/ConjectureId/Intuition`;
 
   // Create an object to send to the database
   const promises = [
     set(ref(db, `${userSession}/End/`), timestamp),
-    set(ref(db, `${userSession}/EndGMT/`), timestampUTC),
+    set(ref(db, `${userSession}/EndGMT/`), timestampGMT),
   ];
 
   // Return the promise that push() returns
   return promises;
 };
 
-export const writeToDatabaseTrueFalseEn = async () => {
+export const writeToDatabaseInsightStart = async () => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
-  const timestampUTC = dateObj.toUTCString();
-
-  // Readable date format
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'full'
-  });
-  const readableDate = formatter.format(dateObj);
+  const timestampGMT = dateObj.toUTCString();
 
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${curricularId}/${readableDate}/${name}/${loginTime}/ConjectureId/TrueFalse`;
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/ConjectureId/Insight`;
+
+  // Create an object to send to the database
+  const promises = [
+    set(ref(db, `${userSession}/Start/`), timestamp),
+    set(ref(db, `${userSession}/StartGMT/`), timestampGMT),
+  ];
+
+  // Return the promise that push() returns
+  return promises;
+};
+
+export const writeToDatabaseInsightEnd = async () => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+  const timestampGMT = dateObj.toUTCString();
+
+  // Create a reference to the Firebase Realtime Database
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/ConjectureId/Insight`;
 
   // Create an object to send to the database
   const promises = [
     set(ref(db, `${userSession}/End/`), timestamp),
-    set(ref(db, `${userSession}/EndGMT/`), timestampUTC),
+    set(ref(db, `${userSession}/EndGMT/`), timestampGMT),
   ];
 
   // Return the promise that push() returns
