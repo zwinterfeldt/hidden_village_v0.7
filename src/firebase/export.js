@@ -5,6 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const { object } = require('prop-types');
 const { getEventType } = require('xstate/lib/utils');
+const { timeStamp } = require('console');
+const { Timestamp } = require('firebase-admin/firestore');
 
 // Initialize Firebase Admin SDK with service account configuration and databaseURL
 admin.initializeApp({
@@ -14,7 +16,7 @@ admin.initializeApp({
 
 // Reference to your Firebase Realtime Database
 const db = admin.database();
-const ref = db.ref('/'); // Adjust to match the correct realtime database path
+const ref = db.ref('/_GameID'); // Adjust to match the correct realtime database path
 
 // This function parses the poseData and separates it into the leftHandLandmarks, rightHandLandmarks, faceLandmarks, and poseLandmarks
 function parsePoseData(poseData) {
@@ -119,7 +121,8 @@ ref.once('value', (snapshot) => {
 
         // Initialize array for the csv data
         const dataArray = [];
-        
+        // manually grab data? 
+        // or write a json file to csv 
 
         // Iterate through each object in the data 
         Object.keys(data).forEach((objectId) => {
@@ -194,13 +197,15 @@ ref.once('value', (snapshot) => {
             ...poseLandmarkHeaders.map(header => ({ id: header, title: header })),
         ];
 
-        // Format the filenames to include date and time of export
-        const csvFileName = `exported-csv-data-${new Date().toISOString().replace(/:/g, '-')}.csv`;
-        const jsonFileName = `exported-json-data-${new Date().toISOString().replace(/:/g, '-')}.json`;
-
+        
         // Find the path to the 'Downloads' folder in the user's home directory
+       
+        // Format the filenames to include date and time of export
+        const jsonFileName = `exported-json-data-${new Date().toISOString().replace(/:/g, '-')}.json`;
+        const csvFileName = `exported-csv-data-${new Date().toISOString().replace(/:/g, '-')}.csv`;
+        
         const downloadsFolder = path.join(require('os').homedir(), 'Downloads');
-
+        
         // Construct the full path to the JSON and CSV files in the 'Downloads' folder
         const jsonFilePath = path.join(downloadsFolder, jsonFileName);
         const csvFilePath = path.join(downloadsFolder, csvFileName);
@@ -214,8 +219,18 @@ ref.once('value', (snapshot) => {
             header: csvHeaders,
         });
 
-       
-        
+        // json to csv script 
+
+        // const jsonContent = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8'));
+        // const jsonFields = Object.keys(jsonContent[0]);
+        // const jsonCsvData = jsonContent.map((row) =>
+        //     jsonFields.map((field) => JSON.stringify(row[field] || '')).join(',')
+        // );
+        // jsonCsvData.unshift(jsonFields.join(','));
+        // fs.writeFileSync(csvFilePath, jsonCsvData.join('\n'), 'utf-8')
+
+
+
 
         // Write the dataArray to the csv file
         csvWriter.writeRecords(dataArray)
