@@ -10,7 +10,6 @@ import { Text, Container } from "@inlet/react-pixi";
 import { white } from "../utils/colors";
 import { writeToDatabasePoseMatch, writeToDatabasePoseStart, writeToDatabase } from "../firebase/database.js";
 
-// Current pose number
 let poseNumber = 1;
 
 const PoseMatching = (props) => {
@@ -136,6 +135,7 @@ const PoseMatching = (props) => {
         poseNumber++;
         // move to next state and reset pose similarity
         if (poses.length === 0 && !firstPose) {
+          poseNumber = 1;
           setTransition(true);
           setPoseSimilarity([{ similarityScore: 0 }]);
           setText("Great!");
