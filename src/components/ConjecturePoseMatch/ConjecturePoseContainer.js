@@ -37,7 +37,7 @@ const ConjecturePoseContainer = (props) => {
         // // Defaults recording conditions true and fps = 12.
     
         // // Get the recording parameter from the URL. If it's not set, default to false.
-        const isRecording = "false";
+        const isRecording = "true";
         
         // If the recording param is set to true, begin writing data to the database.
         if (isRecording === "true") {

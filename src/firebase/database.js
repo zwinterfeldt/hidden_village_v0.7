@@ -15,6 +15,7 @@ let userId;
 let userEmail;
 let name;
 let tempDate;
+let readableDate;
 
 // Date object for login time
 let loginTime;
@@ -22,8 +23,16 @@ let loginTime;
 // Conjecture ID
 let curricularId;
 
+// Event type for pose data
+let eventType;
+let gameID;
+
 // Get the Firebase authentication instance
 const auth = getAuth();
+
+const formatter = new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'full'
+});
 
 // Listen for changes to the authentication state
 // and update the userId variable accordingly
@@ -33,6 +42,7 @@ onAuthStateChanged(auth, (user) => {
   name = userEmail.split('@')[0];
   tempDate = new Date();
   loginTime = tempDate.toUTCString();
+  readableDate = formatter.format(tempDate);
 });
 
 // Define data keys for the text inputs of conjectures
@@ -64,21 +74,26 @@ export const writeToDatabase = async (poseData, frameRate) => {
   const timestamp = dateObj.toISOString();
   const timestampUTC = dateObj.toUTCString();
 
-  // Create a reference to the Firebase Realtime Database
-  const dbRef = ref(db, "/PoseData");
+  const dbRef = ref(db, `_PoseData/${gameID}/${readableDate}/${name}`);
 
   // Create an object to send to the database
   // This object includes the userId, poseData, conjectureId, frameRate, and timestamp and
   const dataToSend = {
     userId,
+    name,
     poseData: JSON.stringify(poseData),
-    frameRate,
+    eventType,
     timestamp,
     timestampUTC,
+    frameRate,
+    loginTime,
   };
 
-  // Push the data to the database using the dbRef reference
-  const promise = push(dbRef, dataToSend);
+  let promise;
+  if(eventType !== null){
+    // Push the data to the database using the dbRef reference
+    promise = push(dbRef, dataToSend);
+  }
 
   // Return the promise that push() returns
   return promise;
@@ -701,6 +716,7 @@ export const writeToDatabaseNewSession = async (CurrId, CurrName) => {
   const readableDate = formatter.format(dateObj);
   // Change conjecture id appropriately
   curricularId = CurrName;
+  gameID = CurrName;
 
   // Create a reference to the Firebase Realtime Database
   const userSession = `_GameID/${curricularId}/${readableDate}/${name}`;
@@ -726,6 +742,9 @@ export const writeToDatabasePoseStart = async (poseNumber) => {
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
   const timestampUTC = dateObj.toUTCString();
+
+  // set event type to pose start
+  eventType = poseNumber
 
   // Readable date format
   const formatter = new Intl.DateTimeFormat('en-US', {
@@ -777,6 +796,9 @@ export const writeToDatabaseTrueFalseStart = async () => {
   const timestamp = dateObj.toISOString();
   const timestampUTC = dateObj.toUTCString();
 
+  // event type for pose data
+  eventType = "intuition";
+
   // Readable date format
   const formatter = new Intl.DateTimeFormat('en-US', {
     dateStyle: 'full'
@@ -802,6 +824,8 @@ export const writeToDatabaseTrueFalseEnd = async () => {
   const timestamp = dateObj.toISOString();
   const timestampUTC = dateObj.toUTCString();
 
+  // event type for pose data
+  eventType = "insight";
   // Readable date format
   const formatter = new Intl.DateTimeFormat('en-US', {
     dateStyle: 'full'
@@ -820,27 +844,28 @@ export const writeToDatabaseTrueFalseEnd = async () => {
   // Return the promise that push() returns
   return promises;
 };
-export const writeToDatabaseFullPoseData = async (poseData) => {
+
+export const writeToDatabaseTrueFalseEn = async () => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
+  const timestampUTC = dateObj.toUTCString();
+
+  // Readable date format
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'full'
+  });
+  const readableDate = formatter.format(dateObj);
 
   // Create a reference to the Firebase Realtime Database
-  const userSession = ref(db, "/FullPoseData");
+  const userSession = `_GameID/${curricularId}/${readableDate}/${name}/${loginTime}/ConjectureId/TrueFalse`;
 
   // Create an object to send to the database
-  // This object includes the userId, poseData, conjectureId, frameRate, and timestamp and
-  const dataToSend = {
-    userId,
-    poseData: JSON.stringify(poseData),
-    conjectureId,
-    frameRate,
-    timestamp,
-  };
-  
-  // Push the data to the database using the dbRef reference
-  const promise = push(dbRef, dataToSend);
+  const promises = [
+    set(ref(db, `${userSession}/End/`), timestamp),
+    set(ref(db, `${userSession}/EndGMT/`), timestampUTC),
+  ];
 
   // Return the promise that push() returns
-  return promise;
+  return promises;
 };
