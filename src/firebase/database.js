@@ -67,6 +67,8 @@ export const curricularTextBoxes = [
   "CurricularPIN",
 ]
 
+
+
 // Export a function named writeToDatabase
 export const writeToDatabase = async (poseData, frameRate) => {
   // Create a new date object to get a timestamp
@@ -74,27 +76,27 @@ export const writeToDatabase = async (poseData, frameRate) => {
   const timestamp = dateObj.toISOString();
   const timestampUTC = dateObj.toUTCString();
 
-  const dbRef = ref(db, `_PoseData/${gameID}/${readableDate}/${name}`);
+  let promise;
+  // only runs if event type is established
+  if(eventType !== null){
+    const dbRef = ref(db, `_PoseData/${gameID}/${readableDate}/${name}/${eventType}`);
 
   // Create an object to send to the database
   // This object includes the userId, poseData, conjectureId, frameRate, and timestamp and
-  const dataToSend = {
-    userId,
-    name,
-    poseData: JSON.stringify(poseData),
-    eventType,
-    timestamp,
-    timestampUTC,
-    frameRate,
-    loginTime,
-  };
+    const dataToSend = {
+      userId,
+      name,
+      poseData: JSON.stringify(poseData),
+      eventType,
+      timestamp,
+      timestampUTC,
+      frameRate,
+      loginTime,
+    };
 
-  let promise;
-  if(eventType !== null){
     // Push the data to the database using the dbRef reference
     promise = push(dbRef, dataToSend);
   }
-
   // Return the promise that push() returns
   return promise;
 };
