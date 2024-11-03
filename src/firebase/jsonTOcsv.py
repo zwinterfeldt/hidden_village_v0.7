@@ -1,7 +1,7 @@
 import json
 #import csv
 #import os
-# import pandas as pd
+#import pandas as pd
 #from datetime import datetime
 
 
@@ -62,6 +62,7 @@ def write_to_file(data, filepath):
 # main function
 def main():
     # read the json file as python dictionary
+    # make this as a input from the user
     data = read_json(filename= 'C:/Users/adamc/Downloads/exported-json-data-2024-10-30T14-15-57.374Z.json')
 
     # normalize the nested python dictionary

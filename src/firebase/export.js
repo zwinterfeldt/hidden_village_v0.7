@@ -43,7 +43,7 @@ function parsePoseData(poseData) {
 
 // Fucntion to populate the data to its respective header array
 function populateLandmarkData(formattedData, prefix, landmarks, count) {
-    //console.log(landmarks); // log to see whats being passed 
+    
 
     for (let i = 0; i < landmarks.length; i++) {
         formattedData[`${prefix}_X_${i + 1}`] = landmarks[i].x || 'null';
@@ -78,7 +78,7 @@ let maxPoseLandmarkCount = 0;
 // this will fetch the data from the Firebase Realtime Database
 ref.once('value', (snapshot) => {
     const data = snapshot.val(); 
-    //console.log(data); // just to check if data is getting passed through
+     // just to check if data is getting passed through
 
      // If the Firebase Database is empty log the error below
     if (!data) {
@@ -125,77 +125,77 @@ ref.once('value', (snapshot) => {
         // or write a json file to csv 
 
         // Iterate through each object in the data 
-        Object.keys(data).forEach((objectId) => {
-            const objectData = data[objectId];
-            // Parse the pose data
-            const parsedPoseData = parsePoseData(objectData.poseData);
-            //console.log(parsePoseData); // check if data is being passed correctly
+        // Object.keys(data).forEach((objectId) => {
+        //     const objectData = data[objectId];
+        //     // Parse the pose data
+        //     const parsedPoseData = parsePoseData(objectData.poseData);
+            
 
-            // format non-landmark data
-            const formattedData = {
-                objectId: objectId,
-                conjectureId: objectData.conjectureId !== undefined ? objectData.conjectureId : 'null',
-                frameRate: objectData.frameRate || 'null',
-                timeStamp: objectData.timestamp || 'null',
-                UTC_Time: objectData.UTC_Time || 'null',
-                userId: objectData.userId || 'null',
-                role: objectData.role || 'null',
-                gameId: objectData.gameId || 'null',
-                gameMode: objectData.gameMode || 'null',
-                daRep: objectData.daRep || 'null',
-                hints: objectData.hints || 'null',
-                hintCount: objectData.hintCount || 'null',
-                latinSquareOrder: objectData.latinSquareOrder || 'null',
-                hintOrder: objectData.hintOrder || 'null',
-                etss: objectData.etss || 'null',
-                etslo: objectData.etslo || 'null',
-                eventType: objectData.eventType || 'null',
-                tfGivenAnswer: objectData.tfGivenAnswer || 'null',
-                correct: objectData.correct || 'null',
-                mcGivenAnswer: objectData.mcGivenAnswer || 'null',
-                correct: objectData.correct || 'null',
-            };
+        //     // format non-landmark data
+        //     const formattedData = {
+        //         objectId: objectId,
+        //         conjectureId: objectData.conjectureId !== undefined ? objectData.conjectureId : 'null',
+        //         frameRate: objectData.frameRate || 'null',
+        //         timeStamp: objectData.timestamp || 'null',
+        //         UTC_Time: objectData.UTC_Time || 'null',
+        //         userId: objectData.userId || 'null',
+        //         role: objectData.role || 'null',
+        //         gameId: objectData.gameId || 'null',
+        //         gameMode: objectData.gameMode || 'null',
+        //         daRep: objectData.daRep || 'null',
+        //         hints: objectData.hints || 'null',
+        //         hintCount: objectData.hintCount || 'null',
+        //         latinSquareOrder: objectData.latinSquareOrder || 'null',
+        //         hintOrder: objectData.hintOrder || 'null',
+        //         etss: objectData.etss || 'null',
+        //         etslo: objectData.etslo || 'null',
+        //         eventType: objectData.eventType || 'null',
+        //         tfGivenAnswer: objectData.tfGivenAnswer || 'null',
+        //         correct: objectData.correct || 'null',
+        //         mcGivenAnswer: objectData.mcGivenAnswer || 'null',
+        //         correct: objectData.correct || 'null',
+        //     };
 
-            //Populate the data for leftHandLandmarks, rightHandLandmarks, faceLandmarks, and poseLandmarks
-            populateLandmarkData(formattedData, 'lefthandlandmark', parsedPoseData.leftHandLandmarks, maxLeftHandLandmarkCount);
-            populateLandmarkData(formattedData, 'righthandlandmark', parsedPoseData.rightHandLandmarks, maxRightHandLandmarkCount);
-            populateLandmarkData(formattedData, 'facelandmark', parsedPoseData.faceLandmarks, maxFaceLandmarkCount);
-            populateLandmarkData(formattedData, 'poselandmark', parsedPoseData.poseLandmarks, maxPoseLandmarkCount);
+        //     //Populate the data for leftHandLandmarks, rightHandLandmarks, faceLandmarks, and poseLandmarks
+        //     populateLandmarkData(formattedData, 'lefthandlandmark', parsedPoseData.leftHandLandmarks, maxLeftHandLandmarkCount);
+        //     populateLandmarkData(formattedData, 'righthandlandmark', parsedPoseData.rightHandLandmarks, maxRightHandLandmarkCount);
+        //     populateLandmarkData(formattedData, 'facelandmark', parsedPoseData.faceLandmarks, maxFaceLandmarkCount);
+        //     populateLandmarkData(formattedData, 'poselandmark', parsedPoseData.poseLandmarks, maxPoseLandmarkCount);
 
-            // Push formatted data into the dataArray created before 
-            dataArray.push(formattedData);
-        });
-        //console.log(dataArray); // check data 
-        // Define the CSV headers
-        const csvHeaders = [
-            { id: 'UTC_Time', title: 'UTC Time' },
-            { id: 'timeStamp', title: 'UNIX Time Stamp' },
-            { id: 'userId', title: 'ID' },
-            { id: 'role', title: 'Role' },
-            { id: 'gameId', title: 'Game ID' },
-            { id: 'gameMode', title: 'Game Mode' },
-            { id: 'daRep', title: 'DA REP' },
-            { id: 'hints', title: 'Hints' },
-            { id: 'hintCount', title: 'Hint Count' },
-            { id: 'latinSquareOrder', title: 'Latin Square Order' },
-            { id: 'hintOrder', title: 'Hint Order' },
-            { id: 'conjectureId', title: 'Conjecture ID' },
-            { id: 'etss', title: 'Duration of Game' },
-            { id: 'etslo', title: 'Duration of Event' },
-            { id: 'eventType', title: 'Event Type' },
-            { id: 'tfGivenAnswer', title: 'True False Answer' },
-            { id: 'correct', title: 'Correct' },
-            { id: 'mcGivenAnswer', title: 'MC Given Answer' },
-            { id: 'correct', title: 'Correct' },
-            //...generateLandmarkHeaders('lefthandlandmark', maxLeftHandLandmarkCount).map(header => ({ id: header, title: header })),
-            //...generateLandmarkHeaders('righthandlandmark', maxRightHandLandmarkCount).map(header => ({ id: header, title: header })),
-            //...generateLandmarkHeaders('facelandmark', maxFaceLandmarkCount).map(header => ({ id: header, title: header })),
-            //...generateLandmarkHeaders('poselandmark', maxPoseLandmarkCount).map(header => ({ id: header, title: header })),
-            ...leftHandHeaders.map(header => ({ id: header, title: header })),
-            ...rightHandHeaders.map(header => ({ id: header, title: header })),
-            ...faceLandmarkHeaders.map(header => ({ id: header, title: header })),
-            ...poseLandmarkHeaders.map(header => ({ id: header, title: header })),
-        ];
+        //     // Push formatted data into the dataArray created before 
+        //     dataArray.push(formattedData);
+        // });
+        
+        // // Define the CSV headers
+        // const csvHeaders = [
+        //     { id: 'UTC_Time', title: 'UTC Time' },
+        //     { id: 'timeStamp', title: 'UNIX Time Stamp' },
+        //     { id: 'userId', title: 'ID' },
+        //     { id: 'role', title: 'Role' },
+        //     { id: 'gameId', title: 'Game ID' },
+        //     { id: 'gameMode', title: 'Game Mode' },
+        //     { id: 'daRep', title: 'DA REP' },
+        //     { id: 'hints', title: 'Hints' },
+        //     { id: 'hintCount', title: 'Hint Count' },
+        //     { id: 'latinSquareOrder', title: 'Latin Square Order' },
+        //     { id: 'hintOrder', title: 'Hint Order' },
+        //     { id: 'conjectureId', title: 'Conjecture ID' },
+        //     { id: 'etss', title: 'Duration of Game' },
+        //     { id: 'etslo', title: 'Duration of Event' },
+        //     { id: 'eventType', title: 'Event Type' },
+        //     { id: 'tfGivenAnswer', title: 'True False Answer' },
+        //     { id: 'correct', title: 'Correct' },
+        //     { id: 'mcGivenAnswer', title: 'MC Given Answer' },
+        //     { id: 'correct', title: 'Correct' },
+        //     //...generateLandmarkHeaders('lefthandlandmark', maxLeftHandLandmarkCount).map(header => ({ id: header, title: header })),
+        //     //...generateLandmarkHeaders('righthandlandmark', maxRightHandLandmarkCount).map(header => ({ id: header, title: header })),
+        //     //...generateLandmarkHeaders('facelandmark', maxFaceLandmarkCount).map(header => ({ id: header, title: header })),
+        //     //...generateLandmarkHeaders('poselandmark', maxPoseLandmarkCount).map(header => ({ id: header, title: header })),
+        //     ...leftHandHeaders.map(header => ({ id: header, title: header })),
+        //     ...rightHandHeaders.map(header => ({ id: header, title: header })),
+        //     ...faceLandmarkHeaders.map(header => ({ id: header, title: header })),
+        //     ...poseLandmarkHeaders.map(header => ({ id: header, title: header })),
+        // ];
 
         
         // Find the path to the 'Downloads' folder in the user's home directory
@@ -218,16 +218,6 @@ ref.once('value', (snapshot) => {
             path: csvFilePath,
             header: csvHeaders,
         });
-
-        // json to csv script 
-
-        // const jsonContent = JSON.parse(fs.readFileSync(jsonFilePath, 'utf-8'));
-        // const jsonFields = Object.keys(jsonContent[0]);
-        // const jsonCsvData = jsonContent.map((row) =>
-        //     jsonFields.map((field) => JSON.stringify(row[field] || '')).join(',')
-        // );
-        // jsonCsvData.unshift(jsonFields.join(','));
-        // fs.writeFileSync(csvFilePath, jsonCsvData.join('\n'), 'utf-8')
 
 
 
