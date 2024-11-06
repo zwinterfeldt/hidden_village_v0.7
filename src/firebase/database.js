@@ -781,7 +781,7 @@ export const writeToDatabaseIntuitionStart = async () => {
   const timestampGMT = dateObj.toUTCString();
 
   // event type for pose data
-  eventType = "intuition";
+  eventType = "Intuition";
 
   // Create a reference to the Firebase Realtime Database
   const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/ConjectureId/Intuition`;
@@ -803,7 +803,7 @@ export const writeToDatabaseIntuitionEnd = async () => {
   const timestampGMT = dateObj.toUTCString();
 
   // event type for pose data
-  eventType = "insight";
+  eventType = "Insight";
 
   // Create a reference to the Firebase Realtime Database
   const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/ConjectureId/Intuition`;
