@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container, Text, Graphics } from '@inlet/react-pixi';
-import { powderBlue, skyBlue, cornflowerBlue, green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise } from "../../utils/colors";
+import { powderBlue, navyBlue, cornflowerBlue, green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise, yellow, gold, goldenRod, midnightBlue, royalBlue} from "../../utils/colors";
 import RectButton from "../RectButton";
 import { useCallback } from "react";
 import { TextStyle } from "@pixi/text";
@@ -157,6 +157,20 @@ const DataMenu = (props) => {
           } else {
             localStorage.setItem("all_data", "true");
           }
+        }}
+      />
+      <RectButton //Button for downloading the data
+        height={menuHeight * 0.3}
+        width={menuWidth* 0.4}
+        x={x + innerRectMargins + innerRectWidth - menuWidth* 0.2 - fieldTextMarginsFromInnerRect}
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 4}
+        color={royalBlue}
+        text={"DOWNLOAD"}
+        fontSize={menuWidth * 0.02}
+        fontColor={white}
+        fontWeight={600}
+        callback={() => {
+          //Sophia, enter code here
         }}
       />
     </Container>
