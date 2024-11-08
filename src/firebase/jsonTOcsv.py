@@ -48,7 +48,17 @@ def generate_csv(data):
 
     return csv_data
 
-    
+# function tpo flatten json 
+def flatten_json(data, prefix = ''):
+    flatJson = {}
+    for key, value in data.items():
+        if isinstance(value, dict):
+            flatJson.update(flatten_json(value, prefix + key + '_'))
+        else:
+            flatJson[prefix + key] = value
+    return flatJson
+
+
 # Function to write data to file
 def write_to_file(data, filepath):
     
@@ -69,14 +79,19 @@ def main():
     new_data = normalize_json(data=data)
 
     # pretty print the normalized data
-    print("New dictionary: ", new_data)
+    #print("New dictionary: ", new_data)
+
+    # flatten the json data
+    flat_json = flatten_json(data)
+    print("Flattened json: ", flat_json)
 
     # generate desired csv data 
-    csv_data = generate_csv(data=new_data)
+    csv_data = generate_csv(data=flat_json)
 
     #save the csv data to a file
     write_to_file(data=csv_data, filepath='data.csv')
 
+   
 # ===========================================================================================================================================
 # apporoach 1: using pandas ==== library issues
 
@@ -124,3 +139,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
