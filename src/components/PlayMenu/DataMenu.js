@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import { TextStyle } from "@pixi/text";
 import InputBox from "../InputBox";
 import { Input } from 'postcss';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, } from 'react';
 import { getUserEmailFromDatabase,  } from "../../firebase/userDatabase"
 import { getFromDatabaseByGame,  } from "../../firebase/database"
 
@@ -30,6 +30,11 @@ const DataMenu = (props) => {
     trigger
   } = props;
 
+  // For fetching email when componenet first mounts
+  const [userEmail, setUserEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const innerRectWidth = menuWidth * 0.94;
   const innerRectHeight = menuHeight * 0.8; 
   const innerRectMargins = (menuWidth - innerRectWidth) / 2;
@@ -49,7 +54,23 @@ const DataMenu = (props) => {
     fill: [black],                      
   })
 
-  
+  // When component mounts, user email is either loading, fetched, or reached an error
+  useEffect(() => {
+    const fetchEmail = async () => {
+      try {
+        setIsLoading(true);
+        const email = await getUserEmailFromDatabase();
+        setUserEmail(email);
+      } catch (error) {
+        console.error('Error fetching email:', error);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEmail();
+  }, []);
 
 
   const draw = useCallback(
@@ -108,7 +129,7 @@ const DataMenu = (props) => {
         color={white}
         fontSize={inputBoxTextSize}  //  Dynamically modify font size based on screen width
         fontColor={black}
-        text={getUserEmailFromDatabase()}
+        text={isLoading ? 'Loading...' : error ? 'Error loading email' : userEmail}
         fontWeight={600}
       />
       <Text
