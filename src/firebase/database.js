@@ -1,5 +1,5 @@
 // Firebase Init
-import { ref, push, getDatabase, set, query, equalTo, get, orderByChild, orderByKey, onValue, child, startAt, endAt, } from "firebase/database";
+import { ref, push, getDatabase, set, query, equalTo, get, orderByChild, orderByKey, onValue, child, startAt, endAt, remove } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { Curriculum } from "../components/CurricularModule/CurricularModule";
@@ -875,19 +875,19 @@ export const writeToDatabaseInsightEnd = async () => {
   return promises;
 };
 
-// Search functionality that returns a branch for the requested pose data. 
+// Search functionality that downloads a set of child nodes from a game based on inputted dates
 export const getFromDatabaseByGame = async (selectedGame, selectedStart, selectedEnd) => {
   try {
-    // ref the realtime db
+    // Create reference to the realtime database
     const dbRef = ref(db, `_PoseData/${selectedGame}`);
 
-    // query to find data
+    // Query to find data
     const q = query(dbRef, orderByKey(), startAt(selectedStart), endAt(selectedEnd));
     
     // Execute the query
     const querySnapshot = await get(q);
 
-    // check the snapshot
+    // Check if data in snapshot exists
     if (querySnapshot.exists()) {
       const data = querySnapshot.val();
       console.log('Data:', data);
@@ -902,6 +902,38 @@ export const getFromDatabaseByGame = async (selectedGame, selectedStart, selecte
       document.body.removeChild(downloadLink);
     } else {
       return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; 
+  }
+};
+
+export const removeFromDatabaseByGame = async (selectedGame, selectedStart, selectedEnd) => {
+  try {
+    // Create reference to the realtime database
+    const dbRef = ref(db, `_PoseData/${selectedGame}`);
+
+    // Query to find data
+    const q = query(dbRef, orderByKey(), startAt(selectedStart), endAt(selectedEnd));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // Check if the data exists
+    if (querySnapshot.exists()) {
+      const data = {};
+
+      // Set each snapshot to null, deleting data
+      querySnapshot.forEach((snapshot) => {
+        data[snapshot.key] = null;
+      })
+      // Using await to handle errors
+      const itemRef = ref(db, `_PoseData/${selectedGame}`);
+      await remove(itemRef, data);
+      
+      return { success: true, message: 'Data removed.' };
+    } else {
+      return { success: false, message: 'No data to remove.' };
     }
   } catch (error) {
     throw error; // this is an actual bad thing
