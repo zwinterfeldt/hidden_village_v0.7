@@ -173,7 +173,7 @@ const DataMenu = (props) => {
         fontWeight={600}
         callback={() => {
           //Sophia, enter code here
-          getFromDatabaseByGame('sittingquicktest', 'Wednesday, November 6, 2024', 'zzz');
+          getFromDatabaseByGame('sittingquicktest', '2024-11-11', '2024-12-11'); //game, start date, end date
         }}
       />
     </Container>

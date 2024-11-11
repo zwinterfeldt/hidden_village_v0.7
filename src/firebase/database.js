@@ -26,11 +26,6 @@ let eventType;
 let gameId;
 let conjectureId;
 
-// Function to Format date into readable format
-const formatter = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'full'
-});
-
 // Listen for changes to the authentication state
 // and update the userId variable accordingly
 onAuthStateChanged(auth, (user) => {
@@ -39,8 +34,23 @@ onAuthStateChanged(auth, (user) => {
   userName = userEmail.split('@')[0];
   date = new Date();
   loginTime = date.toUTCString();
-  readableDate = formatter.format(date);
+  readableDate = formatDate(date);
 });
+
+// Function to Format date into readable format
+// Function to add leading 0s to numbers to keep format
+const padTo2Digits = (num) => {
+  return num.toString().padStart(2, '0');
+};
+
+// Function to format date to YYYY-MM-DD (So it can be ordered easier)
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = padTo2Digits(date.getMonth() + 1); // +1 because months are 0-indexed
+  const day = padTo2Digits(date.getDate());
+
+  return `${year}-${month}-${day}`;
+};
 
 // Define data keys for the text inputs of conjectures
 export const keysToPush = [
