@@ -12,6 +12,7 @@ const ExperimentalTask = (props) => {
     height,
     prompt,
     poseData,
+    UUID,
     columnDimensions,
     onComplete,
     rowDimensions,
@@ -33,8 +34,7 @@ const ExperimentalTask = (props) => {
   // This code runs when the user is participating in a conjecture and recording is enabled.
   // The following code runs once when the component mounts.
   useEffect(() => {
-    // // Defaults recording conditions true and fps = 12.
-    // // Get the recording parameter from the URL. If it's not set, default to false.
+    // Defaults recording conditions true and fps = 12.
     const isRecording = "true";
     
     // If the recording param is set to true, begin writing data to the database.
@@ -51,7 +51,7 @@ const ExperimentalTask = (props) => {
         // Call the writeToDatabase function with the current poseData, conjecture index,
         // and fps parameter. Push the resulting promise object to the promises array.
         promises.push(
-          writeToDatabase(poseData, fpsUrlParam)
+          writeToDatabase(poseData, UUID, fpsUrlParam)
         );
         // Call the promiseChecker function to detect any data loss in the promises array
         // and trigger an alert if necessary.

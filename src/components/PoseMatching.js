@@ -8,12 +8,13 @@ import Pose from "./Pose/index.js";
 import { useState, useEffect, useMemo } from "react";
 import { Text, Container } from "@inlet/react-pixi";
 import { white } from "../utils/colors";
-import { writeToDatabasePoseMatch, writeToDatabasePoseStart, writeToDatabase } from "../firebase/database.js";
+import { writeToDatabasePoseMatch, writeToDatabasePoseStart, } from "../firebase/database.js";
+import { uniqueId } from "xstate/lib/utils.js";
 
 let poseNumber = 1;
 
 const PoseMatching = (props) => {
-  const { posesToMatch, columnDimensions, onComplete } = props;
+  const { posesToMatch, columnDimensions, onComplete, UUID } = props;
   
   const poseNumberStr = "Pose";
   const context = posesToMatch.map((x) => {    
@@ -47,7 +48,7 @@ const PoseMatching = (props) => {
   // update the current pose with nothing
   useEffect(() => {
     if (poses.length > 0 && !transition) {
-      writeToDatabasePoseStart(poseNumberStr + " " + poseNumber);
+      writeToDatabasePoseStart(poseNumberStr + " " + poseNumber, UUID);
       if (firstPose) {
         setFirstPose(false);
       }

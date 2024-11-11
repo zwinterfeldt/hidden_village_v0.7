@@ -7,7 +7,9 @@ import { TextStyle } from "@pixi/text";
 import InputBox from "../InputBox";
 import { Input } from 'postcss';
 import { useEffect, useRef } from 'react';
-import { getUserEmailFromDatabase } from "../../firebase/userDatabase"
+import { getUserEmailFromDatabase,  } from "../../firebase/userDatabase"
+import { getFromDatabaseByGame,  } from "../../firebase/database"
+
 
 function setLocalStorage(){
   localStorage.setItem("game_name", "");
@@ -171,6 +173,7 @@ const DataMenu = (props) => {
         fontWeight={600}
         callback={() => {
           //Sophia, enter code here
+          getFromDatabaseByGame('sittingquicktest', 'Wednesday, November 6, 2024', 'zzz');
         }}
       />
     </Container>

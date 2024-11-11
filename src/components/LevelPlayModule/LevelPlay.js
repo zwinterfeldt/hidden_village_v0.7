@@ -107,11 +107,12 @@ useEffect(() => {
       )}
       {state.value === "intuition" && (
          <ExperimentalTask
-         width={width}
-         heigh={height}
+          width={width}
+          heigh={height}
           prompt={experimentText}
           columnDimensions={columnDimensions}
           poseData={poseData}
+          UUID={UUID}
           rowDimensions={rowDimensions}
           onComplete={() => send("NEXT")}
           cursorTimer={debugMode ? 1_000 : 10_000}
@@ -121,6 +122,7 @@ useEffect(() => {
           prompt={experimentText}
           columnDimensions={columnDimensions}
           poseData={poseData}
+          UUID={UUID}
           rowDimensions={rowDimensions}
           onComplete={onLevelComplete}
           cursorTimer={debugMode ? 1_000 : 30_000}
