@@ -1,4 +1,5 @@
 import React from 'react'
+import { useState } from 'react';
 import { Container, Text, Graphics } from '@inlet/react-pixi';
 import { powderBlue, navyBlue, cornflowerBlue, green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise, yellow, gold, goldenRod, midnightBlue, royalBlue} from "../../utils/colors";
 import RectButton from "../RectButton";
@@ -10,15 +11,10 @@ import { useEffect, useRef, useState, } from 'react';
 import { getUserEmailFromDatabase,  } from "../../firebase/userDatabase"
 import { getFromDatabaseByGame,  } from "../../firebase/database"
 
+import { set } from 'firebase/database';
 
-function setLocalStorage(){
-  localStorage.setItem("game_name", "");
-  localStorage.setItem("start_date", "");
-  localStorage.setItem("end_date", "");
-  localStorage.setItem("all_data", "false");
-  localStorage.setItem("csv", "false");
-  localStorage.setItem("json", "false");
-}
+
+
 
 
 const DataMenu = (props) => {
@@ -29,6 +25,11 @@ const DataMenu = (props) => {
     y,
     trigger
   } = props;
+
+  const [all_data, setAllData] = useState(false);
+  const [save_csv, setSaveCSV] = useState(false);
+  const [save_json, setSaveJSON] = useState(false);
+
 
   // For fetching email when componenet first mounts
   const [userEmail, setUserEmail] = useState('');
@@ -45,7 +46,7 @@ const DataMenu = (props) => {
   const inputBoxTextSize = menuWidth * 0.02;
   const distanceFromFieldTextToField = menuWidth * 0.3;
   const checkButtonWidth = menuWidth * 0.07;
-  const checkButtonFont = menuWidth * 0.5;
+  const checkButtonFont = menuWidth * 0.03;
   const fieldText = new TextStyle({
     align: "center",                    
     fontFamily: "Arial",                 
@@ -90,8 +91,8 @@ const DataMenu = (props) => {
     [menuHeight, menuWidth, x, y]
   );
 
+
   if (trigger) {
-    setLocalStorage();
     return (
     <Container>
       <Graphics
@@ -173,22 +174,86 @@ const DataMenu = (props) => {
         color={white}
         fontSize={checkButtonFont}
         fontColor={black}
-        text={localStorage.getItem("all_data") === "true" ? "  X" : " "}
-        callback = {() => {
-          if (localStorage.getItem("all_data") === "true") {
-            localStorage.setItem("all_data", "false");
-          } else {
-            localStorage.setItem("all_data", "true");
-          }
-        }}
+        fontWeight={600}
+        text={all_data ? "X" : ""}
+        callback = {() => { setAllData(!all_data) } }
       />
+
+      <Text
+        text={"Download all Data Files for this User"}              
+        style={new TextStyle({
+          align: "center",
+          fontFamily: "Arial",
+          fontSize: fieldHeight * 0.9,
+          fontWeight: 1000,
+          fill: [black],
+        })}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect + checkButtonWidth * 0.5} 
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 3 + fieldTextMarginsFromEachOther }
+        anchor={0}
+      />
+
+      <InputBox //Check box for downloading as CSV
+        height={checkButtonWidth}
+        width={checkButtonWidth}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect}
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 5}
+        color={white}
+        fontSize={checkButtonFont}
+        fontColor={black}
+        fontWeight={600}
+        text={save_csv ? "X" : ""}
+        callback = {() => { setSaveCSV(!save_csv) } }
+      />
+
+      <Text
+        text={"CSV"}              
+        style={new TextStyle({
+          align: "center",
+          fontFamily: "Arial",
+          fontSize: fieldHeight * 0.9,
+          fontWeight: 1000,
+          fill: [black],
+        })}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect + checkButtonWidth * 0.8} 
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 5}
+        anchor={0}
+      />
+
+      <InputBox //Check box for downloading as JSON
+        height={checkButtonWidth}
+        width={checkButtonWidth}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect + checkButtonWidth * 3}
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 5}
+        color={white}
+        fontSize={checkButtonFont}
+        fontColor={black}
+        fontWeight={600}
+        text={save_json ? "X" : ""}
+        callback = {() => { setSaveJSON(!save_json) } }
+      />
+
+      <Text
+        text={"JSON"}              
+        style={new TextStyle({
+          align: "center",
+          fontFamily: "Arial",
+          fontSize: fieldHeight * 0.9,
+          fontWeight: 1000,
+          fill: [black],
+        })}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect + + checkButtonWidth * 3 + checkButtonWidth * 0.8} 
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 5}
+        anchor={0}
+      />
+
       <RectButton //Button for downloading the data
         height={menuHeight * 0.3}
         width={menuWidth* 0.4}
         x={x + innerRectMargins + innerRectWidth - menuWidth* 0.2 - fieldTextMarginsFromInnerRect}
         y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 4}
         color={royalBlue}
-        text={"DOWNLOAD"}
+        text={"SAVE"}
         fontSize={menuWidth * 0.02}
         fontColor={white}
         fontWeight={600}
