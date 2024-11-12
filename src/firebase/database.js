@@ -3,6 +3,7 @@ import { ref, push, getDatabase, set, query, equalTo, get, orderByChild, orderBy
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { Curriculum } from "../components/CurricularModule/CurricularModule";
+import { parse } from "querystring-es3";
 
 
 // Import the uuid library
@@ -906,6 +907,44 @@ export const getFromDatabaseByGame = async (selectedGame, selectedStart, selecte
   } catch (error) {
     throw error; 
   }
+};
+
+export const checkDateFormat = (dateStr) => {
+  // Regular expression to match the date format 'mm/dd/yyyy', 'm/dd/yyyy', 'mm/d/yyyy', 'm/d/yyyy', 'mm-dd-yyyy', 'm-dd-yyyy', 'mm-d-yyyy', or 'm-d-yyyy'
+  const regex = /^(0?[1-9]|1[0-2])[-\/](0?[1-9]|[12][0-9]|3[01])[-\/](\d{4})$/;
+
+  // Test the date string against the regular expression
+  if (!regex.test(dateStr)) {
+    console.log('Invalid date format');
+    return false;
+    
+  }
+
+  // Split the date string into parts
+  const separator = dateStr.includes('/') ? '/' : '-';
+  const [month, day, year] = dateStr.split(separator);
+  
+  // Create a date object from the parts
+  const dateObj = new Date(`${year}-${month}-${(parseInt(day) + 1).toString()}`);
+  // Check if the date object is valid
+  if (dateObj.getFullYear() < 2000 ||
+    dateObj.getFullYear() !== parseInt(year) || 
+      dateObj.getMonth() + 1 !== parseInt(month) || 
+      dateObj.getDate() !== parseInt(day)) {
+    return false;
+  }
+  return true;
+};
+
+export const convertDateFormat = (date) => {
+    // Check if the date string contains '/' or '-'
+    const separator = dateStr.includes('/') ? '/' : '-';
+  
+    // Split the date string into parts
+    const [day, month, year] = dateStr.split(separator);
+    
+    // Return the date string in the format 'yyyy-dd-mm'
+    return `${year}-${day}-${month}`;
 };
 
 export const removeFromDatabaseByGame = async (selectedGame, selectedStart, selectedEnd) => {
