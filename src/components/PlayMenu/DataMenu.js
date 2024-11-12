@@ -1,5 +1,4 @@
 import React from 'react'
-import { useState } from 'react';
 import { Container, Text, Graphics } from '@inlet/react-pixi';
 import { powderBlue, navyBlue, cornflowerBlue, green, neonGreen, black, blue, white, pink, orange, red, transparent, turquoise, yellow, gold, goldenRod, midnightBlue, royalBlue} from "../../utils/colors";
 import RectButton from "../RectButton";
@@ -9,13 +8,9 @@ import InputBox from "../InputBox";
 import { Input } from 'postcss';
 import { useEffect, useRef, useState, } from 'react';
 import { getUserEmailFromDatabase,  } from "../../firebase/userDatabase"
-import { getFromDatabaseByGame,  } from "../../firebase/database"
+import { getFromDatabaseByGame, convertDateFormat, checkDateFormat, } from "../../firebase/database"
 
 import { set } from 'firebase/database';
-
-
-
-
 
 const DataMenu = (props) => {
   const {
@@ -29,6 +24,9 @@ const DataMenu = (props) => {
   const [all_data, setAllData] = useState(false);
   const [save_csv, setSaveCSV] = useState(false);
   const [save_json, setSaveJSON] = useState(false);
+  const [game_name, setGameName] = useState('');
+  const [start_date, setStartDate] = useState('');
+  const [end_date, setEndDate] = useState('');
 
 
   // For fetching email when componenet first mounts
@@ -148,8 +146,13 @@ const DataMenu = (props) => {
         color={white}
         fontSize={inputBoxTextSize}  //  Dynamically modify font size based on screen width
         fontColor={black}
-        text={localStorage.getItem("game_name")}
+        text={game_name}
         fontWeight={600}
+        callback={() => {const promptVal = prompt("Please Enter the Game Name", game_name);
+          if (promptVal != null) {
+            setGameName(promptVal)
+          }
+        }}
       />
       <Text
         text={"START DATE"}                             
@@ -158,12 +161,52 @@ const DataMenu = (props) => {
         y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 2}
         anchor={0}
       />
+      <InputBox //Box for Start Date
+        height={inputBoxHeight}
+        width={(innerRectWidth - distanceFromFieldTextToField - fieldTextMarginsFromInnerRect * 2) / 0.4}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect + distanceFromFieldTextToField}
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 2}
+        color={white}
+        fontSize={inputBoxTextSize}
+        fontColor={black}
+        text={start_date}
+        fontWeight={600}
+        callback={() => {
+          let promptVal = prompt("Please Enter the Start Date in the format mm/dd/yyyy", start_date);
+          while (promptVal != null && checkDateFormat(promptVal) == false) {
+            promptVal = prompt("Invalid Date Format. Please Enter the Start Date in the format mm/dd/yyyy", start_date);
+          }
+          if (promptVal != null) {
+            setStartDate(promptVal)
+          }
+        }}
+      />
       <Text
         text={"END DATE"}              
         style={fieldText}
         x={x + innerRectMargins + fieldTextMarginsFromInnerRect} 
         y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 3}
         anchor={0}
+      />
+      <InputBox //Box for End Date
+        height={inputBoxHeight}
+        width={(innerRectWidth - distanceFromFieldTextToField - fieldTextMarginsFromInnerRect * 2) / 0.4}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect + distanceFromFieldTextToField}
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 3}
+        color={white}
+        fontSize={inputBoxTextSize}
+        fontColor={black}
+        text={end_date}
+        fontWeight={600}
+        callback={() => {
+          let promptVal = prompt("Please Enter the End Date in the format mm/dd/yyyy", end_date);
+          while (promptVal != null && checkDateFormat(promptVal) == false) {
+            promptVal = prompt("Invalid Date Format. Please Enter the End Date in the format mm/dd/yyyy", end_date);
+          }
+          if (promptVal != null) {
+            setEndDate(promptVal)
+          }
+        }}
       />
         
       <InputBox //Check box for downloading all the data for the user
@@ -191,6 +234,7 @@ const DataMenu = (props) => {
         x={x + innerRectMargins + fieldTextMarginsFromInnerRect + checkButtonWidth * 0.5} 
         y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 3 + fieldTextMarginsFromEachOther }
         anchor={0}
+        callback = {() => { setAllData(!all_data) } }
       />
 
       <InputBox //Check box for downloading as CSV
@@ -234,7 +278,7 @@ const DataMenu = (props) => {
       />
 
       <Text
-        text={"JSON"}              
+        text={"JSON"}
         style={new TextStyle({
           align: "center",
           fontFamily: "Arial",
@@ -258,8 +302,8 @@ const DataMenu = (props) => {
         fontColor={white}
         fontWeight={600}
         callback={() => {
-          //Sophia, enter code here
-          getFromDatabaseByGame('sittingquicktest', '2024-11-11', '2024-12-11'); //game, start date, end date
+          // getFromDatabaseByGame('sittingquicktest', '2024-11-11', '2024-12-11'); //game, start date, end date
+          getFromDatabaseByGame(game_name, start_date, end_date); //game, start date, end date
         }}
       />
     </Container>
