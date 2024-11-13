@@ -3,10 +3,24 @@ import ConjecturePoseMatch from './ConjecturePoseMatch';
 import Background from "../Background";
 import { Graphics } from "@inlet/react-pixi";
 import { darkGray, yellow } from "../../utils/colors";
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useEffect } from "react";
+import { promiseChecker, writeToDatabase } from "../../firebase/database.js";
 
 const ConjecturePoseContainer = (props) => {
-    const {poses, needBack, height, width, columnDimensions, rowDimensions, editCallback, mainCallback, poseData,UUID,onCompleteCallback } = props;
+    const {
+        poses, 
+        needBack,
+        height,
+        width,
+        columnDimensions,
+        rowDimensions,
+        editCallback,
+        mainCallback,
+        poseData,
+        UUID,
+        onCompleteCallback 
+    } = props;
+
     const drawModalBackground = useCallback((g) => {
         g.beginFill(darkGray, 0.9);
         g.drawRect(0, 0, window.innerWidth, window.innerHeight);
@@ -17,7 +31,45 @@ const ConjecturePoseContainer = (props) => {
         const col3 = columnDimensions(3);
         g.drawRect(col3.x, col3.y, col3.width, col3.height);
         g.endFill();
-      }, []);
+    }, []);
+
+    useEffect(() => {
+        // // Defaults recording conditions true and fps = 12.
+    
+        // // Get the recording parameter from the URL. If it's not set, default to false.
+        const isRecording = "true";
+        
+        // If the recording param is set to true, begin writing data to the database.
+        if (isRecording === "true") {
+          // Get the fps parameter from the URL. If it's not set, default to 30.
+          const fpsUrlParam = 12;
+    
+          // Empty array to hold promise objects assures that all the promises get settled on component unmount.
+          let promises = [];
+    
+          // This creates an interval for the writing to the database every n times a second,
+          // where n is a variable framerate.
+          const intervalId = setInterval(() => {
+            // Call the writeToDatabase function with the current poseData, conjecture index,
+            // and fps parameter. Push the resulting promise object to the promises array.
+            promises.push(
+              writeToDatabase(poseData, UUID, fpsUrlParam)
+            );
+            // Call the promiseChecker function to detect any data loss in the promises array
+            // and trigger an alert if necessary.
+            promiseChecker(fpsUrlParam, promises);
+        }, 1000 / fpsUrlParam);
+    
+          // The code below runs when the component unmounts.
+        return async () => {
+            // Stop the interval when the component unmounts.
+          clearInterval(intervalId);
+    
+            // Wait until all promises are settled so we don't lose data.
+          await Promise.allSettled(promises);
+        };
+      } 
+    }, []);
 
 // Use background and graphics to draw background and then initiate conjecturePoseMatch
     return (

@@ -1,8 +1,9 @@
 // Firebase Init
-import { ref, push, getDatabase, set, query, equalTo, get, orderByChild, orderByKey } from "firebase/database";
+import { ref, push, getDatabase, set, query, equalTo, get, orderByChild, orderByKey, onValue, child, startAt, endAt, remove } from "firebase/database";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { Curriculum } from "../components/CurricularModule/CurricularModule";
+import { parse } from "querystring-es3";
 
 
 // Import the uuid library
@@ -10,17 +11,47 @@ const { v4: uuidv4 } = require('uuid');
 
 const db = getDatabase();
 
-// User Id functionality will be added in a different PR
-let userId;
-
 // Get the Firebase authentication instance
 const auth = getAuth();
+
+// Declare variables that change on user change -> these represent paths in the Firebase
+let userId;
+let userEmail;
+let userName;
+let date;
+let readableDate;
+let loginTime;
+
+// Declare variables that change on game state change
+let eventType;
+let gameId;
+let conjectureId;
 
 // Listen for changes to the authentication state
 // and update the userId variable accordingly
 onAuthStateChanged(auth, (user) => {
   userId = user.uid;
+  userEmail = user.email;
+  userName = userEmail.split('@')[0];
+  date = new Date();
+  loginTime = date.toUTCString();
+  readableDate = formatDate(date);
 });
+
+// Function to Format date into readable format
+// Function to add leading 0s to numbers to keep format
+const padTo2Digits = (num) => {
+  return num.toString().padStart(2, '0');
+};
+
+// Function to format date to YYYY-MM-DD (So it can be ordered easier)
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = padTo2Digits(date.getMonth() + 1); // +1 because months are 0-indexed
+  const day = padTo2Digits(date.getDate());
+
+  return `${year}-${month}-${day}`;
+};
 
 // Define data keys for the text inputs of conjectures
 export const keysToPush = [
@@ -44,28 +75,36 @@ export const curricularTextBoxes = [
   "CurricularPIN",
 ]
 
-// Export a function named writeToDatabase
-export const writeToDatabase = async (poseData, conjectureId, frameRate) => {
+// Export a function named writeToDatabase, allows constant pose data upload
+export const writeToDatabase = async (poseData, UUID, frameRate) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
+  const timestampGMT = dateObj.toUTCString();
 
-  // Create a reference to the Firebase Realtime Database
-  const dbRef = ref(db, "/Experimental_Data");
+  let promise;
+
+  // only runs if event type is established
+  if(eventType !== null){
+    const dbRef = ref(db, `_PoseData/${gameId}/${readableDate}/${userName+" "+loginTime}/${UUID}/${eventType}`);
 
   // Create an object to send to the database
   // This object includes the userId, poseData, conjectureId, frameRate, and timestamp and
-  const dataToSend = {
-    userId,
-    poseData: JSON.stringify(poseData),
-    conjectureId,
-    frameRate,
-    timestamp,
-  };
+    const dataToSend = {
+      userId,
+      userName,
+      poseData: JSON.stringify(poseData),
+      eventType,
+      timestamp,
+      timestampGMT,
+      frameRate,
+      loginTime,
+      UUID,
+    };
 
-  // Push the data to the database using the dbRef reference
-  const promise = push(dbRef, dataToSend);
-
+    // Push the data to the database using the dbRef reference (pushes using default firebase reference codes)
+    promise = push(dbRef, dataToSend);
+  }
   // Return the promise that push() returns
   return promise;
 };
@@ -674,3 +713,399 @@ export const searchConjecturesByWord = async (searchWord) => {
     return []; // Return an empty array in case of error
   }
 };
+
+
+// Write a new game select into database under gameid>>date>>studentid>>sessionid
+export const writeToDatabaseNewSession = async (CurrId, CurrName) => {
+  // Create a new date object to get a timestamp and readable timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+  const timestampGMT = dateObj.toUTCString();
+ 
+  // Change game ID appropriately
+  gameId = CurrName;
+
+  // Create a reference path to the Firebase Realtime Database
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}`;
+
+  // Create an object to send to the database
+  // Some of these are placeholders for future values that aren't implemented yet i.e. Hints
+  const promises = [
+    set(ref(db, `_GameID/${gameId}/CurricularID`), CurrId),
+    set(ref(db, `${userSession}/UserId`), userId),
+    set(ref(db, `${userSession}/${loginTime}/GameStart`), timestamp),
+    set(ref(db, `${userSession}/${loginTime}/GameStartGMT`), timestampGMT),
+    set(ref(db, `${userSession}/${loginTime}/DaRep`), 'null'),
+    set(ref(db, `${userSession}/${loginTime}/Hints/HintEnabled`), "null"),
+    set(ref(db, `${userSession}/${loginTime}/Hints/HintCount`), "null"),
+    set(ref(db, `${userSession}/${loginTime}/Hints/HintOrder`), "null"),
+    set(ref(db, `${userSession}/${loginTime}/LatinSquareOrder`), "null"),
+  ];
+
+  // Return the promise that push() returns
+  return promises;
+};
+
+// Write timestamp for pose start to the database
+export const writeToDatabasePoseStart = async (poseNumber, ConjectureId) => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+  const timestampGMT = dateObj.toUTCString();
+
+  // set event type to pose start
+  eventType = poseNumber
+  conjectureId = ConjectureId;
+
+  // Create a reference path to the Firebase Realtime Database
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}/${poseNumber}`;
+
+  // Create an object to send to the database
+  const promises = [
+    set(ref(db, `${userSession}/Start/`), timestamp),
+    set(ref(db, `${userSession}/StartGMT/`), timestampGMT),
+  ];
+
+  // Return the promise that push() returns
+  return promises;
+};
+
+// Writes a pose match into the database. Separated for simplicity
+export const writeToDatabasePoseMatch = async (poseNumber) => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+  const timestampGMT = dateObj.toUTCString();
+
+  // Create a reference to the Firebase Realtime Database
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}/${poseNumber}`;
+
+  // Create an object to send to the database
+  const promises = [
+    set(ref(db, `${userSession}/Match/`), timestamp),
+    set(ref(db, `${userSession}/MatchGMT/`), timestampGMT),
+  ];
+
+  // Return the promise that push() returns
+  return promises;
+};
+
+// Write in the start of the truefalse phase
+export const writeToDatabaseIntuitionStart = async () => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+  const timestampGMT = dateObj.toUTCString();
+
+  // event type for pose data
+  eventType = "Intuition";
+
+  // Create a reference to the Firebase Realtime Database
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}/Intuition`;
+
+  // Create an object to send to the database
+  const promises = [
+    set(ref(db, `${userSession}/Start/`), timestamp),
+    set(ref(db, `${userSession}/StartGMT/`), timestampGMT),
+  ];
+
+  // Return the promise that push() returns
+  return promises;
+};
+
+// Write in the end of the truefalse phase. 
+export const writeToDatabaseIntuitionEnd = async () => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+  const timestampGMT = dateObj.toUTCString();
+
+  // event type for pose data
+  eventType = "Insight";
+
+  // Create a reference to the Firebase Realtime Database
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}/Intuition`;
+
+  // Create an object to send to the database
+  const promises = [
+    set(ref(db, `${userSession}/End/`), timestamp),
+    set(ref(db, `${userSession}/EndGMT/`), timestampGMT),
+  ];
+
+  // Return the promise that push() returns
+  return promises;
+};
+
+// Write in the second part of the true false phase
+export const writeToDatabaseInsightStart = async () => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+  const timestampGMT = dateObj.toUTCString();
+
+  // Create a reference to the Firebase Realtime Database
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}//Insight`;
+
+  // Create an object to send to the database
+  const promises = [
+    set(ref(db, `${userSession}/Start/`), timestamp),
+    set(ref(db, `${userSession}/StartGMT/`), timestampGMT),
+  ];
+
+  // Return the promise that push() returns
+  return promises;
+};
+
+// Write in the end of the second part of the true false phase
+export const writeToDatabaseInsightEnd = async () => {
+  // Create a new date object to get a timestamp
+  const dateObj = new Date();
+  const timestamp = dateObj.toISOString();
+  const timestampGMT = dateObj.toUTCString();
+
+  // Create a reference to the Firebase Realtime Database
+  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}/Insight`;
+
+  // Create an object to send to the database
+  const promises = [
+    set(ref(db, `${userSession}/End/`), timestamp),
+    set(ref(db, `${userSession}/EndGMT/`), timestampGMT),
+  ];
+
+  // Return the promise that push() returns
+  return promises;
+};
+
+// Search functionality that downloads a set of child nodes from a game based on inputted dates
+export const getFromDatabaseByGame = async (selectedGame, selectedStart, selectedEnd) => {
+  try {
+    // Create reference to the realtime database
+    const dbRef = ref(db, `_PoseData/${selectedGame}`);
+
+    // Query to find data
+    const q = query(dbRef, orderByKey(), startAt(selectedStart), endAt(selectedEnd));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // Check if data in snapshot exists
+    if (querySnapshot.exists()) {
+      const data = querySnapshot.val();
+      console.log('Data:', data);
+      
+      // Convert to JSON and download
+      const jsonStr = JSON.stringify(data, null, 2);
+      const downloadLink = document.createElement('a');
+      downloadLink.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(jsonStr));
+      downloadLink.setAttribute('download', 'query_results.json');
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; 
+  }
+};
+
+export const removeFromDatabaseByGame = async (selectedGame, selectedStart, selectedEnd) => {
+  try {
+    // Create reference to the realtime database
+    const dbRef = ref(db, `_PoseData/${selectedGame}`);
+
+    // Query to find data
+    const q = query(dbRef, orderByKey(), startAt(selectedStart), endAt(selectedEnd));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // Check if the data exists
+    if (querySnapshot.exists()) {
+      const data = {};
+
+      // Set each snapshot to null, deleting data
+      querySnapshot.forEach((snapshot) => {
+        data[snapshot.key] = null;
+      })
+      // Using await to handle errors
+      const itemRef = ref(db, `_PoseData/${selectedGame}`);
+      await remove(itemRef, data);
+      
+      return { success: true, message: 'Data removed.' };
+    } else {
+      return { success: false, message: 'No data to remove.' };
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
+
+export const checkGameAuthorization = async (gameName) => {
+  try {
+    const dbRef = ref(db, 'Game');
+    const q = query(dbRef, orderByChild('CurricularName'), equalTo(gameName));
+    const qSnapshot = await get(q);
+
+    if (qSnapshot.exists()) {
+      // If there is a game with this name, continue
+      const p = query(dbRef, orderByChild('CurricularAuthor'), equalTo(userName));
+      const pSnapshopt = await get(p);
+      // Only returns true if author matches current user
+      if (pSnapshopt.exists()) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      // Returns null if the game does not exist at all
+      return null; 
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
+
+// Not Database function but attached to data menu search
+export const checkDateFormat = (dateStr) => {
+  // Regular expression to match the date format 'mm/dd/yyyy', 'm/dd/yyyy', 'mm/d/yyyy', 'm/d/yyyy', 'mm-dd-yyyy', 'm-dd-yyyy', 'mm-d-yyyy', or 'm-d-yyyy'
+  const regex = /^(0?[1-9]|1[0-2])[-\/](0?[1-9]|[12][0-9]|3[01])[-\/](\d{4})$/;
+
+  // Test the date string against the regular expression
+  if (!regex.test(dateStr)) {
+    console.log('Invalid date format');
+    return false;
+    
+  }
+
+  // Split the date string into parts
+  const separator = dateStr.includes('/') ? '/' : '-';
+  const [month, day, year] = dateStr.split(separator);
+  
+  // Create a date object from the parts
+  const dateObj = new Date(`${year}-${month}-${(parseInt(day) + 1).toString()}`);
+  // Check if the date object is valid
+  if (dateObj.getFullYear() < 2000 ||
+    dateObj.getFullYear() !== parseInt(year) || 
+      dateObj.getMonth() + 1 !== parseInt(month) || 
+      dateObj.getDate() !== parseInt(day)) {
+    return false;
+  }
+  return true;
+};
+
+export const convertDateFormat = (date) => {
+    // Check if the date string contains '/' or '-'
+    const separator = dateStr.includes('/') ? '/' : '-';
+  
+    // Split the date string into parts
+    const [day, month, year] = dateStr.split(separator);
+    
+    // Return the date string in the format 'yyyy-dd-mm'
+    return `${year}-${day}-${month}`;
+};
+
+
+
+
+
+
+  // // ref the realtime db
+  // const dbRef = ref(db, `_PoseData/${selectedGame}`);
+
+  // ref.once('value')
+  //   .startAt(selectedStart)
+  //   .orderByKey()
+  //   .then((snapshot) => {
+  //     const querySnapshot = snapshot.val();
+  //     const queryJSON = JSON.stringify(querySnapshot, null, 2);
+  //     console.log('File successfully created');
+
+  //     const downloadLink = document.createElement('a');
+  //     downloadLink.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(salesJson));
+  //     downloadLink.setAttribute('download', 'pose_data.json');
+
+  //   // Append the link to the DOM and click it
+  //     document.body.appendChild(downloadLink);
+  //     downloadLink.click();
+
+  //   // Remove the link from the DOM
+  //     document.body.removeChild(downloadLink);
+  //   })
+  //   .catch((error) => {
+  //     console.error('No data to download.', error)
+  //   })
+  // }
+//   // query to find data with the UUID
+//   const q = query(dbRef, orderByKey(), startAt(selectedStart), endAt(selectedEnd));
+//   const querySnapshot = await get(q);
+//   console.log(querySnapshot);
+//   // if (querySnapshot.exists()) {
+//   //     // get all the conjectures in an array
+//   //   const poseDataArray = [];
+//   //   querySnapshot.forEach((poseDataSnapshot) => {
+//   //     poseDataArray.push(poseDataSnapshot.val());
+//   //   });
+//   //   return poseDataArray; // return the data if its good
+//   // } else {
+//   //   console.log('no');
+//   //   return null; // This will happen if data not found
+//   // }
+// }
+
+  // const database = firebase.database();
+  // const ref = database.ref(`_PoseData/${selectedGame}`);
+//   ref.orderByKey()
+//     .startAt(selectedStart)
+//     .endAt(selectedEnd)
+//     .once('value')
+//     .then((snapshot) => {
+      
+//     })
+    
+//     });
+// }
+
+  // const startDateObj = new Date(selectedStart);
+  // const endDateObj = new Date(selectedEnd);
+  // const startMidnight = new Date(startDateObj.getFullYear(), startDateObj.getMonth(), startDateObj.getDate());
+  // const endMidnight = new Date(endDateObj.getFullYear(), endDateObj.getMonth(), endDateObj.getDate());
+  // const startUnix = Math.floor(startMidnight.getTime() / 1000);
+  // const endUnix = Math.floor(endMidnight.getTime() / 1000);
+
+  //   querySnapshot = await get(query);
+  
+  //   if (querySnapshot.exists()) {
+  //     // get all the conjectures in an array
+  //     const poseDataArray = [];
+  //     querySnapshot.forEach((poseDataSnapshot) => {
+  //       poseDataArray.push(poseDataSnapshot.val());
+  //     });
+  //     return poseDataArray; // return the data if its good
+  //   } else {
+  //     return null; // This will happen if data not found
+  //   }
+  // } catch (error) {
+  //   throw error;
+  // }
+
+//   get(child(db, `_PoseData/${selectedGame}/${selectedStart}`)).then((snapshot) => {
+//     if (snapshot.exists()) {
+//       const data = snapshot.val();
+//       fs.writeFileSync("firebase-data.json", JSON.stringify(data, null, 2));
+//       console.log("Data exported to firebase-data.json");
+//       console.log(snapshot.val());
+//     } else {
+//       console.log("No data available");
+//     }
+//   }).catch((error) => {
+//     console.error(error);
+//   });
+// };
+
+// export const clearFromDatabaseByGame = async () => {
+// };
+

@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import Background from "../Background"
-import { set } from "js-cookie";
 import Button from "../Button";
 import { red, yellow, purple, babyBlue, powderBlue, cornflowerBlue, steelBlue, dodgerBlue, royalBlue, white } from "../../utils/colors";
-import RectButton from "../RectButton";
-import { send } from "xstate";
-import { sendTo } from "xstate/lib/actions";
 import { useMachine } from "@xstate/react";
 import {PlayMenuMachine} from "./PlayMenuMachine";
 import ConjectureModule , {getEditLevel, setEditLevel, getGoBackFromLevelEdit, setGoBackFromLevelEdit} from "../ConjectureModule/ConjectureModule";
@@ -14,16 +10,14 @@ import ConjectureSelectorModule, { getAddToCurricular, setAddtoCurricular } from
 import CurricularSelectorModule, { getPlayGame, setPlayGame } from "../CurricularSelector/CurricularSelector.js";
 import { getUserRoleFromDatabase } from "../../firebase/userDatabase";
 import firebase from "firebase/compat";
-import { Text } from "@inlet/react-pixi";
 import { Curriculum } from "../CurricularModule/CurricularModule.js";
-import { TextStyle } from "@pixi/text";
 import Settings from "../Settings";
 import UserManagementModule from "../AdminHomeModule/UserManagementModule";
 import NewUserModule from "../AdminHomeModule/NewUserModule";
 import PoseAuthoring from "../PoseAuth/PoseAuthoring";
-import ConjecturePoseContainer from "../ConjecturePoseMatch/ConjecturePoseContainer.js";
 import PlayGame from "../PlayGameModule/PlayGame";
 import PoseTest from "../ConjectureModule/PoseTest";
+import DataMenu from "./DataMenu.js";
 
 const PlayMenu = (props) => {
     const {width, height, poseData, columnDimensions, rowDimensions, role, logoutCallback} = props;
@@ -32,6 +26,7 @@ const PlayMenu = (props) => {
     const [startingX, setStartingX] = useState();
     const [state, send] = useMachine(PlayMenuMachine);
     const [userRole, setUserRole] = useState(null);
+    const [isDataMenuVisable, setdataMenuVisable] = useState(false);
     
     // On render get user role
     const fetchData = async () => {
@@ -90,7 +85,7 @@ const PlayMenu = (props) => {
 
     return (
         <>
-        {state.value === "main" && (
+        {state.value === "main" && ( // if the state is main, show the log out button and background
           <>
             <Background height={height} width= {width}/>
             <Button
@@ -107,7 +102,7 @@ const PlayMenu = (props) => {
           />
         </>
         )}
-        {state.value === "main" && buttonList.map((button, idx) => (
+        {state.value === "main" && buttonList.map((button, idx) => ( //if the state is main, show the buttons
             <Button
                 fontColor={yellow}
                 key = {idx}
@@ -121,7 +116,30 @@ const PlayMenu = (props) => {
                 callback={button.callback}
             />
         ))}
-        {state.value === "test" && (
+                {state.value === "main" && ( // if the state is main, show the data button and the data menu
+          <>
+            <Button
+            height={height * 0.01}
+            width={width * 0.05}
+            x={width - (width * 0.05)}
+            y={height - (height * 0.1)}
+            color={red}
+            fontSize={14}
+            fontColor={white}
+            text={"Data"}
+            fontWeight={800}
+            callback={() => setdataMenuVisable(!isDataMenuVisable)}
+          />
+          <DataMenu 
+          trigger={isDataMenuVisable} 
+          menuWidth={width * 0.4}
+          menuHeight={height * 0.5}
+          x={width * 0.5 - (width * 0.4 * 0.5)}
+          y={height * 0.5 - (height * 0.5 * 0.5)}
+        />
+        </>
+        )}
+        {state.value === "test" && ( //if the state is test, show the test module
           <PoseTest
             width={width}
             height={height}
@@ -131,7 +149,7 @@ const PlayMenu = (props) => {
             conjectureCallback={() => send("NEWLEVEL")}
           />
         )}
-        {state.value === "newLevel" && (
+        {state.value === "newLevel" && ( //if the state is newLevel, show the Conjecture Module
             <ConjectureModule
                 width={width}
                 height={height}
@@ -143,7 +161,7 @@ const PlayMenu = (props) => {
                 testCallback={() => send("TEST")}
             />
         )}
-        {state.value === "edit" && (
+        {state.value === "edit" && ( //if the state is edit, show the Conjecture Module
             <PoseAuthoring
             width={width}
             height={height}
@@ -227,6 +245,7 @@ const PlayMenu = (props) => {
             mainCallback={() => {send("MAIN")}}
           />
         )}
+        
         </>
     );
 };

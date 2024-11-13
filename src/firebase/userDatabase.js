@@ -278,6 +278,18 @@ export const getUsersByOrganizationFromDatabase = async (organization) => {
     }
 };
 
+// get user email for data download auto populate
+export const getUserEmailFromDatabase = async (props) => {
+    const userPath = `Users/${userId}`;
 
+    // Get the user snapshot from the database
+    const userSnapshot = await get(ref(db, userPath));
 
-
+    if (userSnapshot.exists()) {
+        // User exists, return the user's email
+        return userSnapshot.val().userEmail;
+    } else {
+        // User does not exist in the database
+        return null;
+    }
+};

@@ -12,6 +12,7 @@ const ExperimentalTask = (props) => {
     height,
     prompt,
     poseData,
+    UUID,
     columnDimensions,
     onComplete,
     rowDimensions,
@@ -31,24 +32,17 @@ const ExperimentalTask = (props) => {
 
   // Database Write Functionality
   // This code runs when the user is participating in a conjecture and recording is enabled.
-
   // The following code runs once when the component mounts.
   useEffect(() => {
-    // Optional URL parameters for whether motion data recording is enabled
-    // and what the fps is for recording.
-    // Defaults are false and 30.
-    const queryParameters = new URLSearchParams(window.location.search);
-
-    // Get the recording parameter from the URL. If it's not set, default to false.
-    const recordingUrlParam = queryParameters.get("recording") || "false";
-
+    // Defaults recording conditions true and fps = 12.
+    const isRecording = "true";
+    
     // If the recording param is set to true, begin writing data to the database.
-    if (recordingUrlParam.toLowerCase() === "true") {
+    if (isRecording === "true") {
       // Get the fps parameter from the URL. If it's not set, default to 30.
-      const fpsUrlParam = parseInt(queryParameters.get("fps")) || 12;
+      const fpsUrlParam = 12;
 
-      // Empty array to hold the promise objects.
-      // This is important so we can assure that all the promises get settled on component unmount.
+      // Empty array to hold promise objects assures that all the promises get settled on component unmount.
       let promises = [];
 
       // This creates an interval for the writing to the database every n times a second,
@@ -57,23 +51,23 @@ const ExperimentalTask = (props) => {
         // Call the writeToDatabase function with the current poseData, conjecture index,
         // and fps parameter. Push the resulting promise object to the promises array.
         promises.push(
-          writeToDatabase(poseData, fpsUrlParam)
+          writeToDatabase(poseData, UUID, fpsUrlParam)
         );
         // Call the promiseChecker function to detect any data loss in the promises array
         // and trigger an alert if necessary.
         promiseChecker(fpsUrlParam, promises);
-      }, 1000 / fpsUrlParam);
+    }, 1000 / fpsUrlParam);
 
       // The code below runs when the component unmounts.
-      return async () => {
+    return async () => {
         // Stop the interval when the component unmounts.
-        clearInterval(intervalId);
+      clearInterval(intervalId);
 
         // Wait until all promises are settled so we don't lose data.
-        await Promise.allSettled(promises);
-      };
-    }
-  }, []);
+      await Promise.allSettled(promises);
+    };
+  } 
+}, []);
 
   useEffect(() => {
     const timeout = setTimeout(

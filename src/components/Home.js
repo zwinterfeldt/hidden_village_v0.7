@@ -5,9 +5,10 @@ import { TextStyle } from "@pixi/text";
 import { yellow, blue, green, white, red,turquoise } from "../utils/colors";
 
 import React, { useState, useEffect } from 'react';
-import {writeToDatabaseNewUser, getUserRoleFromDatabase, getUserNameFromDatabase} from "../firebase/userDatabase";
+import { writeToDatabaseNewUser, getUserRoleFromDatabase, getUserNameFromDatabase } from "../firebase/userDatabase";
 import UserManagementModule from '../components/AdminHomeModule/UserManagementModule';
 import { onAuthStateChanged } from "firebase/auth";
+
 
 
 const Home = (props) => {

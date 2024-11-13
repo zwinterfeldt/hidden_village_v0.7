@@ -12,7 +12,7 @@ import { set } from "firebase/database";
 import  PoseMatching  from "../PoseMatching";
 
 const ConjecturePoseMatch = (props) => {
-  const { poses, width, columnDimensions, onCompleteCallback, poseData} = props;
+  const { poses, width, columnDimensions, onCompleteCallback, poseData, UUID} = props;
 
 
 return(
@@ -21,6 +21,7 @@ return(
         <>
         <PoseMatching
           poseData={poseData}
+          UUID = {UUID}
           posesToMatch={[
             poses
           ].flat()}

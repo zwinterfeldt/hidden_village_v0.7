@@ -76,7 +76,7 @@ const SignInScreen = ({ firebaseApp }) => {
                 type="password"
               />
               <div></div>
-              <input className="login-input-submit" type="submit" />
+              <input className="login-input-submit" type="submit" value="SUBMIT"/>
               <ErrorMessage
                 error={loginError}
                 message={"Email or password is incorrect."}
