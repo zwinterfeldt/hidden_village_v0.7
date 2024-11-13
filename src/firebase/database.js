@@ -909,6 +909,67 @@ export const getFromDatabaseByGame = async (selectedGame, selectedStart, selecte
   }
 };
 
+export const removeFromDatabaseByGame = async (selectedGame, selectedStart, selectedEnd) => {
+  try {
+    // Create reference to the realtime database
+    const dbRef = ref(db, `_PoseData/${selectedGame}`);
+
+    // Query to find data
+    const q = query(dbRef, orderByKey(), startAt(selectedStart), endAt(selectedEnd));
+    
+    // Execute the query
+    const querySnapshot = await get(q);
+
+    // Check if the data exists
+    if (querySnapshot.exists()) {
+      const data = {};
+
+      // Set each snapshot to null, deleting data
+      querySnapshot.forEach((snapshot) => {
+        data[snapshot.key] = null;
+      })
+      // Using await to handle errors
+      const itemRef = ref(db, `_PoseData/${selectedGame}`);
+      await remove(itemRef, data);
+      
+      return { success: true, message: 'Data removed.' };
+    } else {
+      return { success: false, message: 'No data to remove.' };
+    }
+  } catch (error) {
+    throw error; // this is an actual bad thing
+  }
+};
+
+export const checkGameAuthorization = async (gameName) => {
+  try {
+    const dbRef = ref(db, 'Game');
+    const q = query(dbRef, orderByChild('CurricularName'), equalTo(gameName));
+    const qSnapshot = await get(q);
+
+    if (qSnapshot.exists()) {
+      // If there is a game with this name, continue
+      const p = query(dbRef, orderByChild('CurricularAuthor'), equalTo(userName));
+      const pSnapshopt = await get(p);
+      // Only returns true if author matches current user
+      if (pSnapshopt.exists()) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      // Returns null if the game does not exist at all
+      return null; 
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
+
+// Not Database function but attached to data menu search
 export const checkDateFormat = (dateStr) => {
   // Regular expression to match the date format 'mm/dd/yyyy', 'm/dd/yyyy', 'mm/d/yyyy', 'm/d/yyyy', 'mm-dd-yyyy', 'm-dd-yyyy', 'mm-d-yyyy', or 'm-d-yyyy'
   const regex = /^(0?[1-9]|1[0-2])[-\/](0?[1-9]|[12][0-9]|3[01])[-\/](\d{4})$/;
@@ -947,37 +1008,11 @@ export const convertDateFormat = (date) => {
     return `${year}-${day}-${month}`;
 };
 
-export const removeFromDatabaseByGame = async (selectedGame, selectedStart, selectedEnd) => {
-  try {
-    // Create reference to the realtime database
-    const dbRef = ref(db, `_PoseData/${selectedGame}`);
 
-    // Query to find data
-    const q = query(dbRef, orderByKey(), startAt(selectedStart), endAt(selectedEnd));
-    
-    // Execute the query
-    const querySnapshot = await get(q);
 
-    // Check if the data exists
-    if (querySnapshot.exists()) {
-      const data = {};
 
-      // Set each snapshot to null, deleting data
-      querySnapshot.forEach((snapshot) => {
-        data[snapshot.key] = null;
-      })
-      // Using await to handle errors
-      const itemRef = ref(db, `_PoseData/${selectedGame}`);
-      await remove(itemRef, data);
-      
-      return { success: true, message: 'Data removed.' };
-    } else {
-      return { success: false, message: 'No data to remove.' };
-    }
-  } catch (error) {
-    throw error; // this is an actual bad thing
-  }
-};
+
+
   // // ref the realtime db
   // const dbRef = ref(db, `_PoseData/${selectedGame}`);
 
