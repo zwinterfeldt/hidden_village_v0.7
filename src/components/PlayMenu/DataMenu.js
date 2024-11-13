@@ -151,9 +151,11 @@ const DataMenu = (props) => {
         callback={async () => {
           let promptVal = prompt("Please Enter the Game Name", game_name);
           let gameValid = await checkGameAuthorization(promptVal);
-          console.log(gameValid);
+         // console.log(gameValid);
           while (promptVal != null && gameValid != true) {
             promptVal = prompt("Invalid Game Name. Please try again", game_name);
+            gameValid = await checkGameAuthorization(promptVal);
+            //console.log(gameValid);
           }
           if (promptVal != null) {
             setGameName(promptVal)
