@@ -8,7 +8,7 @@ import InputBox from "../InputBox";
 import { Input } from 'postcss';
 import { useEffect, useRef, useState, } from 'react';
 import { getUserEmailFromDatabase,  } from "../../firebase/userDatabase"
-import { getFromDatabaseByGame, convertDateFormat, checkDateFormat, } from "../../firebase/database"
+import { getFromDatabaseByGame, convertDateFormat, checkDateFormat, checkGameAuthorization, } from "../../firebase/database"
 
 import { set } from 'firebase/database';
 
@@ -148,7 +148,13 @@ const DataMenu = (props) => {
         fontColor={black}
         text={game_name}
         fontWeight={600}
-        callback={() => {const promptVal = prompt("Please Enter the Game Name", game_name);
+        callback={async () => {
+          let promptVal = prompt("Please Enter the Game Name", game_name);
+          let gameValid = await checkGameAuthorization(promptVal);
+          console.log(gameValid);
+          while (promptVal != null && gameValid != true) {
+            promptVal = prompt("Invalid Game Name. Please try again", game_name);
+          }
           if (promptVal != null) {
             setGameName(promptVal)
           }
