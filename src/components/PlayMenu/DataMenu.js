@@ -320,7 +320,7 @@ const DataMenu = (props) => {
             getFromDatabaseByGame(game_name, '2000-01-01', new Date().toISOString().split('T')[0]); //game, start date, end date
           }
           else if (save_json) {
-            getFromDatabaseByGame(game_name, start_date, end_date); //game, start date, end date
+            getFromDatabaseByGame(game_name, convertDateFormat(start_date), convertDateFormat(end_date)); //game, start date, end date
           }
         }}
       />

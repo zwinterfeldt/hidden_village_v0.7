@@ -997,7 +997,7 @@ export const checkDateFormat = (dateStr) => {
   return true;
 };
 
-export const convertDateFormat = (date) => {
+export const convertDateFormat = (dateStr) => {
     // Check if the date string contains '/' or '-'
     const separator = dateStr.includes('/') ? '/' : '-';
   
@@ -1005,7 +1005,7 @@ export const convertDateFormat = (date) => {
     const [day, month, year] = dateStr.split(separator);
     
     // Return the date string in the format 'yyyy-dd-mm'
-    return `${year}-${day}-${month}`;
+    return `${year}-${month}-${day}`;
 };
 
 
