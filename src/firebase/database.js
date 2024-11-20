@@ -966,6 +966,30 @@ export const checkGameAuthorization = async (gameName) => {
   }
 };
 
+export const getAuthorizedGameList = async () => {
+  try {
+    const dbRef = ref(db, 'Game');
+    const q = query(dbRef, orderByChild('CurricularAuthor'), equalTo(userName));
+    const querySnapshot = await get(q);
+
+    if (querySnapshot.exists()) {
+      // get all the conjectures in an array
+      const authorizedCurricular = [];
+
+      querySnapshot.forEach((authorizedCurricularSnapshot) => {
+        const gameData = authorizedCurricularSnapshot.val();
+        authorizedCurricular.push(gameData.CurriclarName)
+          // Add other relevant fields you want to include
+      })
+    } else {
+      // return nothing if user has no created games
+      return null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 
 
 

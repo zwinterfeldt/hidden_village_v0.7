@@ -8,7 +8,7 @@ import InputBox from "../InputBox";
 import { Input } from 'postcss';
 import { useEffect, useRef, useState, } from 'react';
 import { getUserEmailFromDatabase,  } from "../../firebase/userDatabase"
-import { getFromDatabaseByGame, convertDateFormat, checkDateFormat, checkGameAuthorization, } from "../../firebase/database"
+import { getFromDatabaseByGame, convertDateFormat, checkDateFormat, checkGameAuthorization, getAuthorizedGameList, } from "../../firebase/database"
 
 import { set } from 'firebase/database';
 
@@ -27,6 +27,7 @@ const DataMenu = (props) => {
   const [game_name, setGameName] = useState('');
   const [start_date, setStartDate] = useState('');
   const [end_date, setEndDate] = useState('');
+  const [game_list, setGameList] = useState('');
 
 
   // For fetching email when componenet first mounts
@@ -59,7 +60,9 @@ const DataMenu = (props) => {
       try {
         setIsLoading(true);
         const email = await getUserEmailFromDatabase();
+        const gameList = await getAuthorizedGameList();
         setUserEmail(email);
+        setGameList(gameList);
       } catch (error) {
         console.error('Error fetching email:', error);
         setError(error.message);
