@@ -898,7 +898,7 @@ export const getFromDatabaseByGame = async (selectedGame, selectedStart, selecte
       const jsonStr = JSON.stringify(data, null, 2);
       const downloadLink = document.createElement('a');
       downloadLink.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(jsonStr));
-      downloadLink.setAttribute('download', 'query_results.json');
+      downloadLink.setAttribute('download', 'pose_data.json');
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);

@@ -60,7 +60,7 @@ const DataMenu = (props) => {
       try {
         setIsLoading(true);
         const email = await getUserEmailFromDatabase();
-       // const gameList = await getAuthorizedGameList();
+        //const gameList = await getAuthorizedGameList();
         // console.log("data received:", gameList);
         setUserEmail(email);
         //setGameList(gameList);
@@ -154,7 +154,13 @@ const DataMenu = (props) => {
         fontWeight={600}
         callback={async () => {
           const game_list = await getAuthorizedGameList();
-          let gameOptions = game_list.join('\n');
+          let gameOptions;
+          if (game_list != null) {
+            gameOptions = game_list.join('\n');
+          } else {
+            gameOptions = "No games found";
+          }
+          
           //let promptVal = prompt("Please Enter the Game Name", game_name);
           let promptVal = prompt(`Please Enter a Game from the following list\n\n${gameOptions}\n\n`, game_name);
           let gameValid = await checkGameAuthorization(promptVal);
