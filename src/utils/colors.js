@@ -22,6 +22,7 @@ const midnightBlue = 0x191970;
 const gold = 0xFFD700;
 const goldenRod = 0xDAA520;
 const indigo = 0x4B0082;
+const lightGray = 0xababab;
 
 
-export { yellow, blue, white, darkGray, pink, hotPink, green, neonGreen, black, red, orange, turquoise, purple, babyBlue, powderBlue, cornflowerBlue, steelBlue, dodgerBlue, royalBlue, navyBlue, midnightBlue, gold, goldenRod, indigo};
+export { yellow, blue, white, darkGray, pink, hotPink, green, neonGreen, black, red, orange, turquoise, purple, babyBlue, powderBlue, cornflowerBlue, steelBlue, dodgerBlue, royalBlue, navyBlue, midnightBlue, gold, goldenRod, indigo, lightGray};

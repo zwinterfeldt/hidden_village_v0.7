@@ -234,7 +234,8 @@ export const writeToDatabaseConjecture = async (existingUUID) => {
       set(ref(db, `${conjecturePath}/End Pose`), endPoseData),
       set(ref(db, `${conjecturePath}/Text Boxes`), dataToPush),
       set(ref(db, `${conjecturePath}/isFinal`), true),
-      set(ref(db,`${conjecturePath}/Search Words`), searchWordsToPushToDatabase)
+      set(ref(db,`${conjecturePath}/Search Words`), searchWordsToPushToDatabase),
+      set(ref(db, `${conjecturePath}/Name`), dataToPush["Conjecture Name"]),
     ];
 
     return promises && alert("Conjecture successfully published to database.");
@@ -676,7 +677,7 @@ export const getCurricularList = async (final) => {
       return null; // This will happen if data not found
     }
   } catch (error) {
-    throw error; // this is an actual bad thing
+    throw error; 
   }
 };
 
@@ -897,7 +898,7 @@ export const getFromDatabaseByGame = async (selectedGame, selectedStart, selecte
       const jsonStr = JSON.stringify(data, null, 2);
       const downloadLink = document.createElement('a');
       downloadLink.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(jsonStr));
-      downloadLink.setAttribute('download', 'query_results.json');
+      downloadLink.setAttribute('download', 'pose_data.json');
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
@@ -966,6 +967,36 @@ export const checkGameAuthorization = async (gameName) => {
   }
 };
 
+export const getAuthorizedGameList = async () => {
+  try {
+    const dbRef = ref(db, 'Game');
+    const q = query(dbRef, orderByChild('CurricularAuthor'), equalTo(userName));
+    const querySnapshot = await get(q);
+    console.log("Query snapshot:", querySnapshot.val());
+    if (querySnapshot.exists()) {
+      // get all the conjectures in an array
+      const authorizedCurricular = [];
+
+      querySnapshot.forEach((authorizedCurricularSnapshot) => {
+        // console.log("Game data:", gameData);
+        // console.log("CurricularName:", gameData.CurricularName);
+        // push name string into list of authorized games
+        authorizedCurricular.push(authorizedCurricularSnapshot.val().CurricularName);
+      })
+      // console.log("Final array:", authorizedCurricular);
+      return authorizedCurricular;
+
+    } else {
+      console.log("No data found");
+      // return nothing if user has no created games
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting game list", error);
+    throw error;
+  }
+};
+
 
 
 
@@ -997,7 +1028,7 @@ export const checkDateFormat = (dateStr) => {
   return true;
 };
 
-export const convertDateFormat = (date) => {
+export const convertDateFormat = (dateStr) => {
     // Check if the date string contains '/' or '-'
     const separator = dateStr.includes('/') ? '/' : '-';
   
@@ -1005,7 +1036,7 @@ export const convertDateFormat = (date) => {
     const [day, month, year] = dateStr.split(separator);
     
     // Return the date string in the format 'yyyy-dd-mm'
-    return `${year}-${day}-${month}`;
+    return `${year}-${month}-${day}`;
 };
 
 
