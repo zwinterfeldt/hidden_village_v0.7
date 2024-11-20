@@ -27,7 +27,7 @@ const DataMenu = (props) => {
   const [game_name, setGameName] = useState('');
   const [start_date, setStartDate] = useState('');
   const [end_date, setEndDate] = useState('');
-  const [game_list, setGameList] = useState('');
+  const [game_list, setGameList] = useState([]);
 
 
   // For fetching email when componenet first mounts
@@ -60,9 +60,10 @@ const DataMenu = (props) => {
       try {
         setIsLoading(true);
         const email = await getUserEmailFromDatabase();
-        const gameList = await getAuthorizedGameList();
+       // const gameList = await getAuthorizedGameList();
+        // console.log("data received:", gameList);
         setUserEmail(email);
-        setGameList(gameList);
+        //setGameList(gameList);
       } catch (error) {
         console.error('Error fetching email:', error);
         setError(error.message);
@@ -149,10 +150,13 @@ const DataMenu = (props) => {
         color={white}
         fontSize={inputBoxTextSize}  //  Dynamically modify font size based on screen width
         fontColor={black}
-        text={game_name}
+        text={game_name} // change this out to game_name after testing
         fontWeight={600}
         callback={async () => {
-          let promptVal = prompt("Please Enter the Game Name", game_name);
+          const game_list = await getAuthorizedGameList();
+          let gameOptions = game_list.join('\n');
+          //let promptVal = prompt("Please Enter the Game Name", game_name);
+          let promptVal = prompt(`Please Enter a Game from the following list\n\n${gameOptions}\n\n`, game_name);
           let gameValid = await checkGameAuthorization(promptVal);
          // console.log(gameValid);
           while (promptVal != null && gameValid != true) {

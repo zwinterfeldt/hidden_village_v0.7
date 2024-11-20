@@ -234,7 +234,8 @@ export const writeToDatabaseConjecture = async (existingUUID) => {
       set(ref(db, `${conjecturePath}/End Pose`), endPoseData),
       set(ref(db, `${conjecturePath}/Text Boxes`), dataToPush),
       set(ref(db, `${conjecturePath}/isFinal`), true),
-      set(ref(db,`${conjecturePath}/Search Words`), searchWordsToPushToDatabase)
+      set(ref(db,`${conjecturePath}/Search Words`), searchWordsToPushToDatabase),
+      set(ref(db, `${conjecturePath}/Name`), dataToPush["Conjecture Name"]),
     ];
 
     return promises && alert("Conjecture successfully published to database.");
@@ -676,7 +677,7 @@ export const getCurricularList = async (final) => {
       return null; // This will happen if data not found
     }
   } catch (error) {
-    throw error; // this is an actual bad thing
+    throw error; 
   }
 };
 
@@ -971,21 +972,27 @@ export const getAuthorizedGameList = async () => {
     const dbRef = ref(db, 'Game');
     const q = query(dbRef, orderByChild('CurricularAuthor'), equalTo(userName));
     const querySnapshot = await get(q);
-
+    console.log("Query snapshot:", querySnapshot.val());
     if (querySnapshot.exists()) {
       // get all the conjectures in an array
       const authorizedCurricular = [];
 
       querySnapshot.forEach((authorizedCurricularSnapshot) => {
-        const gameData = authorizedCurricularSnapshot.val();
-        authorizedCurricular.push(gameData.CurriclarName)
-          // Add other relevant fields you want to include
+        // console.log("Game data:", gameData);
+        // console.log("CurricularName:", gameData.CurricularName);
+        // push name string into list of authorized games
+        authorizedCurricular.push(authorizedCurricularSnapshot.val().CurricularName);
       })
+      // console.log("Final array:", authorizedCurricular);
+      return authorizedCurricular;
+
     } else {
+      console.log("No data found");
       // return nothing if user has no created games
       return null;
     }
   } catch (error) {
+    console.error("Error getting game list", error);
     throw error;
   }
 };
