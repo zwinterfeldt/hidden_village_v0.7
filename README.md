@@ -32,7 +32,6 @@ To serve the app locally, run `npm run dev`, you can then visit any of these URL
  This is the default local app URL. Recording of conjecture data will not happen, and the framerate (FPS) will be set to the default (which is normally 30)
  
  ```
-
 These currently do not work with the new format of playing the game.
 
  [http://localhost:1234/?recording=true](#http://localhost:1234/?recording=true)
@@ -43,6 +42,12 @@ These currently do not work with the new format of playing the game.
  ```
  Changing the 30 (17, for example) to any positive integer will change FPS that data is sent to Firebase.
  ```
+
+
+## Additional Setup Tutorials
+For information on setting up backend, creating an admin, and previous semester repositories, view the [associated GitHub Wiki](https://github.com/PidgeonBrained/hidden_village_v0.6/wiki)
+
+
 
  
  
