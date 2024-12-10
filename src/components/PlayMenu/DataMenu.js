@@ -118,7 +118,7 @@ const DataMenu = (props) => {
       />
       
       <Text
-        text={"USER ID"}                             
+        text={"USER ID"}
         style={fieldText}
         x={x + innerRectMargins + fieldTextMarginsFromInnerRect} 
         y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect}
@@ -166,7 +166,7 @@ const DataMenu = (props) => {
           let gameValid = await checkGameAuthorization(promptVal);
          // console.log(gameValid);
           while (promptVal != null && gameValid != true) {
-            promptVal = prompt("Invalid Game Name. Please try again", game_name);
+            promptVal = prompt(`Invalid Game Name. Please try again. Enter a Game from the following list\n\n${gameOptions}\n\n`, game_name);
             gameValid = await checkGameAuthorization(promptVal);
             //console.log(gameValid);
           }
@@ -277,9 +277,9 @@ const DataMenu = (props) => {
       />
 
       <Text
-        text={"CSV"}              
+        text={"CSV \n(broken)"}              
         style={new TextStyle({
-          align: "center",
+          align: "left",
           fontFamily: "Arial",
           fontSize: fieldHeight * 0.9,
           fontWeight: 1000,
@@ -334,6 +334,12 @@ const DataMenu = (props) => {
           }
           else if (save_json) {
             getFromDatabaseByGame(game_name, convertDateFormat(start_date), convertDateFormat(end_date)); //game, start date, end date
+          }
+          if (all_data && save_csv){
+            getFromDatabaseByGameCSV(game_name, '2000-01-01', new Date().toISOString().split('T')[0]); //game, start date, end date
+          }
+          else if (save_csv) {
+            getFromDatabaseByGameCSV(game_name, convertDateFormat(start_date), convertDateFormat(end_date)); //game, start date, end date
           }
         }}
       />

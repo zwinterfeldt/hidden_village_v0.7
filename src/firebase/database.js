@@ -5,6 +5,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Curriculum } from "../components/CurricularModule/CurricularModule";
 import { parse } from "querystring-es3";
 
+import { convertJsonToCsv, } from "../firebase/jsonTOcsv.js";
 
 // Import the uuid library
 const { v4: uuidv4 } = require('uuid');
@@ -18,6 +19,7 @@ const auth = getAuth();
 let userId;
 let userEmail;
 let userName;
+let userRole;
 let date;
 let readableDate;
 let loginTime;
@@ -236,6 +238,8 @@ export const writeToDatabaseConjecture = async (existingUUID) => {
       set(ref(db, `${conjecturePath}/isFinal`), true),
       set(ref(db,`${conjecturePath}/Search Words`), searchWordsToPushToDatabase),
       set(ref(db, `${conjecturePath}/Name`), dataToPush["Conjecture Name"]),
+      // auto set author to logged in user
+      //set(ref(db, `${conjecturePath}/Author`), userName),
     ];
 
     return promises && alert("Conjecture successfully published to database.");
@@ -300,6 +304,8 @@ export const writeToDatabaseConjectureDraft = async (existingUUID) => {
     set(ref(db, `${conjecturePath}/Text Boxes`), dataToPush),
     set(ref(db, `${conjecturePath}/UUID`),conjectureID),
     set(ref(db, `${conjecturePath}/isFinal`), false),
+    // auto set author to logged in user
+    //set(ref(db, `${conjecturePath}/Author`), userName)
   ];
 
   return promises && alert("Draft saved");
@@ -446,6 +452,9 @@ export const writeToDatabaseCurricularDraft = async (UUID) => {
     set(ref(db, `${CurricularPath}/Time`), timestamp),
     set(ref(db, `${CurricularPath}/UUID`), CurricularID),
     set(ref(db, `${CurricularPath}/isFinal`), false),
+    // auto set author for security
+    set(ref(db, `${CurricularPath}/Author`), userName),
+    set(ref(db, `${CurricularPath}/AuthorID`), userId),
   ];
 
   return promises && alert("Game Draft saved");
@@ -506,6 +515,9 @@ export const writeToDatabaseCurricular = async (UUID) => {
     set(ref(db, `${CurricularPath}/Time`), timestamp),
     set(ref(db, `${CurricularPath}/UUID`), CurricularID),
     set(ref(db, `${CurricularPath}/isFinal`), true),
+    // auto set author for security
+    set(ref(db, `${CurricularPath}/Author`), userName),
+    set(ref(db, `${CurricularPath}/AuthorID`), userId),
   ];
 
   return alert("Game Published"), promises; //returns the promises and alerts that the game has been published
@@ -717,7 +729,7 @@ export const searchConjecturesByWord = async (searchWord) => {
 
 
 // Write a new game select into database under gameid>>date>>studentid>>sessionid
-export const writeToDatabaseNewSession = async (CurrId, CurrName) => {
+export const writeToDatabaseNewSession = async (CurrId, CurrName, role) => {
   // Create a new date object to get a timestamp and readable timestamp
   const dateObj = new Date();
   const timestamp = dateObj.toISOString();
@@ -725,15 +737,17 @@ export const writeToDatabaseNewSession = async (CurrId, CurrName) => {
  
   // Change game ID appropriately
   gameId = CurrName;
+  userRole = role;
 
   // Create a reference path to the Firebase Realtime Database
-  const userSession = `_GameID/${gameId}/${readableDate}/${userName}`;
+  const userSession = `_GameData/${gameId}/${readableDate}/${userName}`;
 
   // Create an object to send to the database
   // Some of these are placeholders for future values that aren't implemented yet i.e. Hints
   const promises = [
-    set(ref(db, `_GameID/${gameId}/CurricularID`), CurrId),
+    set(ref(db, `_GameData/${gameId}/CurricularID`), CurrId),
     set(ref(db, `${userSession}/UserId`), userId),
+    set(ref(db, `${userSession}/UserRole`), userRole),
     set(ref(db, `${userSession}/${loginTime}/GameStart`), timestamp),
     set(ref(db, `${userSession}/${loginTime}/GameStartGMT`), timestampGMT),
     set(ref(db, `${userSession}/${loginTime}/DaRep`), 'null'),
@@ -759,12 +773,12 @@ export const writeToDatabasePoseStart = async (poseNumber, ConjectureId) => {
   conjectureId = ConjectureId;
 
   // Create a reference path to the Firebase Realtime Database
-  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}/${poseNumber}`;
+  const userSession = `_GameData/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}`;
 
   // Create an object to send to the database
   const promises = [
-    set(ref(db, `${userSession}/Start/`), timestamp),
-    set(ref(db, `${userSession}/StartGMT/`), timestampGMT),
+    set(ref(db, `${userSession}/${poseNumber} Begin`), timestamp),
+    set(ref(db, `${userSession}/${poseNumber} Begin GMT`), timestampGMT),
   ];
 
   // Return the promise that push() returns
@@ -779,12 +793,12 @@ export const writeToDatabasePoseMatch = async (poseNumber) => {
   const timestampGMT = dateObj.toUTCString();
 
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}/${poseNumber}`;
+  const userSession = `_GameData/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}`;
 
   // Create an object to send to the database
   const promises = [
-    set(ref(db, `${userSession}/Match/`), timestamp),
-    set(ref(db, `${userSession}/MatchGMT/`), timestampGMT),
+    set(ref(db, `${userSession}/${poseNumber} Match`), timestamp),
+    set(ref(db, `${userSession}/${poseNumber} Match GMT`), timestampGMT),
   ];
 
   // Return the promise that push() returns
@@ -802,12 +816,12 @@ export const writeToDatabaseIntuitionStart = async () => {
   eventType = "Intuition";
 
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}/Intuition`;
+  const userSession = `_GameData/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}`;
 
   // Create an object to send to the database
   const promises = [
-    set(ref(db, `${userSession}/Start/`), timestamp),
-    set(ref(db, `${userSession}/StartGMT/`), timestampGMT),
+    set(ref(db, `${userSession}/Intuition Start`), timestamp),
+    set(ref(db, `${userSession}/Intuition Start GMT`), timestampGMT),
   ];
 
   // Return the promise that push() returns
@@ -825,12 +839,12 @@ export const writeToDatabaseIntuitionEnd = async () => {
   eventType = "Insight";
 
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}/Intuition`;
+  const userSession = `_GameData/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}`;
 
   // Create an object to send to the database
   const promises = [
-    set(ref(db, `${userSession}/End/`), timestamp),
-    set(ref(db, `${userSession}/EndGMT/`), timestampGMT),
+    set(ref(db, `${userSession}/Intuition End/`), timestamp),
+    set(ref(db, `${userSession}/Intuition End GMT/`), timestampGMT),
   ];
 
   // Return the promise that push() returns
@@ -845,12 +859,12 @@ export const writeToDatabaseInsightStart = async () => {
   const timestampGMT = dateObj.toUTCString();
 
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}//Insight`;
+  const userSession = `_GameData/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}`;
 
   // Create an object to send to the database
   const promises = [
-    set(ref(db, `${userSession}/Start/`), timestamp),
-    set(ref(db, `${userSession}/StartGMT/`), timestampGMT),
+    set(ref(db, `${userSession}/Insight Start/`), timestamp),
+    set(ref(db, `${userSession}/Insight Start GMT/`), timestampGMT),
   ];
 
   // Return the promise that push() returns
@@ -865,12 +879,12 @@ export const writeToDatabaseInsightEnd = async () => {
   const timestampGMT = dateObj.toUTCString();
 
   // Create a reference to the Firebase Realtime Database
-  const userSession = `_GameID/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}/Insight`;
+  const userSession = `_GameData/${gameId}/${readableDate}/${userName}/${loginTime}/${conjectureId}`;
 
   // Create an object to send to the database
   const promises = [
-    set(ref(db, `${userSession}/End/`), timestamp),
-    set(ref(db, `${userSession}/EndGMT/`), timestampGMT),
+    set(ref(db, `${userSession}/Insight End`), timestamp),
+    set(ref(db, `${userSession}/Insight End GMT`), timestampGMT),
   ];
 
   // Return the promise that push() returns
@@ -878,30 +892,85 @@ export const writeToDatabaseInsightEnd = async () => {
 };
 
 // Search functionality that downloads a set of child nodes from a game based on inputted dates
-export const getFromDatabaseByGame = async (selectedGame, selectedStart, selectedEnd) => {
+export const getFromDatabaseByGame = async (selectedGame, selectedStart, selectedEnd ) => {
   try {
     // Create reference to the realtime database
-    const dbRef = ref(db, `_PoseData/${selectedGame}`);
+    const posedbRef = ref(db, `_PoseData/${selectedGame}`);
+    const eventdbRef = ref(db, `_GameData/${selectedGame}`);
 
     // Query to find data
-    const q = query(dbRef, orderByKey(), startAt(selectedStart), endAt(selectedEnd));
-    
+    const poseq = query(posedbRef, orderByKey(), startAt(selectedStart), endAt(selectedEnd));
+    const eventq = query(eventdbRef, orderByKey(), startAt(selectedStart), endAt(selectedEnd));
     // Execute the query
-    const querySnapshot = await get(q);
+    const poseQuerySnapshot = await get(poseq);
+    const eventQuerySnapshot = await get(eventq);
+
+    const formattedStart = selectedStart.replace(/[^a-zA-Z0-9]/g, '_');
+    const formattedEnd = selectedEnd.replace(/[^a-zA-Z0-9]/g, '_');
+    const formattedGame = selectedGame.replace(/[^a-zA-Z0-9]/g, '_');
 
     // Check if data in snapshot exists
-    if (querySnapshot.exists()) {
-      const data = querySnapshot.val();
-      console.log('Data:', data);
+    if (poseQuerySnapshot.exists() && eventQuerySnapshot.exists()) {
+      const poseData = poseQuerySnapshot.val();
+      const eventData = eventQuerySnapshot.val();
+      //console.log('Data:', poseData);
       
-      // Convert to JSON and download
-      const jsonStr = JSON.stringify(data, null, 2);
-      const downloadLink = document.createElement('a');
-      downloadLink.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(jsonStr));
-      downloadLink.setAttribute('download', 'pose_data.json');
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
+      // // Convert event log to JSON and download
+      const eventjsonStr = JSON.stringify(eventData, null, 2);
+      const eventDownload = document.createElement('a');
+      eventDownload.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(eventjsonStr));
+      eventDownload.setAttribute('download', `${formattedGame}_event_log_${formattedStart}_to_${formattedEnd}.json`);
+      document.body.appendChild(eventDownload);
+      eventDownload.click();
+      document.body.removeChild(eventDownload);
+
+      // Convert pose data to JSON and download (takes longer)
+      const posejsonStr = JSON.stringify(poseData, null, 2);
+      const poseDownload = document.createElement('a');
+      poseDownload.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(posejsonStr));
+      poseDownload.setAttribute('download', `${formattedGame}_pose_data_${formattedStart}_to_${formattedEnd}.json`);
+      document.body.appendChild(poseDownload);
+      poseDownload.click();
+      document.body.removeChild(poseDownload);
+      
+    } else {
+      return null; // This will happen if data not found
+    }
+  } catch (error) {
+    throw error; 
+  }
+};
+
+export const getFromDatabaseByGameCSV = async (selectedGame, selectedStart, selectedEnd ) => {
+  try {
+    // Create reference to the realtime database
+    const eventdbRef = ref(db, `_GameData/${selectedGame}`);
+
+    // Query to find data
+    const eventq = query(eventdbRef, orderByKey(), startAt(selectedStart), endAt(selectedEnd));
+    // Execute the query
+    const eventQuerySnapshot = await get(eventq);
+
+    const formattedStart = selectedStart.replace(/[^a-zA-Z0-9]/g, '_');
+    const formattedEnd = selectedEnd.replace(/[^a-zA-Z0-9]/g, '_');
+    const formattedGame = selectedGame.replace(/[^a-zA-Z0-9]/g, '_');
+
+    // Check if data in snapshot exists
+    if (eventQuerySnapshot.exists()) {
+      const eventData = eventQuerySnapshot.val();
+      //console.log('Data:', poseData);
+      
+      // // Convert event log to JSON and download CSV
+      const eventjsonStr = JSON.stringify(eventData, null, 2);
+      const eventDownload = document.createElement('a');
+      eventDownload.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(eventjsonStr));
+      eventDownload.setAttribute('download', `${formattedGame}_event_log_${formattedStart}_to_${formattedEnd}.json`);
+      document.body.appendChild(eventDownload);
+      eventDownload.click();
+      document.body.removeChild(eventDownload);
+
+      const result = await convertJsonToCsv(eventjsonStr, formattedGame, formattedStart, formattedEnd);
+      
     } else {
       return null; // This will happen if data not found
     }
@@ -950,7 +1019,7 @@ export const checkGameAuthorization = async (gameName) => {
 
     if (qSnapshot.exists()) {
       // If there is a game with this name, continue
-      const p = query(dbRef, orderByChild('CurricularAuthor'), equalTo(userName));
+      const p = query(dbRef, orderByChild('AuthorID'), equalTo(userId));
       const pSnapshopt = await get(p);
       // Only returns true if author matches current user
       if (pSnapshopt.exists()) {
@@ -970,20 +1039,18 @@ export const checkGameAuthorization = async (gameName) => {
 export const getAuthorizedGameList = async () => {
   try {
     const dbRef = ref(db, 'Game');
-    const q = query(dbRef, orderByChild('CurricularAuthor'), equalTo(userName));
+    const q = query(dbRef, orderByChild('AuthorID'), equalTo(userId));
     const querySnapshot = await get(q);
     console.log("Query snapshot:", querySnapshot.val());
+
     if (querySnapshot.exists()) {
       // get all the conjectures in an array
       const authorizedCurricular = [];
 
       querySnapshot.forEach((authorizedCurricularSnapshot) => {
-        // console.log("Game data:", gameData);
-        // console.log("CurricularName:", gameData.CurricularName);
         // push name string into list of authorized games
         authorizedCurricular.push(authorizedCurricularSnapshot.val().CurricularName);
       })
-      // console.log("Final array:", authorizedCurricular);
       return authorizedCurricular;
 
     } else {
@@ -1011,21 +1078,6 @@ export const checkDateFormat = (dateStr) => {
     return false;
     
   }
-
-  // Split the date string into parts
-  const separator = dateStr.includes('/') ? '/' : '-';
-  const [month, day, year] = dateStr.split(separator);
-  
-  // Create a date object from the parts
-  const dateObj = new Date(`${year}-${month}-${(parseInt(day) + 1).toString()}`);
-  // Check if the date object is valid
-  if (dateObj.getFullYear() < 2000 ||
-    dateObj.getFullYear() !== parseInt(year) || 
-      dateObj.getMonth() + 1 !== parseInt(month) || 
-      dateObj.getDate() !== parseInt(day)) {
-    return false;
-  }
-  return true;
 };
 
 export const convertDateFormat = (dateStr) => {
@@ -1038,105 +1090,3 @@ export const convertDateFormat = (dateStr) => {
     // Return the date string in the format 'yyyy-dd-mm'
     return `${year}-${month}-${day}`;
 };
-
-
-
-
-
-
-  // // ref the realtime db
-  // const dbRef = ref(db, `_PoseData/${selectedGame}`);
-
-  // ref.once('value')
-  //   .startAt(selectedStart)
-  //   .orderByKey()
-  //   .then((snapshot) => {
-  //     const querySnapshot = snapshot.val();
-  //     const queryJSON = JSON.stringify(querySnapshot, null, 2);
-  //     console.log('File successfully created');
-
-  //     const downloadLink = document.createElement('a');
-  //     downloadLink.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(salesJson));
-  //     downloadLink.setAttribute('download', 'pose_data.json');
-
-  //   // Append the link to the DOM and click it
-  //     document.body.appendChild(downloadLink);
-  //     downloadLink.click();
-
-  //   // Remove the link from the DOM
-  //     document.body.removeChild(downloadLink);
-  //   })
-  //   .catch((error) => {
-  //     console.error('No data to download.', error)
-  //   })
-  // }
-//   // query to find data with the UUID
-//   const q = query(dbRef, orderByKey(), startAt(selectedStart), endAt(selectedEnd));
-//   const querySnapshot = await get(q);
-//   console.log(querySnapshot);
-//   // if (querySnapshot.exists()) {
-//   //     // get all the conjectures in an array
-//   //   const poseDataArray = [];
-//   //   querySnapshot.forEach((poseDataSnapshot) => {
-//   //     poseDataArray.push(poseDataSnapshot.val());
-//   //   });
-//   //   return poseDataArray; // return the data if its good
-//   // } else {
-//   //   console.log('no');
-//   //   return null; // This will happen if data not found
-//   // }
-// }
-
-  // const database = firebase.database();
-  // const ref = database.ref(`_PoseData/${selectedGame}`);
-//   ref.orderByKey()
-//     .startAt(selectedStart)
-//     .endAt(selectedEnd)
-//     .once('value')
-//     .then((snapshot) => {
-      
-//     })
-    
-//     });
-// }
-
-  // const startDateObj = new Date(selectedStart);
-  // const endDateObj = new Date(selectedEnd);
-  // const startMidnight = new Date(startDateObj.getFullYear(), startDateObj.getMonth(), startDateObj.getDate());
-  // const endMidnight = new Date(endDateObj.getFullYear(), endDateObj.getMonth(), endDateObj.getDate());
-  // const startUnix = Math.floor(startMidnight.getTime() / 1000);
-  // const endUnix = Math.floor(endMidnight.getTime() / 1000);
-
-  //   querySnapshot = await get(query);
-  
-  //   if (querySnapshot.exists()) {
-  //     // get all the conjectures in an array
-  //     const poseDataArray = [];
-  //     querySnapshot.forEach((poseDataSnapshot) => {
-  //       poseDataArray.push(poseDataSnapshot.val());
-  //     });
-  //     return poseDataArray; // return the data if its good
-  //   } else {
-  //     return null; // This will happen if data not found
-  //   }
-  // } catch (error) {
-  //   throw error;
-  // }
-
-//   get(child(db, `_PoseData/${selectedGame}/${selectedStart}`)).then((snapshot) => {
-//     if (snapshot.exists()) {
-//       const data = snapshot.val();
-//       fs.writeFileSync("firebase-data.json", JSON.stringify(data, null, 2));
-//       console.log("Data exported to firebase-data.json");
-//       console.log(snapshot.val());
-//     } else {
-//       console.log("No data available");
-//     }
-//   }).catch((error) => {
-//     console.error(error);
-//   });
-// };
-
-// export const clearFromDatabaseByGame = async () => {
-// };
-
