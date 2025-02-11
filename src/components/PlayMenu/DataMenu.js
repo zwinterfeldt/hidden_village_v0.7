@@ -317,6 +317,33 @@ const DataMenu = (props) => {
         anchor={0}
       />
 
+        <InputBox //Check box for downloading audio and video data
+        height={checkButtonWidth}
+        width={checkButtonWidth}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect + checkButtonWidth * 6}
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 5}
+        color={white}
+        fontSize={checkButtonFont}
+        fontColor={black}
+        fontWeight={600}
+        text={save_json ? "X" : ""}
+        //callback = {() => { setSaveJSON(!save_json) } }
+      />
+
+      <Text
+        text={"Video/Audio"}
+        style={new TextStyle({
+          align: "center",
+          fontFamily: "Arial",
+          fontSize: fieldHeight * 0.9,
+          fontWeight: 1000,
+          fill: [black],
+        })}
+        x={x + innerRectMargins + fieldTextMarginsFromInnerRect + + checkButtonWidth * 6 + checkButtonWidth * 0.8} 
+        y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 5}
+        anchor={0}
+      />
+
       <RectButton //Button for downloading the data
         height={menuHeight * 0.3}
         width={menuWidth* 0.4}
