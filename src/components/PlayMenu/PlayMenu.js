@@ -8,6 +8,7 @@ import ConjectureModule , {getEditLevel, setEditLevel, getGoBackFromLevelEdit, s
 import CurricularModule from "../CurricularModule/CurricularModule.js";
 import ConjectureSelectorModule, { getAddToCurricular, setAddtoCurricular } from "../ConjectureSelector/ConjectureSelectorModule.js";
 import CurricularSelectorModule, { getPlayGame, setPlayGame } from "../CurricularSelector/CurricularSelector.js";
+import StoryEditorModule from "../StoryEditorModule/StoryEditorModule.js"; 
 import { getUserRoleFromDatabase } from "../../firebase/userDatabase";
 import firebase from "firebase/compat";
 import { Curriculum } from "../CurricularModule/CurricularModule.js";
@@ -212,6 +213,19 @@ const PlayMenu = (props) => {
             mainCallback={() => send("MAIN")} // goes to Home
             conjectureSelectCallback={() => send("LEVELSELECT")}
             conjectureCallback={() => send("NEWLEVEL")}  // preview a level in the game editor
+            storyEditorCallback={() => {
+
+              console.log("Sending STORYEDITOR...");
+              send("STORYEDITOR")}
+            }
+          />
+        )}
+        {state.value === "storyEditor" && (
+          console.log("Entered storyEditor state"),
+          <StoryEditorModule
+            width={width}
+            height={height}
+            mainCallback={() => send("MAIN")}
           />
         )}
         {state.value === "levelSelect" && (

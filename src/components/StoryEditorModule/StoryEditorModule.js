@@ -5,10 +5,13 @@ import { blue, white, red, green, indigo, hotPink, purple } from "../../utils/co
 import Button from "../Button"
 import RectButton from "../RectButton";
 import { writeToDatabaseCurricular, writeToDatabaseCurricularDraft, getConjectureDataByUUID } from "../../firebase/database";
-import { CurricularContentEditor } from "../CurricularModule/CurricularModuleBoxes";
 import { useMachine } from "@xstate/react";
 import { setAddtoCurricular } from '../ConjectureSelector/ConjectureSelectorModule';
+import { CurricularContentEditor } from "../CurricularModule/CurricularModuleBoxes";
 import Settings from '../Settings'; // Import the Settings component
+
+
+
 
 // stores a list of conjectures
 export const Curriculum = {
@@ -83,8 +86,8 @@ export const Curriculum = {
   },
 };
 
-const CurricularModule = (props) => {
-  const { height, width, mainCallback, conjectureSelectCallback, conjectureCallback, storyEditorCallback } = props;
+const StoryEditorModule = (props) => {
+  const { height, width, mainCallback, conjectureSelectCallback, conjectureCallback } = props;
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
 
   // Reset Function
@@ -132,10 +135,7 @@ const CurricularModule = (props) => {
             fontColor={white}
             text={"SET GAME OPTIONS"}
             fontWeight={800}
-            callback={() => {
-              console.log("Settings Menu button clicked! Sending STORYEDITOR...")
-              setShowSettingsMenu(true)// Open Settings menu
-            }}
+            callback={() => setShowSettingsMenu(true)} // Open Settings menu
           />
           <RectButton
             height={height * 0.13}
@@ -147,15 +147,7 @@ const CurricularModule = (props) => {
             fontColor={white}
             text={"STORY EDITOR"}
             fontWeight={800}
-            callback={() => {
-              console.log("STORY EDITOR button clicked!")
-              if (storyEditorCallback) {
-                storyEditorCallback(); // Ensure it only runs if it exists
-                console.log("State change function was called!"); //Log after calling
-              } else {
-                console.error("Error: storyEditorCallback is undefined!");
-              }
-            }}
+            callback={null}
           />
           <RectButton
             height={height * 0.13}
@@ -178,12 +170,12 @@ const CurricularModule = (props) => {
             width={width * 0.26}
             x={width * 0.85}
             y={height * 0.93}
-            color={red}
+            color={green}
             fontSize={width * 0.013}
             fontColor={white}
             text={"BACK"}
             fontWeight={800}
-            callback={enhancedMainCallback}
+            callback={mainCallback}
           />
           <RectButton
             height={height * 0.13}
@@ -238,4 +230,4 @@ const CurricularModule = (props) => {
   );
 };
 
-export default CurricularModule;
+export default StoryEditorModule;
