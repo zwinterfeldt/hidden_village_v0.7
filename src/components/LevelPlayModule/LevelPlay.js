@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import ExperimentalTask from "../ExperimentalTask";
 import LevelPlayMachine from "./LevelPlayMachine";
 import ConjecturePoseContainter from "../ConjecturePoseMatch/ConjecturePoseContainer"
+import VideoRecorder from "../VideoRecorder";
 import { getConjectureDataByUUID, writeToDatabaseIntuitionStart, writeToDatabaseIntuitionEnd } from "../../firebase/database";
 
 const LevelPlay = (props) => {
@@ -90,6 +91,7 @@ useEffect(() => {
 
   return (
     <>
+    <VideoRecorder phase={state.value} />
       {state.value === "poseMatching" && poses != null && (
         <>
           <ConjecturePoseContainter

@@ -187,7 +187,10 @@ const CurricularModule = (props) => {
             fontColor={white}
             text={"+Add Conjecture"}
             fontWeight={800}
-            callback={() => setAddtoCurricular(true)}
+            callback={() => {
+              setAddtoCurricular(true);
+              conjectureSelectCallback();
+            }}
           />
           <RectButton
             height={height * 0.13}
