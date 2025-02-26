@@ -7,7 +7,7 @@ import RectButton from "../RectButton";
 import { writeToDatabaseCurricular, writeToDatabaseCurricularDraft, getConjectureDataByUUID } from "../../firebase/database";
 import { useMachine } from "@xstate/react";
 import { setAddtoCurricular } from '../ConjectureSelector/ConjectureSelectorModule';
-import { CurricularContentEditor } from "../CurricularModule/CurricularModuleBoxes";
+import { StoryEditorContentEditor } from "./StoryEditorModuleBoxes";
 import Settings from '../Settings'; // Import the Settings component
 
 
@@ -121,56 +121,16 @@ const StoryEditorModule = (props) => {
         <>
           <Background height={height * 1.1} width={width} />
 
-          {/* Render CurricularContentEditor */}
-          <CurricularContentEditor height={height} width={width} conjectureCallback={conjectureCallback} />
+          {/* Render StoryEditorContentEditor */}
+          <StoryEditorContentEditor height={height} width={width} conjectureCallback={conjectureCallback} />
 
           {/* Buttons */}
-          <RectButton
-            height={height * 0.13}
-            width={width * 0.5}
-            x={width * 0.1}
-            y={height * 0.23}
-            color={red}
-            fontSize={width * 0.013}
-            fontColor={white}
-            text={"SET GAME OPTIONS"}
-            fontWeight={800}
-            callback={() => setShowSettingsMenu(true)} // Open Settings menu
-          />
-          <RectButton
-            height={height * 0.13}
-            width={width * 0.5}
-            x={width * 0.4}
-            y={height * 0.23}
-            color={hotPink}
-            fontSize={width * 0.013}
-            fontColor={white}
-            text={"STORY EDITOR"}
-            fontWeight={800}
-            callback={null}
-          />
-          <RectButton
-            height={height * 0.13}
-            width={width * 0.5}
-            x={width * 0.7}
-            y={height * 0.23}
-            color={purple}
-            fontSize={width * 0.013}
-            fontColor={white}
-            text={"INSTRUCTIONS"}
-            fontWeight={800}
-            callback={() =>
-              alert(
-                "Click +Add Conjecture to add a level to the game.\nPress Save Draft to save an incomplete game.\nPress Publish to save a completed game."
-              )
-            }
-          />
           <RectButton
             height={height * 0.13}
             width={width * 0.26}
             x={width * 0.85}
             y={height * 0.93}
-            color={green}
+            color={red}
             fontSize={width * 0.013}
             fontColor={white}
             text={"BACK"}
@@ -180,38 +140,26 @@ const StoryEditorModule = (props) => {
           <RectButton
             height={height * 0.13}
             width={width * 0.45}
-            x={width * 0.3}
+            x={width * 0.06}
             y={height * 0.93}
             color={indigo}
             fontSize={width * 0.014}
             fontColor={white}
-            text={"+Add Conjecture"}
+            text={"ADD CHAPTER"}
             fontWeight={800}
             callback={() => setAddtoCurricular(true)}
           />
           <RectButton
             height={height * 0.13}
-            width={width * 0.26}
-            x={width * 0.55}
+            width={width * 0.45}
+            x={width * 0.3}
             y={height * 0.93}
             color={green}
             fontSize={width * 0.013}
             fontColor={white}
-            text={"SAVE DRAFT"}
+            text={"ADD DIALOGUE"}
             fontWeight={800}
             callback={() => writeToDatabaseCurricularDraft(Curriculum.getCurrentUUID())}
-          />
-          <RectButton
-            height={height * 0.13}
-            width={width * 0.26}
-            x={width * 0.73}
-            y={height * 0.93}
-            color={blue}
-            fontSize={width * 0.015}
-            fontColor={white}
-            text={"PUBLISH"}
-            fontWeight={800}
-            callback={() => publishAndReset(Curriculum.getCurrentUUID())}
           />
         </>
       )}
