@@ -4,11 +4,7 @@ import { TextStyle } from "@pixi/text";
 import { white, black } from "../../utils/colors";
 import InputBox from "../InputBox";
 import RectButton from "../RectButton";
-import { blue, red, green, orange } from "../../utils/colors";
-
-// If you still want references to Curriculum or Conjecture logic, uncomment these imports
-// import { Curriculum } from "../CurricularModule/CurricularModule";
-// import { setEditLevel, setGoBackFromLevelEdit, currentConjecture } from '../ConjectureModule/ConjectureModule';
+import { blue, red, green, orange, pink, } from "../../utils/colors";
 
 // =========== HANDLER FUNCTIONS ===========
 
@@ -44,18 +40,6 @@ function handlePinInput(key) {
     alert("PIN must be numeric.");
   }
 }
-
-/**
- * Optional: If you want to handle clicking on a Conjecture in your story editor,
- * you can keep or remove this function. 
- */
-// function handleLevelClicked(conjecture, conjectureCallback) {
-//   setEditLevel(false);
-//   setGoBackFromLevelEdit("NEWGAME");
-//   currentConjecture.setConjecture(conjecture);
-//   conjectureCallback(conjecture);
-// }
-
 // =========== CREATOR FUNCTIONS ===========
 
 function createInputBox(
@@ -187,8 +171,6 @@ function drawCurriculum(
           text={conjecture["Text Boxes"]["Author Name"] || "No Author"}
           fontWeight="bold"
           callback={() => {
-            // Example:
-            // handleLevelClicked(conjecture, conjectureCallback);
           }}
         />
       ))}
@@ -224,13 +206,17 @@ function drawCurriculum(
 
 // =========== MAIN COMPONENT (COPY OF CurricularContentEditor) ===========
 
-/**
- * This is a direct copy of CurricularContentEditor,
- * renamed to StoryEditorContentEditor so you can import it into StoryEditorModule.
- */
 export const StoryEditorContentEditor = (props) => {
-  const { height, width, conjectureCallback } = props;
+  const { height, width, conjectureCallback, dialogues, onMoveUp, onMoveDown, 
+          onAddDialogue, onRemoveDialogue, onEditDialogue, onChangeType, idToSprite,
+          onChangeCharacter,} = props;
+  
+  //Local state to track which row i open
+  const [openDropdownIndex, setOpenDropdownIndex] = useState(-1);
 
+  //Array of all sprite keys
+  const allSprites = Object.keys(idToSprite);
+  
   return (
     <>
       {createInputBox(
@@ -285,13 +271,164 @@ export const StoryEditorContentEditor = (props) => {
       {createTextElement("Author:", 0.48, 0.105, 0.018, width, height)}
       {createTextElement("Game Name:", 0.11, 0.10, 0.018, width, height)}
 
-      {/* To label the conjectures */}
-      {createTextElement("Chapter", 0.0825, 0.32, 0.015, width, height)}
-      {createTextElement("Character", 0.275, 0.32, 0.015, width, height)}
-      {createTextElement("In/Out", 0.58, 0.32, 0.015, width, height)}
-      {createTextElement("Dialogue Preview", 0.75, 0.32, 0.015, width, height)}
+      {/* To label the narritives */}
+      {createTextElement("Chapter", 0.04, 0.32, 0.015, width, height)}
+      {createTextElement("Character", 0.13, 0.32, 0.015, width, height)}
+      {createTextElement("In/Out", 0.25, 0.32, 0.015, width, height)}
+      {createTextElement("Dialogue Preview", 0.45, 0.32, 0.015, width, height)}
 
-      {drawCurriculum(0.1, 0.3, 0.018, width, height, conjectureCallback)}
+      {/* ========== DIALOGUE ROWS ========== */}
+      {dialogues?.map((dialogue, index) => {
+        const rowY = 0.40 + index * 0.06; // adjust spacing as needed
+
+        return (
+          <React.Fragment key={index}>
+
+            {/* Example: Dialogue text preview */}
+            <RectButton
+              height={height * 0.1}
+              width={width * 1}
+              x={width * 0.31}
+              y={height * rowY}
+              color={white}
+              fontSize={width * 0.015}
+              fontColor={black}
+              text={
+                dialogue.text.length > 40
+                  ? dialogue.text.slice(0, 40) + "..."
+                  : dialogue.text
+              }
+              fontWeight={500}
+              callback={() => onEditDialogue(index)}
+            />
+            {/* Intro/Outro */}
+            <RectButton
+              height={height * 0.1}
+              width={width * .15}
+              x={width * 0.245}
+              y={height * rowY}
+              color={white}
+              fontSize={width * 0.015}
+              fontColor={black}
+              text={`${dialogue.type} ▼`}
+              fontWeight={500}
+              callback={() => onChangeType(index)}
+            />
+            {/* Character */}
+            <RectButton
+              height={height * 0.1}
+              width={width * .365}
+              x={width * 0.0945}
+              y={height * rowY}
+              color={white}
+              fontSize={width * 0.015}
+              fontColor={black}
+              text={`${dialogue.character} ▼`}
+              fontWeight={500}
+              callback={() => {
+                // If the dropdown is already open for this row, close it; otherwise open it
+                setOpenDropdownIndex(openDropdownIndex === index ? -1 : index);
+              }}
+            />
+            {/* If openDropdownIndex === index, show the dropdown menu */}
+            {openDropdownIndex === index && (
+              <React.Fragment>
+                {allSprites.map((charID, spriteIdx) => {
+                  // For each possible character, render a small button
+                  return (
+                    <RectButton
+                      key={charID}
+                      height={height * 0.1}
+                      width={width * .26}
+                      x={width * 0.13}
+                      y={
+                        // place each item below the "Character" button
+                        // e.g. rowY + spriteIdx * (some vertical spacing)
+                        (height * rowY) +
+                        (spriteIdx + 1) * (height * 0.04)
+                      }
+                      color={0xdddddd}
+                      fontSize={width * 0.012}
+                      fontColor={0x000000}
+                      text={charID}
+                      callback={() => {
+                        // Call parent handler to update the character
+                        onChangeCharacter(index, charID);
+                        // Close dropdown
+                        setOpenDropdownIndex(-1);
+                      }}
+                    />
+                  );
+                })}
+              </React.Fragment>
+            )}
+            
+            {/* Chapter */} 
+            <RectButton
+              height={height * 0.1}
+              width={width * .1}
+              x={width * 0.05}
+              y={height * rowY}
+              color={white}
+              fontSize={width * 0.015}
+              fontColor={black}
+              text={"1"}
+              fontWeight={500}
+              callback={() => onEditDialogue(index)}
+            />
+
+            {/* Remove button */}
+            <RectButton
+              height={height * 0.1}
+              width={width * 0.2}
+              x={width * 0.87}
+              y={height * rowY}
+              color={orange}
+              fontSize={width * 0.01}
+              fontColor={white}
+              text={"Remove"}
+              fontWeight ={800}
+              callback={() => onRemoveDialogue(index)}
+            />
+            <RectButton
+            height={height * 0.1}
+            width={width * 0.15}
+            x={width * 0.715}
+            y={height * rowY}
+            color={pink}
+            fontSize={width * 0.01}
+            fontColor={white}
+            text={"Edit"}
+            fontWeight={800}
+            callback={null}
+          />
+          <RectButton
+              height={height * 0.1}
+              width={width * 0.1}
+              x={width * 0.825}
+              y={height * rowY}
+              color={red}
+              fontSize={width * 0.01}
+              fontColor={white}
+              text={"V"}
+              fontWeight={800}
+              callback={() => onMoveDown(index)}
+          />
+          <RectButton
+              height={height * 0.1}
+              width={width * 0.1}
+              x={width * 0.78}
+              y={height * rowY}
+              color={green}
+              fontSize={width * 0.01}
+              fontColor={white}
+              text={"Λ"}
+              fontWeight={800}
+              callback={() => onMoveUp(index)}
+          />
+          </React.Fragment>
+        );
+      })}
     </>
   );
 };

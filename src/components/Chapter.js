@@ -42,7 +42,7 @@ const colorMap = {
   green: green,
 };
 
-const idToSprite = {
+export const idToSprite = {
   // "circle": "../assets/circle.png",
   player: new URL("../assets/player_sprite.png", import.meta.url).href,
   equilateralTriangle: new URL(

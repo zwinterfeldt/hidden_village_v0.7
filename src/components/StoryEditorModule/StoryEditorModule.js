@@ -9,6 +9,8 @@ import { useMachine } from "@xstate/react";
 import { setAddtoCurricular } from '../ConjectureSelector/ConjectureSelectorModule';
 import { StoryEditorContentEditor } from "./StoryEditorModuleBoxes";
 import Settings from '../Settings'; // Import the Settings component
+import { idToSprite } from "../Chapter"; //Import list of sprites
+
 
 
 
@@ -90,6 +92,75 @@ const StoryEditorModule = (props) => {
   const { height, width, mainCallback, conjectureSelectCallback, conjectureCallback } = props;
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
 
+  // Stores dialogues
+  const [dialogues, setDialogues] = useState([]);
+
+  //Add a new dialogue
+  const handleAddDialogue = () => {
+    const newText = prompt("Enter dialogue text:");
+    if (newText && newText.trim() !== "") {
+      //Example defaults for character, type, etc.
+      const newDialogue = {
+        text: newText,
+        character: "player",
+        type: "Intro"
+      };
+      setDialogues([...dialogues, newDialogue]);
+    }
+  };
+
+  //Remove a dialogue by index
+  const handleRemoveDialogue = (index) => {
+    const updated = [...dialogues];
+    updated.splice(index, 1);
+    setDialogues(updated);
+  };
+
+  //Edit a dialogue's text
+  const handleEditDialogue = (index) => {
+    const updatedText = prompt("Edit dialogue:", dialogues[index].text);
+    if (updatedText !== null) {
+      const updated = [...dialogues];
+      updated[index].text = updatedText;
+      setDialogues(updated);
+    }
+  };
+
+  //Toggle Intro/Outro
+  const handleChangeType = (index, newType) => {
+    const updated = [...dialogues];
+    updated[index].type = updated[index].type === "Intro" ? "Outro" : "Intro";
+    setDialogues(updated);
+  }
+
+  //Moves narrative up
+  const handleMoveup = (index) => {
+    if (index > 0) {
+      const updated = [...dialogues];
+      // Swap this item with the one above
+      [updated[index - 1], updated[index]] = [updated[index], updated[index - 1]];
+      setDialogues(updated);
+    }
+  };
+
+  //Moves narrative down
+  const handleMoveDown = (index) => {
+    if (index < dialogues.length - 1) {
+      const updated = [... dialogues];
+      // Swap this item with the one below
+      [updated[index + 1], updated[index]] = [updated[index], updated[index + 1]];
+      setDialogues(updated);
+    }
+  };
+
+  const handleChangeCharacter = (index, newCharacter) => {
+    const updated = [...dialogues];
+    updated[index].character = newCharacter;
+    setDialogues(updated);
+  }
+
+
+
   // Reset Function
   const resetCurricularValues = () => {
     localStorage.removeItem('CurricularName');
@@ -122,7 +193,9 @@ const StoryEditorModule = (props) => {
           <Background height={height * 1.1} width={width} />
 
           {/* Render StoryEditorContentEditor */}
-          <StoryEditorContentEditor height={height} width={width} conjectureCallback={conjectureCallback} />
+          <StoryEditorContentEditor height={height} width={width} dialogues={dialogues} onAddDialogue={handleAddDialogue} onMoveUp={handleMoveup} 
+                                    onRemoveDialogue={handleRemoveDialogue} onEditDialogue={handleEditDialogue} onChangeType={handleChangeType}
+                                    onMoveDown={handleMoveDown} idToSprite={idToSprite} onChangeCharacter={handleChangeCharacter} />
 
           {/* Buttons */}
           <RectButton
@@ -159,7 +232,7 @@ const StoryEditorModule = (props) => {
             fontColor={white}
             text={"ADD DIALOGUE"}
             fontWeight={800}
-            callback={() => writeToDatabaseCurricularDraft(Curriculum.getCurrentUUID())}
+            callback={handleAddDialogue}
           />
         </>
       )}
