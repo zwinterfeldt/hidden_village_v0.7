@@ -19,6 +19,8 @@ const PlayGame = (props) => {
         }
     });
 
+    const curricularID = 
+
     useEffect(() => {
         setuuidIDX(state.context.uuidIndex)
     }, [state.context.uuidIndex]
@@ -39,6 +41,7 @@ const PlayGame = (props) => {
             UUID={uuidsList[uuidIDX]['UUID']}
             onLevelComplete={() => {send("LOAD_NEXT")}}
             needBack={false}
+        
         />)}
         {state.value === "end" && (
             <Button

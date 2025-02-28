@@ -16,7 +16,9 @@ const LevelPlay = (props) => {
     UUID,
     width,
     height,
-    backCallback
+    backCallback,
+    curricularID,
+    gameID
   } = props;
   
   const [state, send] = useMachine(LevelPlayMachine);
@@ -91,7 +93,12 @@ useEffect(() => {
 
   return (
     <>
-    <VideoRecorder phase={state.value} />
+    <VideoRecorder 
+      phase={state.value} 
+      // CurricularID and gameID not functional at this moment 
+      curricularID={curricularID}
+      gameID={gameID}
+    />
       {state.value === "poseMatching" && poses != null && (
         <>
           <ConjecturePoseContainter
