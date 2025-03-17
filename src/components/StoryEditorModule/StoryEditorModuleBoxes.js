@@ -209,10 +209,13 @@ function drawCurriculum(
 export const StoryEditorContentEditor = (props) => {
   const { height, width, conjectureCallback, dialogues, onMoveUp, onMoveDown, 
           onAddDialogue, onRemoveDialogue, onEditDialogue, onChangeType, idToSprite,
-          onChangeCharacter,} = props;
+          onChangeCharacter, chapters, onChangeChapter,} = props;
   
-  //Local state to track which row i open
+  //Local state to track which row is open for Character
   const [openDropdownIndex, setOpenDropdownIndex] = useState(-1);
+
+  //Local state to track which row is open for Chapter
+  const [openDropdownIndexChapter, setOpenDropdownIndexChapter] = useState(-1);
 
   //Array of all sprite keys
   const allSprites = Object.keys(idToSprite);
@@ -314,7 +317,8 @@ export const StoryEditorContentEditor = (props) => {
               fontWeight={500}
               callback={() => onChangeType(index)}
             />
-            {/* Character */}
+
+            {/* ========== Character Button & Dropdown ========== */}
             <RectButton
               height={height * 0.1}
               width={width * .365}
@@ -323,7 +327,7 @@ export const StoryEditorContentEditor = (props) => {
               color={white}
               fontSize={width * 0.015}
               fontColor={black}
-              text={`${dialogue.character} ▼`}
+              text={`${dialogue.character || 1} ▼`}
               fontWeight={500}
               callback={() => {
                 // If the dropdown is already open for this row, close it; otherwise open it
@@ -339,15 +343,15 @@ export const StoryEditorContentEditor = (props) => {
                     <RectButton
                       key={charID}
                       height={height * 0.1}
-                      width={width * .26}
-                      x={width * 0.13}
+                      width={width * .365}
+                      x={width * 0.0945}
                       y={
                         // place each item below the "Character" button
                         // e.g. rowY + spriteIdx * (some vertical spacing)
                         (height * rowY) +
                         (spriteIdx + 1) * (height * 0.04)
                       }
-                      color={0xdddddd}
+                      color={white}
                       fontSize={width * 0.012}
                       fontColor={0x000000}
                       text={charID}
@@ -363,19 +367,51 @@ export const StoryEditorContentEditor = (props) => {
               </React.Fragment>
             )}
             
-            {/* Chapter */} 
+            {/* ========== Chapter Button & Dropdown ========== */}
             <RectButton
               height={height * 0.1}
-              width={width * .1}
+              width={width * 0.1}
               x={width * 0.05}
               y={height * rowY}
               color={white}
               fontSize={width * 0.015}
               fontColor={black}
-              text={"1"}
+              // show the current dialogue.chapter or default "1"
+              text={`${dialogue.chapter || "1"} ▼`}
               fontWeight={500}
-              callback={() => onEditDialogue(index)}
+              callback={() => {
+                // Toggle the chapter dropdown
+                setOpenDropdownIndexChapter(
+                  openDropdownIndexChapter === index ? -1 : index
+                );
+              }}
             />
+
+            {/* If openDropdownIndexChapter === index, show the chapters */}
+            {openDropdownIndexChapter === index && chapters && (
+              <React.Fragment>
+                {chapters.map((chVal, chIdx) => {
+                  // chVal is numberic, e.g. 1, 2, 3
+                  return (
+                    <RectButton
+                      key={chVal}
+                      height={height * 0.1}
+                      width={width * 0.1}
+                      x={width * 0.05}
+                      y={(height * rowY) + (chIdx + 1) * (height * 0.04)}
+                      color={white}
+                      fontSize={width * 0.012}
+                      fontColor={0x000000}
+                      text={String(chVal)}
+                      callback={() => {
+                        onChangeChapter(index, chVal);
+                        setOpenDropdownIndexChapter(-1);
+                      }}
+                    />
+                  );
+                })}
+              </React.Fragment>
+            )}
 
             {/* Remove button */}
             <RectButton

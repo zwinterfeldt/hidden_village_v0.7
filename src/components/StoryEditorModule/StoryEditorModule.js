@@ -95,6 +95,24 @@ const StoryEditorModule = (props) => {
   // Stores dialogues
   const [dialogues, setDialogues] = useState([]);
 
+  //Stores Chapters
+  const [chapters, setChapters] = useState([1]);
+
+  //Change Chapter
+  const handleChangeChapter = (dialogueIndex, newChapterName) => {
+    const updated = [...dialogues];
+    updated[dialogueIndex].chapter = newChapterName;
+    setDialogues(updated);
+  }
+
+  //Add chapter, called by "Add Chapter" button
+  const handleAddChapter = () => {
+    //If chapters.length is 0, the first newChapterNumber will be 1
+    const newChapterNumber = chapters.length + 1;
+
+    //Store numeric value
+    setChapters([...chapters, newChapterNumber]);
+  };
   //Add a new dialogue
   const handleAddDialogue = () => {
     const newText = prompt("Enter dialogue text:");
@@ -195,7 +213,8 @@ const StoryEditorModule = (props) => {
           {/* Render StoryEditorContentEditor */}
           <StoryEditorContentEditor height={height} width={width} dialogues={dialogues} onAddDialogue={handleAddDialogue} onMoveUp={handleMoveup} 
                                     onRemoveDialogue={handleRemoveDialogue} onEditDialogue={handleEditDialogue} onChangeType={handleChangeType}
-                                    onMoveDown={handleMoveDown} idToSprite={idToSprite} onChangeCharacter={handleChangeCharacter} />
+                                    onMoveDown={handleMoveDown} idToSprite={idToSprite} onChangeCharacter={handleChangeCharacter} chapters={chapters}
+                                    onChangeChapter={handleChangeChapter} />
 
           {/* Buttons */}
           <RectButton
@@ -220,7 +239,7 @@ const StoryEditorModule = (props) => {
             fontColor={white}
             text={"ADD CHAPTER"}
             fontWeight={800}
-            callback={() => setAddtoCurricular(true)}
+            callback={handleAddChapter}
           />
           <RectButton
             height={height * 0.13}
