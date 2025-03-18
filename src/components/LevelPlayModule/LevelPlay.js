@@ -96,8 +96,8 @@ useEffect(() => {
     <VideoRecorder 
       phase={state.value} 
       // CurricularID and gameID not functional at this moment 
-      curricularID={curricularID}
-      gameID={gameID}
+      curricularID={UUID} // This is working correctly now!
+      gameID={conjectureData?.[UUID]?.GameID} // This is not working
     />
       {state.value === "poseMatching" && poses != null && (
         <>

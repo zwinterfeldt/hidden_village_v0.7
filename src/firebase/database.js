@@ -1064,7 +1064,90 @@ export const getAuthorizedGameList = async () => {
   }
 };
 
+// Get game name using game UUID
+export const getGameNameByUUID = async (gameID) => {
+  try {
+    // if (!gameID) return 'UnknownGame';
+    
+    const gameData = await getCurricularDataByUUID(gameID);
+    console.log('Game data', gameData);
+    if (gameData && Object.keys(gameData).length > 0) {
+      const gameKey = Object.keys(gameData)[0];
+      console.log('Game name:', gameData[gameKey].CurricularName);
+      return gameData[gameKey].CurricularName || 'UnknownGame';
+    }
+    return 'UnknownGame';
+  } catch (error) {
+    console.error('Error getting game name:', error);
+    return 'GameNameNotFound';
+  }
+};
 
+// Get level name using level UUID
+export const getLevelNameByUUID = async (levelUUID) => {
+  try {
+    if (!levelUUID) return 'UnknownLevel';
+    
+    const levelData = await getConjectureDataByUUID(levelUUID);
+    if (levelData && Object.keys(levelData).length > 0) {
+      const levelKey = Object.keys(levelData)[0];
+      // First try to get the level Name field
+      if (levelData[levelKey].Name) {
+        console.log('Level name: ', levelData[levelKey].Name);
+        return levelData[levelKey].Name;
+      }
+      // Otherwise try the CurricularName or conjecture name
+      if (levelData[levelKey]['Text Boxes'] && 
+          levelData[levelKey]['Text Boxes']['Conjecture Name']) {
+        return levelData[levelKey]['Text Boxes']['Conjecture Name'];
+      }
+      return 'UnknownLevel';
+    }
+    return 'UnknownLevel';
+  } catch (error) {
+    console.error('Error getting level name:', error);
+    return 'UnknownLevel';
+  }
+};
+
+// Find game that contains a specific level UUID
+export const findGameByLevelUUID = async (levelUUID) => {
+  try {
+    if (!levelUUID) return null;
+    
+    const gamesRef = ref(db, 'Game');
+    const gamesSnapshot = await get(gamesRef);
+    
+    if (!gamesSnapshot.exists()) return null;
+    
+    const games = gamesSnapshot.val();
+    
+    for (const gameKey in games) {
+      const game = games[gameKey];
+      if (game.ConjectureUUIDs && Array.isArray(game.ConjectureUUIDs) && 
+          game.ConjectureUUIDs.includes(levelUUID)) {
+        // console.log('Game found:', game.CurricularName);
+        return game;
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error finding game by level UUID:', error);
+    return null;
+  }
+};
+
+// Get game name from level UUID by finding the game that contains this level
+export const getGameNameByLevelUUID = async (levelUUID) => {
+  try {
+    const game = await findGameByLevelUUID(levelUUID);
+    return game?.CurricularName || 'UnknownGame';
+  } catch (error) {
+    console.error('Error getting game name by level UUID:', error);
+    return 'UnknownGame';
+  }
+};
 
 
 // Not Database function but attached to data menu search
@@ -1090,3 +1173,4 @@ export const convertDateFormat = (dateStr) => {
     // Return the date string in the format 'yyyy-dd-mm'
     return `${year}-${month}-${day}`;
 };
+

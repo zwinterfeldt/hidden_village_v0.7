@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useMachine } from "@xstate/react";
 import LevelPlayMachine from "./LevelPlayModule/LevelPlayMachine";
 import { getUserNameFromDatabase } from '../firebase/userDatabase';
-import { getCurricularDataByUUID } from '../firebase/database';
+import { getGameNameByUUID, getLevelNameByUUID, getGameNameByLevelUUID, getCurricularDataByUUID } from '../firebase/database';
 import { storage } from '../firebase/init';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
@@ -11,7 +11,13 @@ const VideoRecorder = ({ phase, curricularID, gameID }) => {
   const mediaRecorderRef = useRef(null);
   const recordedChunksRef = useRef([]);
   const streamRef = useRef(null);
+  const recordingPhaseRef = useRef(null);
   const [state, send] = useMachine(LevelPlayMachine);
+
+  // Checking to ensure props were received
+  useEffect(() => {
+    console.log("VideoRecorder props received:", { phase, curricularID, gameID });
+  }, [phase, curricularID, gameID]);
 
   // Get the camera stream from the existing video element (defined in index.html)
   useEffect(() => {
@@ -28,7 +34,7 @@ const VideoRecorder = ({ phase, curricularID, gameID }) => {
         streamRef.current = inputVideo.srcObject.clone();
         // If a phase is already set, start recording immediately
         if (phase) {
-          startRecording();
+          startRecording(phase);
           setCurrentPhase(phase);
         }
       }
@@ -45,57 +51,94 @@ const VideoRecorder = ({ phase, curricularID, gameID }) => {
     };
   }, []);
 
-  // When the phase prop changes, stop the current recording (if any) and start a new one
+  // When the phase prop changes, handle recording changes with proper sequencing
   useEffect(() => {
     if (phase !== currentPhase) {
-      // Stop current recording if one is active
-      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-        mediaRecorderRef.current.stop();
-      }
-      // Start new recording if the new phase is defined
-      if (phase) {
-        // Allow a small delay for the previous recorder to finish
-        setTimeout(() => {
-          startRecording();
-          setCurrentPhase(phase);
-        }, 500);
-      } else {
-        setCurrentPhase(null);
-      }
+      console.log(`Phase changing from ${currentPhase} to ${phase}`);
+      
+      const handlePhaseChange = async () => {
+        // Step 1: Stop the current recording if one is active
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+          console.log(`Stopping recording for phase: ${recordingPhaseRef.current}`);
+          mediaRecorderRef.current.stop();
+          
+          // Wait for the recording to fully stop before starting a new one
+          // This ensures the onstop handler completes before a new recording starts
+          await new Promise(resolve => {
+            const checkRecording = setInterval(() => {
+              if (!mediaRecorderRef.current || mediaRecorderRef.current.state === 'inactive') {
+                clearInterval(checkRecording);
+                resolve();
+              }
+            }, 100);
+          });
+        }
+        
+        // Step 2: Start a new recording if we have a new phase
+        if (phase) {
+          console.log(`Starting new recording for phase: ${phase}`);
+          startRecording(phase); // Pass the current phase
+        }
+        
+        // Step 3: Update the current phase state
+        setCurrentPhase(phase);
+      };
+      
+      handlePhaseChange();
     }
   }, [phase, currentPhase]);
 
-  // Get game name from gameID
-  const getGameName = async () => {
-    try {
-      const gameData = await getCurricularDataByUUID(gameID);
-      if (gameData) {
-        // Extract the first key in the returned object
-        const gameKey = Object.keys(gameData)[0];
-        return gameData[gameKey].CurricularName; 
-      }
-      return 'UnknownGame';
-    } catch (error) {
-      console.error('Error getting game name:', error);
-      return 'UnknownGame';
+
+  // In the VideoRecorder component, get the game name:
+  const getGameDetails = async () => {
+    if (gameID) {
+      return getGameNameByUUID(gameID);
+    } else if (curricularID) {
+      // If no game ID but we have level ID, find what game contains this level
+      return getGameNameByLevelUUID(curricularID);
     }
+    return 'NoGameID';
   };
 
-  // Get level name from curricularID
-  const getLevelName = async () => {
-    try {
-      const levelData = await getCurricularDataByUUID(curricularID);
-      if (levelData) {
-        // Extract the first key in the returned object
-        const levelKey = Object.keys(levelData)[0];
-        return levelData[levelKey].CurricularName;
-      }
-      return 'UnknownLevel';
-    } catch (error) {
-      console.error('Error getting level name:', error);
-      return 'UnknownLevel';
+  // And get the level name:
+  const getLevelDetails = async () => {
+    if (curricularID) {
+      return getLevelNameByUUID(curricularID);
     }
+    return 'UnknownLevel';
   };
+
+  // Get game name from gameID
+  // const getGameName = async () => {
+  //   try {
+  //     const gameData = await getCurricularDataByUUID(gameID);
+  //     if (gameData) {
+  //       // Extract the first key in the returned object
+  //       const gameKey = Object.keys(gameData)[0];
+  //       return gameData[gameKey].CurricularName; 
+  //     }
+  //     return 'UnknownGame';
+  //   } catch (error) {
+  //     console.error('Error getting game name:', error);
+  //     return 'UnknownGame';
+  //   }
+  // };
+
+  // // Get level name from curricularID
+  // const getLevelName = async () => {
+  //   try {
+  //     const levelData = await getCurricularDataByUUID(curricularID);
+  //     if (levelData) {
+  //       // Extract the first key in the returned object
+  //       const levelKey = Object.keys(levelData)[0];
+  //       return levelData[levelKey].CurricularName;
+  //     }
+  //     return 'UnknownLevel';
+  //   } catch (error) {
+  //     console.error('Error getting level name:', error);
+  //     return 'UnknownLevel';
+  //   }
+  // };
 
   // Format the event type (Insight, Intuition, etc.)
   const formatEventType = (eventType) => {
@@ -103,8 +146,9 @@ const VideoRecorder = ({ phase, curricularID, gameID }) => {
   };
 
   // Upload the video to Firebase Storage
-  const uploadVideo = async (blob, filename) => {
+  const uploadVideo = async (blob, filename, recordingPhase) => {
     try {
+      console.log(`Uploading video for phase: ${recordingPhase}, filename: ${filename}`);
       const videoRef = ref(storage, `videos/${filename}`);
       await uploadBytes(videoRef, blob);
       const downloadURL = await getDownloadURL(videoRef);
@@ -116,11 +160,15 @@ const VideoRecorder = ({ phase, curricularID, gameID }) => {
     }
   };
 
-  const startRecording = () => {
+  const startRecording = (recordingPhase) => {
     recordedChunksRef.current = [];
     if (!streamRef.current) return;
     
     try {
+      // Store the phase at the start of recording - this won't change even if app phase changes
+      recordingPhaseRef.current = recordingPhase;
+      console.log(`Setting up recording for phase: ${recordingPhase}`);
+      
       const options = { mimeType: 'video/webm; codecs=vp9' };
       mediaRecorderRef.current = new MediaRecorder(streamRef.current, options);
       
@@ -130,15 +178,22 @@ const VideoRecorder = ({ phase, curricularID, gameID }) => {
         }
       };
 
+      // Use the phase that was active when recording started
+      const recordingPhaseValue = recordingPhase;
+      
       // Stop the recording, get metadata, and upload the video
       mediaRecorderRef.current.onstop = async () => {
+        console.log(`Recording stopped for phase: ${recordingPhaseValue}`);
+        if (recordedChunksRef.current.length === 0) {
+          console.warn('No recorded chunks available');
+          return;
+        }
+        
         const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
         
         try {
           // Get all the necessary data for the filename
           const currentDate = new Date();
-          
-          // Format for date is incorrect
           const formattedDate = `${(currentDate.getMonth() + 1)
             .toString()
             .padStart(2, "0")}${currentDate
@@ -147,39 +202,34 @@ const VideoRecorder = ({ phase, curricularID, gameID }) => {
             .padStart(2, "0")}${currentDate.getFullYear().toString().slice(-2)}`;
             
           const username = await getUserNameFromDatabase();
+          const participantID = username ? username.padStart(3, '0') : '000';
+          
+          const gameNameResult = await getGameDetails();
+          const gameNameFormatted = gameNameResult.replace(/\s+/g, '');
 
-          //Rename variable
-          const participantID = username ? username.padStart(3, '0') : '000'; // Ensure 3 digits
+          const levelNameResult = await getLevelDetails();
           
-          // Not working
-          const gameNameResult = await getGameName();
-          const gameNameFormatted = gameNameResult.replace(/\s+/g, ''); // Remove spaces
-
-          // Also does not work
-          const levelNameResult = await getLevelName();
-          const levelNumber = levelNameResult ? '01' : '00'; // Could extract a number if available
+          // Use the phase that was captured when recording started
+          const eventType = formatEventType(recordingPhaseValue || 'unknown');
           
-          // Works
-          const eventType = formatEventType(currentPhase || 'unknown');
-          
-          // Create the filename in the format: Date_ParticpantID_GameID_Level_Event.mp4
-          // Change this to an mp4 if applicable, do some research on this
-          const filename = `${formattedDate}_${participantID}_${gameNameFormatted}_${levelNumber}_${eventType}.webm`;
+          // Create the filename with the correct phase
+          const filename = `${formattedDate}_${participantID}_${gameNameFormatted}_${levelNameResult}_${eventType}.webm`;
           
           console.log('Generated filename:', filename);
+          console.log('Using event type:', eventType, 'from recording phase:', recordingPhaseValue);
           
-          // Upload the video with the generated filename
-          await uploadVideo(blob, filename);
+          // Pass the recording phase along with the upload for logging
+          await uploadVideo(blob, filename, recordingPhaseValue);
           
         } catch (error) {
           console.error('Error generating filename or uploading video:', error);
-          // Fallback filename if something goes wrong
-          const fallbackFilename = `video_${new Date().getTime()}.webm`;
-          await uploadVideo(blob, fallbackFilename);
+          const fallbackFilename = `video_${new Date().getTime()}_${recordingPhaseValue || 'unknown'}.webm`;
+          await uploadVideo(blob, fallbackFilename, recordingPhaseValue || 'unknown');
         }
       };
       
       mediaRecorderRef.current.start();
+      console.log(`Recording started for phase: ${recordingPhase}`);
     } catch (e) {
       console.error("Error creating MediaRecorder", e);
     }
