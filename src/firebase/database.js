@@ -111,6 +111,30 @@ export const writeToDatabase = async (poseData, UUID, frameRate) => {
   return promise;
 };
 
+//Saves an array of dialogues to Firebase under Game/{gameId}/Dialogues
+export const saveGameDialoguesToFirebase = async (gameId, dialogues) => {
+  if (!gameId) {
+    alert("No gameId provided!");
+    return;
+  }
+
+  // Store them under "Game/{gameId}/Dialogues"
+  const dbRef = ref(db, `Game/${gameId}/Dialogues`);
+  await set(dbRef, dialogues);
+  return true;
+};
+
+export const loadGameDialoguesFromFirebase = async (gameId) => {
+  if (!gameId) {
+    alert("No gameId provided!");
+    return [];
+  }
+  const dbRef = ref(db, `Game/${gameId}/Dialogues`);
+  const snapshot = await get(dbRef);
+  return snapshot.exists() ? snapshot.val() : [];
+};
+
+
 export const writeToDatabasePoseAuth = async (poseData, state, tolerance) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();

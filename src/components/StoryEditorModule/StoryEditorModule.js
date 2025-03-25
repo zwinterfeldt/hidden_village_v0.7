@@ -1,7 +1,7 @@
 // AKA Game module
 import React, {useState} from 'react';
 import Background from "../Background";
-import { blue, white, red, green, indigo, hotPink, purple } from "../../utils/colors";
+import { blue, white, red, green, indigo, hotPink, purple,} from "../../utils/colors";
 import Button from "../Button"
 import RectButton from "../RectButton";
 import { writeToDatabaseCurricular, writeToDatabaseCurricularDraft, getConjectureDataByUUID } from "../../firebase/database";
@@ -10,9 +10,8 @@ import { setAddtoCurricular } from '../ConjectureSelector/ConjectureSelectorModu
 import { StoryEditorContentEditor } from "./StoryEditorModuleBoxes";
 import Settings from '../Settings'; // Import the Settings component
 import { idToSprite } from "../Chapter"; //Import list of sprites
-
-
-
+import { saveGameDialoguesToFirebase,loadGameDialoguesFromFirebase } from "../../firebase/database";
+import { useEffect } from "react";
 
 
 // stores a list of conjectures
@@ -98,6 +97,20 @@ const StoryEditorModule = (props) => {
   //Stores Chapters
   const [chapters, setChapters] = useState([1]);
 
+  useEffect(() => {
+    const gameId = Curriculum.getCurrentUUID();
+    if (!gameId) {
+      console.warn("No real gameId—skipping dialogues load.");
+      return;
+    }
+    loadGameDialoguesFromFirebase(gameId).then((loaded) => {
+      if (loaded) {
+        setDialogues(loaded);
+      }
+    });
+  }, []);
+
+
   //Change Chapter
   const handleChangeChapter = (dialogueIndex, newChapterName) => {
     const updated = [...dialogues];
@@ -177,6 +190,20 @@ const StoryEditorModule = (props) => {
     setDialogues(updated);
   }
 
+  const handleSaveDialogues = async () => {
+    const gameId = Curriculum.getCurrentUUID();
+    if (!gameId) {
+      alert("No valid game ID. Please open or create a game first.");
+      return;
+    }
+    try {
+      await saveGameDialoguesToFirebase(gameId, dialogues);
+      alert("Dialogues saved to the game node!");
+    } catch (error) {
+      console.error("Error saving dialogues:", error);
+      alert("Failed to save dialogues.");
+    }
+  };
 
 
   // Reset Function
@@ -252,6 +279,18 @@ const StoryEditorModule = (props) => {
             text={"ADD DIALOGUE"}
             fontWeight={800}
             callback={handleAddDialogue}
+          />
+          <RectButton
+            height={height * 0.13}
+            width={width * 0.25}
+            x={width * 0.53}
+            y={height * 0.93}
+            color={green}
+            fontSize={width * 0.013}
+            fontColor={white}
+            text={"SAVE"}
+            fontWeight={800}
+            callback={handleSaveDialogues}
           />
         </>
       )}

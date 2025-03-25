@@ -10,6 +10,9 @@ import { useMachine } from "@xstate/react";
 import { setAddtoCurricular } from '../ConjectureSelector/ConjectureSelectorModule';
 import Settings from '../Settings'; // Import the Settings component
 
+//Import uuid library
+const { v4: uuidv4 } = require("uuid");
+
 // stores a list of conjectures
 export const Curriculum = {
   CurrentConjectures: [],
@@ -149,6 +152,11 @@ const CurricularModule = (props) => {
             fontWeight={800}
             callback={() => {
               console.log("STORY EDITOR button clicked!")
+              // If there is no current game ID, generate one now:
+              if (!Curriculum.getCurrentUUID()) {
+                const newId = uuidv4();  // same approach as in your database code
+                Curriculum.setCurrentUUID(newId);
+              }
               if (storyEditorCallback) {
                 storyEditorCallback(); // Ensure it only runs if it exists
                 console.log("State change function was called!"); //Log after calling
