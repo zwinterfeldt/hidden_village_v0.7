@@ -160,16 +160,33 @@ const VideoRecorder = ({ phase, curricularID, gameID }) => {
     }
   };
 
-  const startRecording = (recordingPhase) => {
+  const startRecording = async (recordingPhase) => {
     recordedChunksRef.current = [];
-    if (!streamRef.current) return;
+    // if (!streamRef.current) return;
     
+    if (!streamRef.current) {
+      try {
+        streamRef.current = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true
+          }
+        });
+        console.log("Audio tracks is included:", streamRef.current.getAudioTracks().length > 0);
+      } catch (error) {
+        console.error("Audio device access failed. Only video is recorded", error);
+        // If audio access fails, record video only
+        streamRef.current = await navigator.mediaDevices.getUserMedia({ video: true });
+      }
+    }
+
     try {
       // Store the phase at the start of recording - this won't change even if app phase changes
       recordingPhaseRef.current = recordingPhase;
       console.log(`Setting up recording for phase: ${recordingPhase}`);
       
-      const options = { mimeType: 'video/webm; codecs=vp9' };
+      const options = { mimeType: 'video/mp4; codecs=vp9,opus' };
       mediaRecorderRef.current = new MediaRecorder(streamRef.current, options);
       
       mediaRecorderRef.current.ondataavailable = (event) => {
@@ -189,17 +206,18 @@ const VideoRecorder = ({ phase, curricularID, gameID }) => {
           return;
         }
         
-        const blob = new Blob(recordedChunksRef.current, { type: 'video/webm' });
+        const blob = new Blob(recordedChunksRef.current, { type: mediaRecorderRef.current.mimeType });
         
         try {
           // Get all the necessary data for the filename
           const currentDate = new Date();
-          const formattedDate = `${(currentDate.getMonth() + 1)
-            .toString()
-            .padStart(2, "0")}${currentDate
-            .getDate()
-            .toString()
-            .padStart(2, "0")}${currentDate.getFullYear().toString().slice(-2)}`;
+          const formattedDate = `${currentDate.getFullYear()}${(currentDate.getMonth() + 1)
+            .toString().padStart(2, "0")}${currentDate.getDate().toString().padStart(2, "0")}_${currentDate.getHours().toString().padStart(2, "0")}h${currentDate.getMinutes().toString().padStart(2, "0")}m${currentDate.getSeconds().toString().padStart(2, "0")}s`;
+            // .padStart(2, "0")}${currentDate
+            // .getDate()
+            // .toString()
+            // .padStart(2, "0")}${currentDate.getFullYear().toString().slice(-2)}`;
+            // .padStart(2, "0")}${currentDate.getDate().toString().padStart(2, "0")}`;
             
           const username = await getUserNameFromDatabase();
           const participantID = username ? username.padStart(3, '0') : '000';
@@ -213,7 +231,7 @@ const VideoRecorder = ({ phase, curricularID, gameID }) => {
           const eventType = formatEventType(recordingPhaseValue || 'unknown');
           
           // Create the filename with the correct phase
-          const filename = `${formattedDate}_${participantID}_${gameNameFormatted}_${levelNameResult}_${eventType}.webm`;
+          const filename = `${formattedDate}_${participantID}_${gameNameFormatted}_${levelNameResult}_${eventType}.mp4`;
           
           console.log('Generated filename:', filename);
           console.log('Using event type:', eventType, 'from recording phase:', recordingPhaseValue);
@@ -223,7 +241,7 @@ const VideoRecorder = ({ phase, curricularID, gameID }) => {
           
         } catch (error) {
           console.error('Error generating filename or uploading video:', error);
-          const fallbackFilename = `video_${new Date().getTime()}_${recordingPhaseValue || 'unknown'}.webm`;
+          const fallbackFilename = `video_${new Date().getTime()}_${recordingPhaseValue || 'unknown'}.mp4`;
           await uploadVideo(blob, fallbackFilename, recordingPhaseValue || 'unknown');
         }
       };
