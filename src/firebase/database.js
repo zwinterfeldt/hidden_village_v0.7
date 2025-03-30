@@ -111,19 +111,6 @@ export const writeToDatabase = async (poseData, UUID, frameRate) => {
   return promise;
 };
 
-//Saves an array of dialogues to Firebase under Game/{gameId}/Dialogues
-export const saveGameDialoguesToFirebase = async (gameId, dialogues) => {
-  if (!gameId) {
-    alert("No gameId provided!");
-    return;
-  }
-
-  // Store them under "Game/{gameId}/Dialogues"
-  const dbRef = ref(db, `Game/${gameId}/Dialogues`);
-  await set(dbRef, dialogues);
-  return true;
-};
-
 export const loadGameDialoguesFromFirebase = async (gameId) => {
   if (!gameId) {
     alert("No gameId provided!");
@@ -546,6 +533,26 @@ export const writeToDatabaseCurricular = async (UUID) => {
 
   return alert("Game Published"), promises; //returns the promises and alerts that the game has been published
 }
+
+// save dialogues to firebase
+export const saveNarrativeDraftToFirebase = async (UUID, dialogues) => {
+  const timestamp = new Date().toISOString();
+  const gameId = UUID ?? uuidv4(); // Use provided UUID or create new one
+  const dbRef = ref(db, `Game/${gameId}/Dialogues`);
+
+  const promises = [
+    set(ref(db, `Game/${gameId}/Dialogues`), dialogues),
+    set(ref(db, `Game/${gameId}/LastSaved`), timestamp),
+    set(ref(db, `Game/${gameId}/UUID`), gameId),
+    set(ref(db, `Game/${gameId}/isFinal`), false),
+    // Optional: auto-set author again for traceability
+    set(ref(db, `Game/${gameId}/AuthorID`), userId),
+    set(ref(db, `Game/${gameId}/Author`), userName),
+  ];
+
+  await Promise.all(promises);
+  alert("Narrative draft saved.");
+};
 
 
 // Define a function to retrieve a conjecture based on UUID

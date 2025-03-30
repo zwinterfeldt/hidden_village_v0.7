@@ -11,7 +11,8 @@ import { StoryEditorContentEditor } from "./StoryEditorModuleBoxes";
 import Settings from '../Settings'; // Import the Settings component
 import { idToSprite } from "../Chapter"; //Import list of sprites
 import { saveGameDialoguesToFirebase,loadGameDialoguesFromFirebase } from "../../firebase/database";
-import { useEffect } from "react";
+import { useEffect } from "react";import { saveNarrativeDraftToFirebase } from "../../firebase/database";
+
 
 
 // stores a list of conjectures
@@ -88,7 +89,7 @@ export const Curriculum = {
 };
 
 const StoryEditorModule = (props) => {
-  const { height, width, mainCallback, conjectureSelectCallback, conjectureCallback } = props;
+  const { height, width, mainCallback, gameUUID, conjectureSelectCallback, conjectureCallback } = props;
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
 
   // Stores dialogues
@@ -98,7 +99,7 @@ const StoryEditorModule = (props) => {
   const [chapters, setChapters] = useState([1]);
 
   useEffect(() => {
-    const gameId = Curriculum.getCurrentUUID();
+    const gameId = gameUUID ?? Curriculum.getCurrentUUID();
     if (!gameId) {
       console.warn("No real gameId—skipping dialogues load.");
       return;
@@ -191,18 +192,21 @@ const StoryEditorModule = (props) => {
   }
 
   const handleSaveDialogues = async () => {
-    const gameId = Curriculum.getCurrentUUID();
+    const gameId = Curriculum.getCurrentUUID() || gameUUID;
+  
     if (!gameId) {
       alert("No valid game ID. Please open or create a game first.");
       return;
     }
+  
     try {
-      await saveGameDialoguesToFirebase(gameId, dialogues);
+      await saveNarrativeDraftToFirebase(gameId, dialogues);
       alert("Dialogues saved to the game node!");
     } catch (error) {
       console.error("Error saving dialogues:", error);
       alert("Failed to save dialogues.");
     }
+    console.log("Saving to Game UUID:", gameId);
   };
 
 

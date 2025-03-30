@@ -226,6 +226,7 @@ const PlayMenu = (props) => {
             width={width}
             height={height}
             mainCallback={() => send("MAIN")}
+            gameUUID={Curriculum.getCurrentUUID()}
           />
         )}
         {state.value === "levelSelect" && (

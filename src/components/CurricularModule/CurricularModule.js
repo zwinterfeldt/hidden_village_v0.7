@@ -158,7 +158,8 @@ const CurricularModule = (props) => {
                 Curriculum.setCurrentUUID(newId);
               }
               if (storyEditorCallback) {
-                storyEditorCallback(); // Ensure it only runs if it exists
+                const currentUUID = Curriculum.getCurrentUUID();
+                storyEditorCallback(currentUUID);
                 console.log("State change function was called!"); //Log after calling
               } else {
                 console.error("Error: storyEditorCallback is undefined!");
