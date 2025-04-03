@@ -106,6 +106,30 @@ const Chapter = (props) => {
     nextChapterCallback,
     currentConjectureIdx,
   } = props;
+<<<<<<< HEAD
+  let context;
+  if (script[`chapter-${currentConjectureIdx + 1}`]) {
+    const { intro, outro, scene } =
+      script[`chapter-${currentConjectureIdx + 1}`];
+    context = {
+      introText: intro && intro.length > 0 ? intro : [{ speaker: "player", text: "This is a fallback intro to confirm it's rendering!" }],
+      outroText: outro ? outro : [],
+      scene: scene ? scene : [],
+      currentText: null,
+      lastText: [],
+      cursorMode: true,
+    };
+  } else {
+    context = {
+      introText: [{ speaker: "player", text: "This is a fallback intro to confirm it's rendering!" }],
+      outroText: [],
+      scene: [],
+      currentText: null,
+      lastText: [],
+      cursorMode: true,
+    };
+  }
+=======
   
   // Replace static script context with dynamic state
   const [dialogueData, setDialogueData] = useState({
@@ -114,6 +138,7 @@ const Chapter = (props) => {
     scene: []
   });
   
+>>>>>>> a3744c68a99458414212529334b949bb3809e0db
   const [characters, setCharacters] = useState(undefined);
   const [displayText, setDisplayText] = useState(null);
   const [speaker, setSpeaker] = useState(null);
