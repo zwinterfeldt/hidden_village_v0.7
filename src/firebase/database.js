@@ -486,6 +486,15 @@ export const writeToDatabaseCurricular = async (UUID) => {
     CurricularID = UUID;
   }
 
+  // First, load any existing dialogues to preserve them
+  let existingDialogues = [];
+  try {
+    existingDialogues = await loadGameDialoguesFromFirebase(CurricularID) || [];
+    console.log("Preserving existing dialogues:", existingDialogues.length);
+  } catch (error) {
+    console.warn("No existing dialogues found or error loading dialogues:", error);
+  }
+
   //get the UUID of each conjecture
   const conjectureList = Curriculum.getCurrentConjectures();
   let conjectures = [];
@@ -495,7 +504,7 @@ export const writeToDatabaseCurricular = async (UUID) => {
 
   const dataToPush = {}
   let hasUndefined = false;
-  // Fetch values from local storage for each key inside  curricularTextBoxes
+  // Fetch values from local storage for each key inside curricularTextBoxes
   await Promise.all(curricularTextBoxes.map(async (key) => {
     const value = localStorage.getItem(key);
     Object.assign(dataToPush, await createTextObjects(key, value));
@@ -526,9 +535,10 @@ export const writeToDatabaseCurricular = async (UUID) => {
     set(ref(db, `${CurricularPath}/Time`), timestamp),
     set(ref(db, `${CurricularPath}/UUID`), CurricularID),
     set(ref(db, `${CurricularPath}/isFinal`), true),
-    // auto set author for security
     set(ref(db, `${CurricularPath}/Author`), userName),
     set(ref(db, `${CurricularPath}/AuthorID`), userId),
+    // CRITICAL: Preserve dialogues when publishing
+    set(ref(db, `${CurricularPath}/Dialogues`), existingDialogues),
   ];
 
   return alert("Game Published"), promises; //returns the promises and alerts that the game has been published

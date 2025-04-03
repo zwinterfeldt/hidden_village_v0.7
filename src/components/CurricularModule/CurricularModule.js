@@ -107,11 +107,20 @@ const CurricularModule = (props) => {
 
   // Publish function that includes reset
   async function publishAndReset(currentUUID)  {
-      promise = await writeToDatabaseCurricular(currentUUID);
-      if (promise != undefined){ // promise is undefined if the game cannot be published
-        resetCurricularValues();
-        Curriculum.CurrentConjectures = [];
-      }
+    let promise = await writeToDatabaseCurricular(currentUUID);
+    if (promise != undefined) { // promise is undefined if the game cannot be published
+      // Don't reset values when publishing - this keeps dialogues accessible
+      alert("Game published successfully! Your dialogues are preserved.");
+      
+      // Optional: If you want to clear some data but KEEP the game UUID:
+      localStorage.removeItem('CurricularName');
+      localStorage.removeItem('CurricularAuthor');
+      localStorage.removeItem('CurricularKeywords');
+      localStorage.removeItem('CurricularPIN');
+      
+      // IMPORTANT: Do NOT clear the curriculum or reset the UUID
+      // This keeps the connection to your dialogues intact
+    }
   };
 
   return (

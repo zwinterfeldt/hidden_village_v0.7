@@ -21,12 +21,12 @@ const LevelPlay = (props) => {
   const [state, send] = useMachine(LevelPlayMachine);
   const [experimentText, setExperimentText] = useState(
     `Read the following aloud:\n\nFigure it out? \n\n Answer TRUE or FALSE?`
-  ); 
+  );
   const [conjectureData, setConjectureData] = useState(null);
   const [poses, setPoses] = useState(null);
 
   // Get tolerance from the pose data 
-  const getTolerance = (poseData) => {  
+  const getTolerance = (poseData) => {
     const tolerance = poseData['tolerance'] || null;
     if (tolerance != null){
       // Stored in database as a num% so replace
@@ -42,6 +42,8 @@ const LevelPlay = (props) => {
         try {
           const data = await getConjectureDataByUUID(UUID);
           setConjectureData(data);
+          console.log(data);
+          // Need to find a way to get the game UUID from here
         } catch (error) {
           console.error('Error getting data: ', error);
         }
