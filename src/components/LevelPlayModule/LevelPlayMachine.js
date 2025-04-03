@@ -4,8 +4,13 @@ const LevelPlayMachine =
   createMachine(
     {
       id: "levelPlay",
-      initial: "poseMatching",
+      initial: "introDialogue",
       states: {
+        introDialogue: {
+          on: {
+            NEXT: "poseMatching",
+          },
+        },
         poseMatching: {
           on: {
             NEXT: "intuition",

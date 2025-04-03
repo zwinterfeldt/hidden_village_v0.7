@@ -4,6 +4,8 @@ import ExperimentalTask from "../ExperimentalTask";
 import LevelPlayMachine from "./LevelPlayMachine";
 import ConjecturePoseContainter from "../ConjecturePoseMatch/ConjecturePoseContainer"
 import { getConjectureDataByUUID, writeToDatabaseIntuitionStart, writeToDatabaseIntuitionEnd } from "../../firebase/database";
+import Chapter from "../Chapter"; // adjust path if needed
+
 
 const LevelPlay = (props) => {
   const {
@@ -106,6 +108,18 @@ useEffect(() => {
             poses={poses}
           />
         </>
+      )}
+      {state.value === "introDialogue" && conjectureData && conjectureData[UUID] && (
+        <Chapter
+          poseData={poseData}
+          columnDimensions={columnDimensions}
+          rowDimensions={rowDimensions}
+          height={height}
+          width={width}
+          chapterConjecture={conjectureData[UUID]} // or pass anything to satisfy props
+          currentConjectureIdx={0} // or extract index if available
+          nextChapterCallback={() => send("NEXT")} // transition to poseMatching
+        />
       )}
       {state.value === "intuition" && (
          <ExperimentalTask
