@@ -1,7 +1,17 @@
 import { createMachine, assign } from "xstate";
+
 const chapterMachine = createMachine(
   {
     initial: "intro",
+    // Set initial context including scene
+    context: {
+      introText: [],
+      outroText: [],
+      scene: [],
+      currentText: {},
+      lastText: [],
+      cursorMode: true,
+    },
     states: {
       idle: {
         after: {
@@ -50,22 +60,23 @@ const chapterMachine = createMachine(
             {
               target: "loadingNextChapter",
               actions: assign({
-                currentText: (context) => {
-                  return {
-                    text: "Hit the next button to load the next chapter...",
-                    speaker: "player",
-                  };
-                },
+                currentText: (context) => ({
+                  text: "Hit the next button to load the next chapter...",
+                  speaker: "player",
+                }),
                 loaded: () => false,
               }),
             },
           ],
+          // Update RESET_CONTEXT here to include scene
           RESET_CONTEXT: {
             actions: assign({
               introText: (_, event) => event.introText,
               outroText: (_, event) => event.outroText,
-              currentText: (_, event) => event.introText[0],
+              scene: (_, event) => event.scene,
+              currentText: (_, event) => event.introText[0] || null,
               lastText: () => [],
+              cursorMode: (_, event) => event.cursorMode,
             }),
           },
         },
@@ -77,22 +88,33 @@ const chapterMachine = createMachine(
             actions: assign({
               introText: (_, event) => event.introText,
               outroText: (_, event) => event.outroText,
-              currentText: (_, event) => null,
+              scene: (_, event) => event.scene,
+              currentText: (_, event) => event.introText[0] || null,
               lastText: () => [],
+              cursorMode: (_, event) => event.cursorMode,
             }),
           },
         },
       },
     },
+    // Global handler to catch RESET_CONTEXT no matter what state you're in
+    on: {
+      RESET_CONTEXT: {
+        actions: assign({
+          introText: (_, event) => event.introText,
+          outroText: (_, event) => event.outroText,
+          scene: (_, event) => event.scene,
+          currentText: (_, event) => event.introText[0] || null,
+          lastText: () => [],
+          cursorMode: (_, event) => event.cursorMode,
+        }),
+      },
+    },
   },
   {
     guards: {
-      continueIntro: (context) => {
-        return context.introText.length > 0;
-      },
-      continueOutro: (context) => {
-        return context.outroText.length > 0;
-      },
+      continueIntro: (context) => context.introText.length > 0,
+      continueOutro: (context) => context.outroText.length > 0,
     },
     actions: {
       introDialogStep: assign({
@@ -119,9 +141,7 @@ const chapterMachine = createMachine(
         },
       }),
       toggleCursorMode: assign({
-        cursorMode: (context) => {
-          return !context.cursorMode;
-        },
+        cursorMode: (context) => !context.cursorMode,
       }),
       outroDialogStep: assign({
         currentText: (context) => {

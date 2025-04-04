@@ -4,7 +4,7 @@ import ExperimentalTask from "../ExperimentalTask";
 import LevelPlayMachine from "./LevelPlayMachine";
 import ConjecturePoseContainter from "../ConjecturePoseMatch/ConjecturePoseContainer"
 import { getConjectureDataByUUID, writeToDatabaseIntuitionStart, writeToDatabaseIntuitionEnd } from "../../firebase/database";
-import Chapter from "../Chapter"; // adjust path if needed
+import Chapter from "../Chapter";
 
 
 const LevelPlay = (props) => {

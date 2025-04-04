@@ -10,7 +10,7 @@ import { setAddtoCurricular } from '../ConjectureSelector/ConjectureSelectorModu
 import { StoryEditorContentEditor } from "./StoryEditorModuleBoxes";
 import Settings from '../Settings'; // Import the Settings component
 import { idToSprite } from "../Chapter"; //Import list of sprites
-import { saveGameDialoguesToFirebase,loadGameDialoguesFromFirebase } from "../../firebase/database";
+import { saveGameDialoguesToFirebase, loadGameDialoguesFromFirebase } from "../../firebase/database";
 import { useEffect } from "react";import { saveNarrativeDraftToFirebase } from "../../firebase/database";
 
 // stores a list of conjectures

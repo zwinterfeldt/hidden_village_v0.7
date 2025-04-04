@@ -5,10 +5,12 @@ import TextBox from "./TextBox.js";
 import Pose from "./Pose/index.js";
 import { useEffect, useState } from "react";
 import { useMachine, useSelector, assign } from "@xstate/react";
-import ChapterMachine from "../machines/chapterMachine.js";
+import chapterMachine from "../machines/chapterMachine.js";
 import { Sprite } from "@inlet/react-pixi";
 import Experiment from "./Experiment.js";
 import script from "../scripts/chapters.toml";
+import { Curriculum } from "./CurricularModule/CurricularModule";
+import { loadGameDialoguesFromFirebase } from "../firebase/database.js";
 
 const characterRenderOrder = {
   aboveground: 1,
@@ -60,6 +62,7 @@ export const idToSprite = {
 };
 
 const createScene = (sceneConfig, columnDimensions, rowDimensions) => {
+  console.log("sceneConfig received in createScene:", sceneConfig);
   return sceneConfig
     .sort((a, b) => {
       return (
@@ -73,6 +76,7 @@ const createScene = (sceneConfig, columnDimensions, rowDimensions) => {
       placementText += characterConfig.placement
         ? ` ${characterConfig.placement}`
         : " left";
+      console.log("character config", characterConfig);
       return (
         <Character
           type={characterConfig.id}
@@ -125,7 +129,7 @@ const Chapter = (props) => {
     cursorMode: true,
   };
 
-  const [state, send, service] = useMachine(ChapterMachine, { context });
+  const [state, send, service] = useMachine(chapterMachine, { context });
   const currentText = useSelector(service, selectCurrentText);
   const cursorMode = useSelector(service, selectCursorMode);
 
@@ -133,6 +137,8 @@ const Chapter = (props) => {
   useEffect(() => {
     const loadDialogues = async () => {
       setIsLoading(true);
+      // console.log("Curriculum = ");
+      // console.log(Curriculum.getCurrentUUID());
       const gameId = Curriculum.getCurrentUUID();
       if (!gameId) {
         console.warn("No valid game ID found. Cannot load dialogues.");
@@ -145,11 +151,18 @@ const Chapter = (props) => {
         if (allDialogues) {
           // Format current chapter name
           const currentChapterName = `chapter-${currentConjectureIdx + 1}`;
-          
+          // console.log("Current Chapter Name = ", currentChapterName);
+
           // Filter dialogues for current chapter
           const chapterDialogues = allDialogues.filter(
             dialogue => dialogue.chapter === currentChapterName
           );
+          // console.log("Chapter Dialogues = ", chapterDialogues);
+
+          // Ensuring chapters.toml is being rendered correctly
+          console.log("Script: ", script);
+          console.log("Scene for", currentChapterName, ":", script[currentChapterName]?.scene);
+
           
           // Separate intros and outros
           const intros = chapterDialogues
@@ -158,6 +171,8 @@ const Chapter = (props) => {
               text: dialogue.text, 
               speaker: dialogue.character || "player"
             }));
+
+          // console.log("Intros = ", intros);
             
           const outros = chapterDialogues
             .filter(dialogue => dialogue.type === "Outro")
@@ -165,11 +180,18 @@ const Chapter = (props) => {
               text: dialogue.text, 
               speaker: dialogue.character || "player"
             }));
-          
+          // console.log("Outros = ", outros);
+
           // For scene, we'll use a default or extract from dialogues if available
           const scene = [];
-          // You might want to define a method to create scene data from dialogues
-          
+
+          // TODO: Create a method to extract scene data from dialogues if needed
+          // For now, we'll just use the default scene from the script
+          if (script[currentChapterName] && script[currentChapterName].scene) {
+            console.log("Loaded scene from chapters.toml:", script[currentChapterName].scene);
+            scene.push(...script[currentChapterName].scene);
+          }
+
           setDialogueData({
             intro: intros,
             outro: outros,
@@ -182,7 +204,7 @@ const Chapter = (props) => {
             introText: intros,
             outroText: outros,
             scene: scene,
-            currentText: null,
+            currentText: intros.length > 0 ? intros[0] : null,
             lastText: [],
             cursorMode: true,
           });
@@ -191,6 +213,7 @@ const Chapter = (props) => {
         console.error("Error loading dialogues:", error);
       } finally {
         setIsLoading(false);
+        console.log("Loading complete.");
       }
     };
 
@@ -199,8 +222,9 @@ const Chapter = (props) => {
 
   useEffect(() => {
     if (dialogueData.scene && !isLoading) {
+      console.log("Loading...");
       setCharacters(
-        createScene(state.context.scene, columnDimensions(1), rowDimensions(1))
+        createScene(state.context.scene, columnDimensions(1), rowDimensions(1)),
       );
     }
   }, [dialogueData, isLoading]);
@@ -238,6 +262,7 @@ const Chapter = (props) => {
   useEffect(() => {
     const subscription = service.subscribe((state) => {
       if (state.context.currentText) {
+        // console.log("THERE CURRENTLY IS TEXT YES IT EXISTS!");
         setDisplayText(state.context.currentText.text);
       }
     });
@@ -247,6 +272,9 @@ const Chapter = (props) => {
 
   useEffect(() => {
     if (characters && currentText) {
+      // console.log("There are characters and current text is set.");
+      // console.log("Characters", characters);
+      // console.log("Current Text", currentText);
       setSpeaker(
         <Sprite
           image={idToSprite[currentText.speaker]}
@@ -276,6 +304,26 @@ const Chapter = (props) => {
     <>
       <Background height={height} width={width} />
       {characters}
+      <TextBox
+        text={displayText}
+        rowDimensionsCallback={rowDimensions}
+        speaker={speaker}
+        onCompleteCallback={() => {
+          if (state.value === "outro") {
+            nextChapterCallback();
+          } else {
+            send("NEXT");
+          }
+        }}
+        onClickCallback={() => {
+          if (state.value === "outro") {
+            nextChapterCallback();
+          } else {
+            send("NEXT");
+          }
+        }}
+        isLoading={isLoading}
+      />
       {["intro", "outro", "loadingNextChapter"].includes(state.value) && (
         <Pose poseData={poseData} colAttr={columnDimensions(3)} />
       )}
