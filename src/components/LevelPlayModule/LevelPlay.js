@@ -5,6 +5,8 @@ import LevelPlayMachine from "./LevelPlayMachine";
 import ConjecturePoseContainter from "../ConjecturePoseMatch/ConjecturePoseContainer"
 import VideoRecorder from "../VideoRecorder";
 import { getConjectureDataByUUID, writeToDatabaseIntuitionStart, writeToDatabaseIntuitionEnd } from "../../firebase/database";
+import Chapter from "../Chapter";
+
 
 const LevelPlay = (props) => {
   const {
@@ -24,12 +26,12 @@ const LevelPlay = (props) => {
   const [state, send] = useMachine(LevelPlayMachine);
   const [experimentText, setExperimentText] = useState(
     `Read the following aloud:\n\nFigure it out? \n\n Answer TRUE or FALSE?`
-  ); 
+  );
   const [conjectureData, setConjectureData] = useState(null);
   const [poses, setPoses] = useState(null);
 
   // Get tolerance from the pose data 
-  const getTolerance = (poseData) => {  
+  const getTolerance = (poseData) => {
     const tolerance = poseData['tolerance'] || null;
     if (tolerance != null){
       // Stored in database as a num% so replace
@@ -45,6 +47,8 @@ const LevelPlay = (props) => {
         try {
           const data = await getConjectureDataByUUID(UUID);
           setConjectureData(data);
+          console.log(data);
+          // Need to find a way to get the game UUID from here
         } catch (error) {
           console.error('Error getting data: ', error);
         }
@@ -99,6 +103,18 @@ useEffect(() => {
       curricularID={UUID} // This is working correctly now!
       gameID={conjectureData?.[UUID]?.GameID} // This is not working
     />
+    {state.value === "introDialogue" && conjectureData && conjectureData[UUID] && (
+      <Chapter
+        poseData={poseData}
+        columnDimensions={columnDimensions}
+        rowDimensions={rowDimensions}
+        height={height}
+        width={width}
+        chapterConjecture={conjectureData[UUID]}
+        currentConjectureIdx={0}
+        nextChapterCallback={() => send("NEXT")}
+      />
+    )}
       {state.value === "poseMatching" && poses != null && (
         <>
           <ConjecturePoseContainter
@@ -124,7 +140,7 @@ useEffect(() => {
           UUID={UUID}
           rowDimensions={rowDimensions}
           onComplete={() => send("NEXT")}
-          cursorTimer={debugMode ? 1_000 : 10_000}
+          cursorTimer={debugMode ? 1000 : 10000}
         /> )}
         {state.value === "insight" && (
         <ExperimentalTask
@@ -134,9 +150,23 @@ useEffect(() => {
           UUID={UUID}
           rowDimensions={rowDimensions}
           onComplete={onLevelComplete}
-          cursorTimer={debugMode ? 1_000 : 30_000}
+          cursorTimer={debugMode ? 1000 : 30000}
         />
       )}
+      {state.value === "outroDialogue" && conjectureData && conjectureData[UUID] && (
+      <Chapter
+        poseData={poseData}
+        columnDimensions={columnDimensions}
+        rowDimensions={rowDimensions}
+        height={height}
+        width={width}
+        chapterConjecture={conjectureData[UUID]} // Assuming your data contains both intro and outro dialogues.
+        // You might need to differentiate by passing a different index 
+        // or flag so that Chapter renders outro dialogues instead of intro dialogues.
+        currentConjectureIdx={1} // For example, index 1 for outro dialogues (adjust as needed)
+        nextChapterCallback={() => send("NEXT")} // Transition to levelEnd
+      />
+    )}
     </>
   );
 };

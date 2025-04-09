@@ -1,7 +1,18 @@
 import { createMachine, assign } from "xstate";
+
 const chapterMachine = createMachine(
   {
     initial: "intro",
+    context: {
+      introText: [],
+      outroText: [],
+      scene: [],
+      currentText: {},
+      lastText: [],
+      cursorMode: true,
+      // The callback that will notify the parent when the intro is complete.
+      onIntroComplete: () => {},
+    },
     states: {
       idle: {
         after: {
@@ -19,8 +30,10 @@ const chapterMachine = createMachine(
               cond: "continueIntro",
             },
             {
-              target: "experiment",
-              cond: (context, event) => context.introText.length === 0,
+              // When there’s no more intro text, call the callback and enter the final "done" state.
+              target: "done",
+              cond: (context) => context.introText.length === 0,
+              actions: "triggerOnIntroComplete",
             },
           ],
         },
@@ -32,6 +45,7 @@ const chapterMachine = createMachine(
           },
         },
       },
+      // Other states remain unchanged…
       experiment: {
         on: {
           ADVANCE: {
@@ -50,12 +64,10 @@ const chapterMachine = createMachine(
             {
               target: "loadingNextChapter",
               actions: assign({
-                currentText: (context) => {
-                  return {
-                    text: "Hit the next button to load the next chapter...",
-                    speaker: "player",
-                  };
-                },
+                currentText: (context) => ({
+                  text: "Hit the next button to load the next chapter...",
+                  speaker: "player",
+                }),
                 loaded: () => false,
               }),
             },
@@ -64,8 +76,10 @@ const chapterMachine = createMachine(
             actions: assign({
               introText: (_, event) => event.introText,
               outroText: (_, event) => event.outroText,
-              currentText: (_, event) => event.introText[0],
+              scene: (_, event) => event.scene,
+              currentText: (_, event) => event.introText[0] || null,
               lastText: () => [],
+              cursorMode: (_, event) => event.cursorMode,
             }),
           },
         },
@@ -77,39 +91,47 @@ const chapterMachine = createMachine(
             actions: assign({
               introText: (_, event) => event.introText,
               outroText: (_, event) => event.outroText,
-              currentText: (_, event) => null,
+              scene: (_, event) => event.scene,
+              currentText: (_, event) => event.introText[0] || null,
               lastText: () => [],
+              cursorMode: (_, event) => event.cursorMode,
             }),
           },
         },
+      },
+      // This final state indicates that the intro is fully completed.
+      done: {
+        type: "final",
+      },
+    },
+    on: {
+      RESET_CONTEXT: {
+        actions: assign({
+          introText: (_, event) => event.introText,
+          outroText: (_, event) => event.outroText,
+          scene: (_, event) => event.scene,
+          currentText: (_, event) => event.introText[0] || null,
+          lastText: () => [],
+          cursorMode: (_, event) => event.cursorMode,
+        }),
       },
     },
   },
   {
     guards: {
-      continueIntro: (context) => {
-        return context.introText.length > 0;
-      },
-      continueOutro: (context) => {
-        return context.outroText.length > 0;
-      },
+      continueIntro: (context) => context.introText.length > 0,
+      continueOutro: (context) => context.outroText.length > 0,
     },
     actions: {
       introDialogStep: assign({
         currentText: (context) => {
-          if (context.introText[0]) {
-            return context.introText[0];
-          }
-          if (context.currentText) {
-            return context.currentText;
-          }
-          return {};
+          console.log("Current introText before slicing:", context.introText);
+          return context.introText[0] || {};
         },
         introText: (context) => {
-          if (context.introText.length > 0) {
-            return context.introText.slice(1);
-          }
-          return [];
+          const sliced = context.introText.length > 0 ? context.introText.slice(1) : [];
+          console.log("New introText after slicing:", sliced);
+          return sliced;
         },
         lastText: (context) => {
           if (context.introText.length > 0) {
@@ -119,9 +141,7 @@ const chapterMachine = createMachine(
         },
       }),
       toggleCursorMode: assign({
-        cursorMode: (context) => {
-          return !context.cursorMode;
-        },
+        cursorMode: (context) => !context.cursorMode,
       }),
       outroDialogStep: assign({
         currentText: (context) => {
@@ -143,6 +163,10 @@ const chapterMachine = createMachine(
           return [];
         },
       }),
+      triggerOnIntroComplete: (context) => {
+        // Call the callback passed in via context.
+        context.onIntroComplete();
+      },
     },
   }
 );

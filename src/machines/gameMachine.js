@@ -3,7 +3,7 @@ import { createMachine, assign } from "xstate";
 const GameMachine = createMachine(
   {
     id: "GameMachine",
-    initial: "tutorial",
+    initial: "chapter",
     states: {
       tutorial: {
         on: {

@@ -111,6 +111,17 @@ export const writeToDatabase = async (poseData, UUID, frameRate) => {
   return promise;
 };
 
+export const loadGameDialoguesFromFirebase = async (gameId) => {
+  if (!gameId) {
+    alert("No gameId provided!");
+    return [];
+  }
+  const dbRef = ref(db, `Game/${gameId}/Dialogues`);
+  const snapshot = await get(dbRef);
+  return snapshot.exists() ? snapshot.val() : [];
+};
+
+
 export const writeToDatabasePoseAuth = async (poseData, state, tolerance) => {
   // Create a new date object to get a timestamp
   const dateObj = new Date();
@@ -475,6 +486,15 @@ export const writeToDatabaseCurricular = async (UUID) => {
     CurricularID = UUID;
   }
 
+  // First, load any existing dialogues to preserve them
+  let existingDialogues = [];
+  try {
+    existingDialogues = await loadGameDialoguesFromFirebase(CurricularID) || [];
+    console.log("Preserving existing dialogues:", existingDialogues.length);
+  } catch (error) {
+    console.warn("No existing dialogues found or error loading dialogues:", error);
+  }
+
   //get the UUID of each conjecture
   const conjectureList = Curriculum.getCurrentConjectures();
   let conjectures = [];
@@ -484,7 +504,7 @@ export const writeToDatabaseCurricular = async (UUID) => {
 
   const dataToPush = {}
   let hasUndefined = false;
-  // Fetch values from local storage for each key inside  curricularTextBoxes
+  // Fetch values from local storage for each key inside curricularTextBoxes
   await Promise.all(curricularTextBoxes.map(async (key) => {
     const value = localStorage.getItem(key);
     Object.assign(dataToPush, await createTextObjects(key, value));
@@ -515,13 +535,34 @@ export const writeToDatabaseCurricular = async (UUID) => {
     set(ref(db, `${CurricularPath}/Time`), timestamp),
     set(ref(db, `${CurricularPath}/UUID`), CurricularID),
     set(ref(db, `${CurricularPath}/isFinal`), true),
-    // auto set author for security
     set(ref(db, `${CurricularPath}/Author`), userName),
     set(ref(db, `${CurricularPath}/AuthorID`), userId),
+    // CRITICAL: Preserve dialogues when publishing
+    set(ref(db, `${CurricularPath}/Dialogues`), existingDialogues),
   ];
 
   return alert("Game Published"), promises; //returns the promises and alerts that the game has been published
 }
+
+// save dialogues to firebase
+export const saveNarrativeDraftToFirebase = async (UUID, dialogues) => {
+  const timestamp = new Date().toISOString();
+  const gameId = UUID ?? uuidv4(); // Use provided UUID or create new one
+  const dbRef = ref(db, `Game/${gameId}/Dialogues`);
+
+  const promises = [
+    set(ref(db, `Game/${gameId}/Dialogues`), dialogues),
+    set(ref(db, `Game/${gameId}/LastSaved`), timestamp),
+    set(ref(db, `Game/${gameId}/UUID`), gameId),
+    set(ref(db, `Game/${gameId}/isFinal`), false),
+    // Optional: auto-set author again for traceability
+    set(ref(db, `Game/${gameId}/AuthorID`), userId),
+    set(ref(db, `Game/${gameId}/Author`), userName),
+  ];
+
+  await Promise.all(promises);
+  alert("Narrative draft saved.");
+};
 
 
 // Define a function to retrieve a conjecture based on UUID
