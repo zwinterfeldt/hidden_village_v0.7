@@ -127,6 +127,9 @@ const Chapter = (props) => {
     currentText: null,
     lastText: [],
     cursorMode: true,
+    onIntroComplete: () => {
+      nextChapterCallback();
+    },
   };
 
   const [state, send, service] = useMachine(chapterMachine, { context });
@@ -304,6 +307,20 @@ const Chapter = (props) => {
     <>
       <Background height={height} width={width} />
       {characters}
+      {cursorMode && (
+        <CursorMode 
+          rowDimensions={rowDimensions} 
+          poseData={poseData} 
+          callback={() => {
+            if (state.value === "outro") {
+              nextChapterCallback();
+            }
+            else {
+              send("NEXT");
+            }
+          }}
+        />
+      )}
       <TextBox
         text={displayText}
         rowDimensionsCallback={rowDimensions}
@@ -327,7 +344,6 @@ const Chapter = (props) => {
       {["intro", "outro", "loadingNextChapter"].includes(state.value) && (
         <Pose poseData={poseData} colAttr={columnDimensions(3)} />
       )}
-      {/* Rest of JSX unchanged */}
     </>
   );
 };

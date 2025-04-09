@@ -94,6 +94,18 @@ useEffect(() => {
 
   return (
     <>
+    {state.value === "introDialogue" && conjectureData && conjectureData[UUID] && (
+      <Chapter
+        poseData={poseData}
+        columnDimensions={columnDimensions}
+        rowDimensions={rowDimensions}
+        height={height}
+        width={width}
+        chapterConjecture={conjectureData[UUID]}
+        currentConjectureIdx={0}
+        nextChapterCallback={() => send("NEXT")}
+      />
+    )}
       {state.value === "poseMatching" && poses != null && (
         <>
           <ConjecturePoseContainter
@@ -109,18 +121,6 @@ useEffect(() => {
           />
         </>
       )}
-      {state.value === "introDialogue" && conjectureData && conjectureData[UUID] && (
-        <Chapter
-          poseData={poseData}
-          columnDimensions={columnDimensions}
-          rowDimensions={rowDimensions}
-          height={height}
-          width={width}
-          chapterConjecture={conjectureData[UUID]} // or pass anything to satisfy props
-          currentConjectureIdx={0} // or extract index if available
-          nextChapterCallback={() => send("NEXT")} // transition to poseMatching
-        />
-      )}
       {state.value === "intuition" && (
          <ExperimentalTask
           width={width}
@@ -131,7 +131,7 @@ useEffect(() => {
           UUID={UUID}
           rowDimensions={rowDimensions}
           onComplete={() => send("NEXT")}
-          cursorTimer={debugMode ? 1_000 : 10_000}
+          cursorTimer={debugMode ? 1000 : 10000}
         /> )}
         {state.value === "insight" && (
         <ExperimentalTask
@@ -141,9 +141,23 @@ useEffect(() => {
           UUID={UUID}
           rowDimensions={rowDimensions}
           onComplete={onLevelComplete}
-          cursorTimer={debugMode ? 1_000 : 30_000}
+          cursorTimer={debugMode ? 1000 : 30000}
         />
       )}
+      {state.value === "outroDialogue" && conjectureData && conjectureData[UUID] && (
+      <Chapter
+        poseData={poseData}
+        columnDimensions={columnDimensions}
+        rowDimensions={rowDimensions}
+        height={height}
+        width={width}
+        chapterConjecture={conjectureData[UUID]} // Assuming your data contains both intro and outro dialogues.
+        // You might need to differentiate by passing a different index 
+        // or flag so that Chapter renders outro dialogues instead of intro dialogues.
+        currentConjectureIdx={1} // For example, index 1 for outro dialogues (adjust as needed)
+        nextChapterCallback={() => send("NEXT")} // Transition to levelEnd
+      />
+    )}
     </>
   );
 };
