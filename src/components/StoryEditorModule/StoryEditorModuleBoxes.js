@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Text } from "@inlet/react-pixi";
 import { TextStyle } from "@pixi/text";
-import { white, black } from "../../utils/colors";
+import { white, black, } from "../../utils/colors";
 import InputBox from "../InputBox";
 import RectButton from "../RectButton";
-import { blue, red, green, orange, pink, } from "../../utils/colors";
+import { blue, red, green, orange, pink, dodgerBlue} from "../../utils/colors";
 
 // =========== HANDLER FUNCTIONS ===========
 
@@ -277,7 +277,7 @@ export const StoryEditorContentEditor = (props) => {
       {/* To label the narritives */}
       {createTextElement("Chapter", 0.04, 0.32, 0.015, width, height)}
       {createTextElement("Character", 0.13, 0.32, 0.015, width, height)}
-      {createTextElement("In/Out", 0.25, 0.32, 0.015, width, height)}
+      {createTextElement("Intro/Outro", 0.238, 0.32, 0.015, width, height)}
       {createTextElement("Dialogue Preview", 0.45, 0.32, 0.015, width, height)}
 
       {/* ========== DIALOGUE ROWS ========== */}
@@ -313,7 +313,7 @@ export const StoryEditorContentEditor = (props) => {
               color={white}
               fontSize={width * 0.015}
               fontColor={black}
-              text={`${dialogue.type} ▼`}
+              text={`◀${dialogue.type}▶`}
               fontWeight={500}
               callback={() => onChangeType(index)}
             />
@@ -419,7 +419,7 @@ export const StoryEditorContentEditor = (props) => {
               width={width * 0.2}
               x={width * 0.87}
               y={height * rowY}
-              color={orange}
+              color={red}
               fontSize={width * 0.01}
               fontColor={white}
               text={"Remove"}
@@ -431,7 +431,7 @@ export const StoryEditorContentEditor = (props) => {
             width={width * 0.15}
             x={width * 0.715}
             y={height * rowY}
-            color={pink}
+            color={green}
             fontSize={width * 0.01}
             fontColor={white}
             text={"Edit"}
@@ -443,7 +443,7 @@ export const StoryEditorContentEditor = (props) => {
               width={width * 0.1}
               x={width * 0.825}
               y={height * rowY}
-              color={red}
+              color={dodgerBlue}
               fontSize={width * 0.01}
               fontColor={white}
               text={"V"}
@@ -455,7 +455,7 @@ export const StoryEditorContentEditor = (props) => {
               width={width * 0.1}
               x={width * 0.78}
               y={height * rowY}
-              color={green}
+              color={dodgerBlue}
               fontSize={width * 0.01}
               fontColor={white}
               text={"Λ"}
