@@ -109,6 +109,7 @@ const Chapter = (props) => {
     chapterConjecture,
     nextChapterCallback,
     currentConjectureIdx,
+    isOutro,
   } = props;
 
   const [characters, setCharacters] = useState(undefined);
@@ -124,15 +125,23 @@ const Chapter = (props) => {
     introText: dialogueData.intro || [],
     outroText: dialogueData.outro || [],
     scene: dialogueData.scene || [],
-    currentText: null,
+    currentText: props.isOutro
+    ? (dialogueData.outro && dialogueData.outro[0]) || null
+    : (dialogueData.intro && dialogueData.intro[0]) || null,
     lastText: [],
     cursorMode: true,
     onIntroComplete: () => {
       nextChapterCallback();
     },
+    onOutroComplete: () => {
+      nextChapterCallback();
+    },
   };
 
-  const [state, send, service] = useMachine(chapterMachine, { context });
+  const [state, send, service] = useMachine(chapterMachine, { 
+    context, 
+    initialState: isOutro ? "outro" : "intro",
+  });
   const currentText = useSelector(service, selectCurrentText);
   const cursorMode = useSelector(service, selectCursorMode);
 
@@ -150,7 +159,8 @@ const Chapter = (props) => {
       }
 
       try {
-        const allDialogues = await loadGameDialoguesFromFirebase(gameId);
+        const rawDialogues = await loadGameDialoguesFromFirebase(gameId);
+        const allDialogues = Object.values(rawDialogues || {});
         if (allDialogues) {
           // Format current chapter name
           const currentChapterName = `chapter-${currentConjectureIdx + 1}`;
@@ -207,9 +217,12 @@ const Chapter = (props) => {
             introText: intros,
             outroText: outros,
             scene: scene,
-            currentText: intros.length > 0 ? intros[0] : null,
+            currentText: isOutro
+            ? (outros.length > 0 ? outros[0] : null)
+            : (intros.length > 0 ? intros[0] : null),
             lastText: [],
             cursorMode: true,
+            isOutro: isOutro,
           });
         }
       } catch (error) {

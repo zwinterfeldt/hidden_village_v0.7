@@ -19,7 +19,7 @@ const LevelPlayMachine = createMachine({
     },
     insight: {
       on: {
-        NEXT: "levelEnd",
+        NEXT: "outroDialogue",
       },
     },
     intuition: {

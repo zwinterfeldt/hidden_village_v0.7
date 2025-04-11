@@ -22,7 +22,7 @@ const chapterMachine = createMachine(
         },
       },
       intro: {
-        entry: ["introDialogStep"],
+        entry: ["introDialogueStep"],
         on: {
           NEXT: [
             {
@@ -62,14 +62,9 @@ const chapterMachine = createMachine(
               cond: "continueOutro",
             },
             {
-              target: "loadingNextChapter",
-              actions: assign({
-                currentText: (context) => ({
-                  text: "Hit the next button to load the next chapter...",
-                  speaker: "player",
-                }),
-                loaded: () => false,
-              }),
+              target: "done",
+              cond: (context) => context.outroText.length === 0,
+              actions: "triggerOnOutroComplete",
             },
           ],
           RESET_CONTEXT: {
@@ -77,7 +72,7 @@ const chapterMachine = createMachine(
               introText: (_, event) => event.introText,
               outroText: (_, event) => event.outroText,
               scene: (_, event) => event.scene,
-              currentText: (_, event) => event.introText[0] || null,
+              currentText: (_, event) => event.isOutro ? event.outroText[0] || null : event.introText[0] || null,
               lastText: () => [],
               cursorMode: (_, event) => event.cursorMode,
             }),
@@ -92,7 +87,7 @@ const chapterMachine = createMachine(
               introText: (_, event) => event.introText,
               outroText: (_, event) => event.outroText,
               scene: (_, event) => event.scene,
-              currentText: (_, event) => event.introText[0] || null,
+              currentText: (_, event) => event.isOutro ? event.outroText[0] || null : event.introText[0] || null,
               lastText: () => [],
               cursorMode: (_, event) => event.cursorMode,
             }),
@@ -110,7 +105,7 @@ const chapterMachine = createMachine(
           introText: (_, event) => event.introText,
           outroText: (_, event) => event.outroText,
           scene: (_, event) => event.scene,
-          currentText: (_, event) => event.introText[0] || null,
+          currentText: (_, event) => event.isOutro ? event.outroText[0] || null : event.introText[0] || null,
           lastText: () => [],
           cursorMode: (_, event) => event.cursorMode,
         }),
@@ -123,7 +118,7 @@ const chapterMachine = createMachine(
       continueOutro: (context) => context.outroText.length > 0,
     },
     actions: {
-      introDialogStep: assign({
+      introDialogueStep: assign({
         currentText: (context) => {
           console.log("Current introText before slicing:", context.introText);
           return context.introText[0] || {};
@@ -167,6 +162,9 @@ const chapterMachine = createMachine(
         // Call the callback passed in via context.
         context.onIntroComplete();
       },
+      triggerOnOutroComplete: (context) => {
+        context.onOutroComplete?.();
+      },      
     },
   }
 );

@@ -149,7 +149,7 @@ useEffect(() => {
           poseData={poseData}
           UUID={UUID}
           rowDimensions={rowDimensions}
-          onComplete={onLevelComplete}
+          onComplete={() => send("NEXT")}
           cursorTimer={debugMode ? 1000 : 30000}
         />
       )}
@@ -160,11 +160,10 @@ useEffect(() => {
         rowDimensions={rowDimensions}
         height={height}
         width={width}
-        chapterConjecture={conjectureData[UUID]} // Assuming your data contains both intro and outro dialogues.
-        // You might need to differentiate by passing a different index 
-        // or flag so that Chapter renders outro dialogues instead of intro dialogues.
-        currentConjectureIdx={1} // For example, index 1 for outro dialogues (adjust as needed)
-        nextChapterCallback={() => send("NEXT")} // Transition to levelEnd
+        chapterConjecture={conjectureData[UUID]} 
+        currentConjectureIdx={1} 
+        nextChapterCallback={() => send("NEXT")} 
+        isOutro={true}
       />
     )}
     </>
