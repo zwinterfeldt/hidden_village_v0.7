@@ -138,8 +138,9 @@ const chapterMachine = createMachine(
       toggleCursorMode: assign({
         cursorMode: (context) => !context.cursorMode,
       }),
-      outroDialogStep: assign({
+      outroDialogStep: assign({     
         currentText: (context) => {
+          console.log("🎬 Running outroDialogStep with outroText:", context.outroText);
           if (context.outroText[0]) {
             return context.outroText[0];
           }

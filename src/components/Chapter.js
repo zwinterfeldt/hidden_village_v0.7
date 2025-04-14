@@ -161,16 +161,19 @@ const Chapter = (props) => {
       try {
         const rawDialogues = await loadGameDialoguesFromFirebase(gameId);
         const allDialogues = Object.values(rawDialogues || {});
+        console.log("🔍 Raw Dialogues:", rawDialogues);
+        console.log("🧮 All Dialogues:", allDialogues);
+
         if (allDialogues) {
           // Format current chapter name
           const currentChapterName = `chapter-${currentConjectureIdx + 1}`;
-          // console.log("Current Chapter Name = ", currentChapterName);
+          console.log("Current Chapter Name = ", currentChapterName);
 
           // Filter dialogues for current chapter
           const chapterDialogues = allDialogues.filter(
             dialogue => dialogue.chapter === currentChapterName
           );
-          // console.log("Chapter Dialogues = ", chapterDialogues);
+          console.log("Chapter Dialogues = ", chapterDialogues);
 
           // Ensuring chapters.toml is being rendered correctly
           console.log("Script: ", script);
@@ -185,7 +188,7 @@ const Chapter = (props) => {
               speaker: dialogue.character || "player"
             }));
 
-          // console.log("Intros = ", intros);
+          console.log("Intros = ", intros);
             
           const outros = chapterDialogues
             .filter(dialogue => dialogue.type === "Outro")
@@ -193,7 +196,7 @@ const Chapter = (props) => {
               text: dialogue.text, 
               speaker: dialogue.character || "player"
             }));
-          // console.log("Outros = ", outros);
+          console.log("Outros = ", outros);
 
           // For scene, we'll use a default or extract from dialogues if available
           const scene = [];

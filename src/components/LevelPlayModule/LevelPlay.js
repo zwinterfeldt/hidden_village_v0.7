@@ -150,7 +150,7 @@ useEffect(() => {
           UUID={UUID}
           rowDimensions={rowDimensions}
           onComplete={() => send("NEXT")}
-          cursorTimer={debugMode ? 1000 : 30000}
+          cursorTimer={debugMode ? 1000 : 5000} //moved insight phase to 5 seconds for testing
         />
       )}
       {state.value === "outroDialogue" && conjectureData && conjectureData[UUID] && (
@@ -161,7 +161,7 @@ useEffect(() => {
         height={height}
         width={width}
         chapterConjecture={conjectureData[UUID]} 
-        currentConjectureIdx={1} 
+        currentConjectureIdx={0} 
         nextChapterCallback={() => send("NEXT")} 
         isOutro={true}
       />
