@@ -118,6 +118,12 @@ const Chapter = (props) => {
   const [currentConjecture, setCurrentConjecture] = useState(chapterConjecture);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [hasCompleted, setHasCompleted] = useState(false);
+
+  const handleAdvance = () => {
+    send("NEXT");
+  };
+
   const [dialogueData, setDialogueData] = useState({ intro: [], outro: [], scene: [] });
 
   // Initialize with empty context
@@ -237,7 +243,7 @@ const Chapter = (props) => {
     };
 
     loadDialogues();
-  }, [currentConjectureIdx]); // Reload when chapter changes
+  }, [currentConjectureIdx, isOutro]); // Reload when chapter changes
 
   useEffect(() => {
     if (dialogueData.scene && !isLoading) {
@@ -327,34 +333,15 @@ const Chapter = (props) => {
         <CursorMode 
           rowDimensions={rowDimensions} 
           poseData={poseData} 
-          callback={() => {
-            if (state.value === "outro") {
-              nextChapterCallback();
-            }
-            else {
-              send("NEXT");
-            }
-          }}
+          callback={handleAdvance}
         />
       )}
       <TextBox
         text={displayText}
         rowDimensionsCallback={rowDimensions}
         speaker={speaker}
-        onCompleteCallback={() => {
-          if (state.value === "outro") {
-            nextChapterCallback();
-          } else {
-            send("NEXT");
-          }
-        }}
-        onClickCallback={() => {
-          if (state.value === "outro") {
-            nextChapterCallback();
-          } else {
-            send("NEXT");
-          }
-        }}
+        onCompleteCallback={handleAdvance}
+        onClickCallback={handleAdvance}
         isLoading={isLoading}
       />
       {["intro", "outro", "loadingNextChapter"].includes(state.value) && (

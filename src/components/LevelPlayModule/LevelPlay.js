@@ -105,6 +105,7 @@ useEffect(() => {
     />
     {state.value === "introDialogue" && conjectureData && conjectureData[UUID] && (
       <Chapter
+        key={`chapter-${UUID}-intro`}
         poseData={poseData}
         columnDimensions={columnDimensions}
         rowDimensions={rowDimensions}
@@ -113,6 +114,7 @@ useEffect(() => {
         chapterConjecture={conjectureData[UUID]}
         currentConjectureIdx={0}
         nextChapterCallback={() => send("NEXT")}
+        isOutro={false}
       />
     )}
       {state.value === "poseMatching" && poses != null && (
@@ -155,6 +157,7 @@ useEffect(() => {
       )}
       {state.value === "outroDialogue" && conjectureData && conjectureData[UUID] && (
       <Chapter
+        key={`chapter-${UUID}-outro`}
         poseData={poseData}
         columnDimensions={columnDimensions}
         rowDimensions={rowDimensions}
@@ -162,7 +165,7 @@ useEffect(() => {
         width={width}
         chapterConjecture={conjectureData[UUID]} 
         currentConjectureIdx={0} 
-        nextChapterCallback={() => send("NEXT")} 
+        nextChapterCallback={onLevelComplete} 
         isOutro={true}
       />
     )}
