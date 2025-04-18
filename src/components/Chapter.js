@@ -144,10 +144,17 @@ const Chapter = (props) => {
     },
   };
 
-  const [state, send, service] = useMachine(chapterMachine, { 
-    context, 
+  const [hasRun, setHasRun] = useState(false);
+
+  const [state, send, service] = useMachine(chapterMachine, {
+    context,
     initialState: isOutro ? "outro" : "intro",
+  }, (state) => {
+    if (state.matches("done") && !hasRun) {
+      setHasRun(true); // prevent any future remount from restarting the machine
+    }
   });
+
   const currentText = useSelector(service, selectCurrentText);
   const cursorMode = useSelector(service, selectCursorMode);
 
@@ -221,18 +228,20 @@ const Chapter = (props) => {
           });
           
           // Update the state machine with the new data
-          send({
-            type: "RESET_CONTEXT",
-            introText: intros,
-            outroText: outros,
-            scene: scene,
-            currentText: isOutro
-            ? (outros.length > 0 ? outros[0] : null)
-            : (intros.length > 0 ? intros[0] : null),
-            lastText: [],
-            cursorMode: true,
-            isOutro: isOutro,
-          });
+          if (!hasRun) {
+            send({
+              type: "RESET_CONTEXT",
+              introText: intros,
+              outroText: outros,
+              scene: scene,
+              currentText: isOutro
+                ? (outros.length > 0 ? outros[0] : null)
+                : (intros.length > 0 ? intros[0] : null),
+              lastText: [],
+              cursorMode: true,
+              isOutro: isOutro,
+            });
+          }
         }
       } catch (error) {
         console.error("Error loading dialogues:", error);

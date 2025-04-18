@@ -8,6 +8,7 @@ import { getConjectureDataByUUID, writeToDatabaseIntuitionStart, writeToDatabase
 import Chapter from "../Chapter";
 
 
+
 const LevelPlay = (props) => {
   const {
     columnDimensions,
@@ -19,9 +20,17 @@ const LevelPlay = (props) => {
     width,
     height,
     backCallback,
+    currentConjectureIdx,
     curricularID,
-    gameID
+    gameID,
+    hasShownIntro,
+    markIntroShown,
   } = props;
+
+  if (!UUID || currentConjectureIdx === undefined || isNaN(currentConjectureIdx)) {
+    console.warn("🚫 Skipping render — invalid UUID or chapter index", { UUID, currentConjectureIdx });
+    return null;
+  }
   
   const [state, send] = useMachine(LevelPlayMachine);
   const [experimentText, setExperimentText] = useState(
@@ -29,6 +38,19 @@ const LevelPlay = (props) => {
   );
   const [conjectureData, setConjectureData] = useState(null);
   const [poses, setPoses] = useState(null);
+  
+    useEffect(() => {
+      console.log("🎮 LevelPlay state:", state.value); // ← Debug log 3
+    }, [state.value]);
+
+    // ✅ Auto-skip introDialogue if it's already been shown
+    useEffect(() => {
+      if (state.value === "introDialogue" && hasShownIntro(currentConjectureIdx)) {
+        console.log("🚪 Auto-skipping introDialogue because it's already shown.");
+        send("NEXT");
+      }
+    }, [state.value, hasShownIntro, currentConjectureIdx]);
+
 
   // Get tolerance from the pose data 
   const getTolerance = (poseData) => {
@@ -47,8 +69,7 @@ const LevelPlay = (props) => {
         try {
           const data = await getConjectureDataByUUID(UUID);
           setConjectureData(data);
-          console.log(data);
-          // Need to find a way to get the game UUID from here
+          console.log("📦 Loaded Conjecture Data:", data); // ← Debug log 4
         } catch (error) {
           console.error('Error getting data: ', error);
         }
@@ -103,18 +124,30 @@ useEffect(() => {
       curricularID={UUID} // This is working correctly now!
       gameID={conjectureData?.[UUID]?.GameID} // This is not working
     />
-    {state.value === "introDialogue" && conjectureData && conjectureData[UUID] && (
-      <Chapter
-        key={`chapter-${UUID}-intro`}
-        poseData={poseData}
-        columnDimensions={columnDimensions}
-        rowDimensions={rowDimensions}
-        height={height}
-        width={width}
-        chapterConjecture={conjectureData[UUID]}
-        currentConjectureIdx={0}
-        nextChapterCallback={() => send("NEXT")}
-        isOutro={false}
+    
+    {/* ✅ Debug: Checking if intro should show */}
+    {/*{console.log("👁️ Should render intro?", {
+      state: state.value,
+      hasShown: hasShownIntro(0)
+    })}*/}
+    
+    {state.value === "introDialogue" &&
+      !hasShownIntro(currentConjectureIdx) && // assuming chapter index 0 for now
+      conjectureData && conjectureData[UUID] && (
+        <Chapter
+          key={`chapter-${UUID}-intro`}
+          poseData={poseData}
+          columnDimensions={columnDimensions}
+          rowDimensions={rowDimensions}
+          height={height}
+          width={width}
+          chapterConjecture={conjectureData[UUID]}
+          currentConjectureIdx={currentConjectureIdx}
+          nextChapterCallback={() => {
+            markIntroShown(currentConjectureIdx); // mark this chapter's intro as shown
+            send("NEXT");
+          }}
+          isOutro={false}
       />
     )}
       {state.value === "poseMatching" && poses != null && (
@@ -164,7 +197,7 @@ useEffect(() => {
         height={height}
         width={width}
         chapterConjecture={conjectureData[UUID]} 
-        currentConjectureIdx={0} 
+        currentConjectureIdx={currentConjectureIdx} 
         nextChapterCallback={onLevelComplete} 
         isOutro={true}
       />
