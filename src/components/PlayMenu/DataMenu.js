@@ -9,6 +9,8 @@ import { Input } from 'postcss';
 import { useEffect, useRef, useState, } from 'react';
 import { getUserEmailFromDatabase,  } from "../../firebase/userDatabase"
 import { getFromDatabaseByGame, convertDateFormat, checkDateFormat, checkGameAuthorization, getAuthorizedGameList, } from "../../firebase/database"
+import { getStorage, ref, listAll, getDownloadURL } from "firebase/storage";
+import { getDatabase, ref as dbRef, get } from "firebase/database";
 
 import { set } from 'firebase/database';
 
@@ -28,6 +30,7 @@ const DataMenu = (props) => {
   const [start_date, setStartDate] = useState('');
   const [end_date, setEndDate] = useState('');
   const [game_list, setGameList] = useState([]);
+  const [save_videos, setSaveVideos] = useState(false);
 
 
   // For fetching email when componenet first mounts
@@ -75,6 +78,133 @@ const DataMenu = (props) => {
     fetchEmail();
   }, []);
 
+  const downloadVideos = async (gameName, start, end) => {
+    try {
+      const storage = getStorage();
+      const database = getDatabase();
+  
+      // Parsing dates
+      // const parseDate = (dateStr) => {
+      //   if (!dateStr) return null;
+  
+      //   if (dateStr.includes('/')) {
+      //     const [month, day, year] = dateStr.split('/');
+      //     return new Date(Date.UTC(+year, +month - 1, +day));
+      //   } else if (dateStr.includes('-')) {
+      //     const [year, month, day] = dateStr.split('-');
+      //     return new Date(Date.UTC(+year, +month - 1, +day));
+      //   }
+  
+      //   return null;
+      // };
+  
+      const startDateUTC = start;
+      const endDateUTC = end ? new Date(end.getTime() + 86400000 - 1) : null;
+
+      // Calling Firebase to get the game data
+      const gamesRef = dbRef(database, 'Game');
+      const snapshot = await get(gamesRef);
+  
+      if (!snapshot.exists()) {
+        alert('No games found in database. Please check the database path.');
+        return;
+      }
+  
+      const games = snapshot.val();
+      let foundGame = null;
+  
+      for (const uuid in games) {
+        const game = games[uuid];
+        if (
+          game.CurricularName &&
+          game.CurricularName.toLowerCase().trim() === gameName.toLowerCase().trim()
+        ) {
+          foundGame = game;
+          break;
+        }
+      }
+  
+      if (!foundGame) {
+        alert(`Couldn't find a matching game in the database. Searched for: ${gameName}`);
+        return;
+      }
+  
+      const author = foundGame.Author || '';
+      const name = foundGame.CurricularName || '';
+  
+      // Fetching videos from Firebase Storage
+      const videoFolderRef = ref(storage, 'videos');
+      const videoList = await listAll(videoFolderRef);
+  
+      if (videoList.items.length === 0) {
+        alert("No videos found in storage.");
+        return;
+      }
+  
+      const filteredVideos = [];
+  
+      for (const item of videoList.items) {
+        const match = item.name.match(/^(\d{4})(\d{2})(\d{2})_/); // YYYYMMDD_
+  
+        if (!match) continue;
+  
+        const videoDate = new Date(Date.UTC(
+          parseInt(match[1]),
+          parseInt(match[2]) - 1,
+          parseInt(match[3])
+        ));
+  
+        // Debugging log
+        console.log(`Checking ${item.name} | videoDate: ${videoDate.toISOString()}, start: ${startDateUTC?.toISOString()}, end: ${endDateUTC?.toISOString()}`);
+  
+        const isInDateRange =
+          (!startDateUTC || videoDate >= startDateUTC) &&
+          (!endDateUTC || videoDate <= endDateUTC);
+  
+        const includesAuthor = author ? item.name.includes(author) : true;
+        const includesName = name ? item.name.includes(name) : true;
+  
+        if (isInDateRange && includesAuthor && includesName) {
+          filteredVideos.push(item);
+        }
+      }
+  
+      if (filteredVideos.length === 0) {
+        alert("No videos found for the specified criteria.");
+        return;
+      }
+  
+      let downloadCount = 0;
+      for (const videoRef of filteredVideos) {
+        try {
+          const downloadURL = await getDownloadURL(videoRef);
+  
+          const response = await fetch(downloadURL);
+          const blob = await response.blob();
+  
+          const blobURL = URL.createObjectURL(blob);
+  
+          const a = document.createElement('a');
+          a.href = blobURL;
+          a.download = videoRef.name.endsWith('.mp4') ? videoRef.name : `${videoRef.name}.mp4`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          downloadCount++;
+  
+          await new Promise(resolve => setTimeout(resolve, 100));
+        } catch (err) {
+          console.error(`Error downloading ${videoRef.name}:`, err);
+        }
+      }
+  
+      alert(`Successfully downloaded ${downloadCount} out of ${filteredVideos.length} video files.`);
+    } catch (error) {
+      console.error('Error during video download:', error);
+      alert('Failed to download videos. Please check the console for details.');
+    }
+  };
+  
 
   const draw = useCallback(
     (g) => {
@@ -326,8 +456,8 @@ const DataMenu = (props) => {
         fontSize={checkButtonFont}
         fontColor={black}
         fontWeight={600}
-        text={save_json ? "X" : ""}
-        //callback = {() => { setSaveJSON(!save_json) } }
+        text={save_videos ? "X" : ""}
+        callback = {() => { setSaveVideos(!save_videos) } }
       />
 
       <Text
@@ -368,6 +498,58 @@ const DataMenu = (props) => {
           else if (save_csv) {
             getFromDatabaseByGameCSV(game_name, convertDateFormat(start_date), convertDateFormat(end_date)); //game, start date, end date
           }
+          
+          if (all_data && save_videos) {
+            if (!game_name) {
+              alert('Please enter a game name.');
+              return;
+            }
+          
+            if (!all_data && (!start_date || !end_date)) {
+              alert('Please enter a start and end date.');
+              return;
+            }
+          
+            // parse to Date object directly here
+            const parseDate = (dateStr) => {
+              if (!dateStr) return null;
+              const [month, day, year] = dateStr.split('/');
+              return new Date(Date.UTC(+year, +month - 1, +day));
+            };
+          
+            const start = all_data ? new Date(Date.UTC(2000, 0, 1)) : parseDate(start_date);
+            const end = all_data ? new Date() : parseDate(end_date);
+          
+            console.log("Sending to downloadVideos -> start:", start.toISOString(), "end:", end.toISOString());
+          
+            downloadVideos(game_name, start, end);
+          }
+
+          if (save_videos) {
+            if (!game_name) {
+              alert('Please enter a game name.');
+              return;
+            }
+          
+            if (!all_data && (!start_date || !end_date)) {
+              alert('Please enter a start and end date.');
+              return;
+            }
+          
+            // parse to Date object directly here
+            const parseDate = (dateStr) => {
+              if (!dateStr) return null;
+              const [month, day, year] = dateStr.split('/');
+              return new Date(Date.UTC(+year, +month - 1, +day));
+            };
+          
+            const start = all_data ? new Date() : parseDate(start_date);
+            const end = all_data ? new Date() : parseDate(end_date);
+          
+            console.log("Sending to downloadVideos -> start:", start.toISOString(), "end:", end.toISOString());
+          
+            downloadVideos(game_name, start, end);
+          }                  
         }}
       />
     </Container>
