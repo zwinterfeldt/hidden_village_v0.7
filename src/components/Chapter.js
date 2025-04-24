@@ -146,12 +146,17 @@ const Chapter = (props) => {
 
   const [hasRun, setHasRun] = useState(false);
 
+  // Reset hasRun when chapter changes
+  useEffect(() => {
+    setHasRun(false);
+  }, [currentConjectureIdx]);
+
   const [state, send, service] = useMachine(chapterMachine, {
     context,
     initialState: isOutro ? "outro" : "intro",
   }, (state) => {
     if (state.matches("done") && !hasRun) {
-      setHasRun(true); // prevent any future remount from restarting the machine
+      setHasRun(true);
     }
   });
 
