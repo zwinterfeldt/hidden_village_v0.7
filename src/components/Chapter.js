@@ -125,31 +125,62 @@ const Chapter = (props) => {
   };
 
   const [dialogueData, setDialogueData] = useState({ intro: [], outro: [], scene: [] });
+  const [hasRun, setHasRun] = useState(false);
+  const [previousChapter, setPreviousChapter] = useState(null);
 
-  // Initialize with empty context
-  let context = {
+  // Initialize context
+  const context = {
     introText: dialogueData.intro || [],
     outroText: dialogueData.outro || [],
     scene: dialogueData.scene || [],
     currentText: props.isOutro
-    ? (dialogueData.outro && dialogueData.outro[0]) || null
-    : (dialogueData.intro && dialogueData.intro[0]) || null,
+      ? (dialogueData.outro && dialogueData.outro[0]) || null
+      : (dialogueData.intro && dialogueData.intro[0]) || null,
     lastText: [],
     cursorMode: true,
     onIntroComplete: () => {
-      nextChapterCallback();
+      if (!hasRun) {
+        setHasRun(true);
+        // Clear dialogues immediately before GameMachine updates
+        setDialogueData({ intro: [], outro: [], scene: [] });
+        nextChapterCallback();
+      }
     },
     onOutroComplete: () => {
-      nextChapterCallback();
+      if (!hasRun) {
+        setHasRun(true);
+        // Clear dialogues immediately before GameMachine updates
+        setDialogueData({ intro: [], outro: [], scene: [] });
+        nextChapterCallback();
+      }
     },
   };
 
-  const [hasRun, setHasRun] = useState(false);
-
-  // Reset hasRun when chapter changes
+  // Reset state when chapter changes
   useEffect(() => {
-    setHasRun(false);
-  }, [currentConjectureIdx]);
+    if (previousChapter !== currentConjectureIdx) {
+      console.log('=== CHAPTER CHANGE ===');
+      console.log('Previous:', previousChapter);
+      console.log('Current:', currentConjectureIdx);
+      console.log('isOutro:', isOutro);
+      console.log('Current dialogueData:', dialogueData);
+      setHasRun(false);
+      // Clear any existing dialogues
+      setDialogueData({ intro: [], outro: [], scene: [] });
+      // Reset state machine
+      send({
+        type: "RESET_CONTEXT",
+        introText: [],
+        outroText: [],
+        scene: [],
+        currentText: null,
+        lastText: [],
+        cursorMode: true,
+        isOutro: isOutro,
+      });
+      setPreviousChapter(currentConjectureIdx);
+    }
+  }, [currentConjectureIdx, isOutro]);
 
   const [state, send, service] = useMachine(chapterMachine, {
     context,
@@ -163,101 +194,98 @@ const Chapter = (props) => {
   const currentText = useSelector(service, selectCurrentText);
   const cursorMode = useSelector(service, selectCursorMode);
 
-  // New effect to load dialogues from Firebase
+  // Load dialogues from Firebase - but only if we haven't loaded them yet
   useEffect(() => {
-    const loadDialogues = async () => {
-      setIsLoading(true);
-      // console.log("Curriculum = ");
-      // console.log(Curriculum.getCurrentUUID());
-      const gameId = Curriculum.getCurrentUUID();
-      if (!gameId) {
-        console.warn("No valid game ID found. Cannot load dialogues.");
-        setIsLoading(false);
-        return;
-      }
+    if (previousChapter === currentConjectureIdx && !hasRun) {
+      const loadDialogues = async () => {
+        console.log('=== LOADING DIALOGUES ===');
+        console.log('Chapter:', currentConjectureIdx + 1);
+        console.log('isOutro:', isOutro);
+        console.log('hasRun:', hasRun);
+        setIsLoading(true);
+        const gameId = Curriculum.getCurrentUUID();
+        
+        if (!gameId) {
+          console.warn("No valid game ID found. Cannot load dialogues.");
+          setIsLoading(false);
+          return;
+        }
 
-      try {
-        const rawDialogues = await loadGameDialoguesFromFirebase(gameId);
-        const allDialogues = Object.values(rawDialogues || {});
-        console.log("🔍 Raw Dialogues:", rawDialogues);
-        console.log("🧮 All Dialogues:", allDialogues);
-
-        if (allDialogues) {
-          // Format current chapter name
-          const currentChapterName = `chapter-${currentConjectureIdx + 1}`;
-          console.log("Current Chapter Name = ", currentChapterName);
-
-          // Filter dialogues for current chapter
-          const chapterDialogues = allDialogues.filter(
-            dialogue => dialogue.chapter === currentChapterName
-          );
-          console.log("Chapter Dialogues = ", chapterDialogues);
-
-          // Ensuring chapters.toml is being rendered correctly
-          console.log("Script: ", script);
-          console.log("Scene for", currentChapterName, ":", script[currentChapterName]?.scene);
-
+        try {
+          const rawDialogues = await loadGameDialoguesFromFirebase(gameId);
+          const allDialogues = Object.values(rawDialogues || {});
           
-          // Separate intros and outros
-          const intros = chapterDialogues
-            .filter(dialogue => dialogue.type === "Intro")
-            .map(dialogue => ({ 
-              text: dialogue.text, 
-              speaker: dialogue.character || "player"
-            }));
-
-          console.log("Intros = ", intros);
+          if (allDialogues && allDialogues.length > 0) {
+            const currentChapterName = `chapter-${currentConjectureIdx + 1}`;
+            console.log('=== FILTERING DIALOGUES ===');
+            console.log('Looking for chapter:', currentChapterName);
             
-          const outros = chapterDialogues
-            .filter(dialogue => dialogue.type === "Outro")
-            .map(dialogue => ({
-              text: dialogue.text, 
-              speaker: dialogue.character || "player"
-            }));
-          console.log("Outros = ", outros);
+            const chapterDialogues = allDialogues.filter(
+              dialogue => dialogue.chapter === currentChapterName
+            );
+            console.log('Found dialogues:', chapterDialogues);
 
-          // For scene, we'll use a default or extract from dialogues if available
-          const scene = [];
+            const intros = chapterDialogues
+              .filter(dialogue => dialogue.type === "Intro")
+              .map(dialogue => ({ 
+                text: dialogue.text, 
+                speaker: dialogue.character || "player"
+              }));
+            console.log('Filtered intros:', intros);
+              
+            const outros = chapterDialogues
+              .filter(dialogue => dialogue.type === "Outro")
+              .map(dialogue => ({
+                text: dialogue.text, 
+                speaker: dialogue.character || "player"
+              }));
+            console.log('Filtered outros:', outros);
 
-          // TODO: Create a method to extract scene data from dialogues if needed
-          // For now, we'll just use the default scene from the script
-          if (script[currentChapterName] && script[currentChapterName].scene) {
-            console.log("Loaded scene from chapters.toml:", script[currentChapterName].scene);
-            scene.push(...script[currentChapterName].scene);
-          }
+            const scene = [];
+            if (script[currentChapterName] && script[currentChapterName].scene) {
+              scene.push(...script[currentChapterName].scene);
+            }
 
-          setDialogueData({
-            intro: intros,
-            outro: outros,
-            scene: scene
-          });
-          
-          // Update the state machine with the new data
-          if (!hasRun) {
+            console.log('=== UPDATING STATE ===');
+            console.log('Setting dialogueData for chapter:', currentConjectureIdx + 1);
+            setDialogueData({
+              intro: intros,
+              outro: outros,
+              scene: scene
+            });
+
+            console.log('Sending RESET_CONTEXT to state machine');
             send({
               type: "RESET_CONTEXT",
               introText: intros,
               outroText: outros,
               scene: scene,
-              currentText: isOutro
-                ? (outros.length > 0 ? outros[0] : null)
-                : (intros.length > 0 ? intros[0] : null),
+              currentText: isOutro ? outros[0] : intros[0],
               lastText: [],
               cursorMode: true,
               isOutro: isOutro,
             });
           }
+        } catch (error) {
+          console.error("Error loading dialogues:", error);
+        } finally {
+          setIsLoading(false);
+          console.log('=== LOADING COMPLETE ===');
         }
-      } catch (error) {
-        console.error("Error loading dialogues:", error);
-      } finally {
-        setIsLoading(false);
-        console.log("Loading complete.");
-      }
-    };
+      };
 
-    loadDialogues();
-  }, [currentConjectureIdx, isOutro]); // Reload when chapter changes
+      loadDialogues();
+    }
+  }, [currentConjectureIdx, isOutro, previousChapter, hasRun]);
+
+  // Add effect to monitor state changes
+  useEffect(() => {
+    console.log('=== STATE UPDATE ===');
+    console.log('Current state:', state.value);
+    console.log('Current text:', state.context.currentText);
+    console.log('isOutro:', isOutro);
+    console.log('hasRun:', hasRun);
+  }, [state, isOutro, hasRun]);
 
   useEffect(() => {
     if (dialogueData.scene && !isLoading) {
@@ -271,31 +299,6 @@ const Chapter = (props) => {
   useEffect(() => {
     setCurrentConjecture(chapterConjecture);
   }, [chapterConjecture]);
-
-  // Remove the old effect that used script data
-  /* useEffect(() => {
-    let [intro, outro, scene] = [[], [], []];
-    if (script[`chapter-${currentConjectureIdx + 1}`]) {
-      intro = script[`chapter-${currentConjectureIdx + 1}`].intro
-        ? script[`chapter-${currentConjectureIdx + 1}`].intro
-        : [];
-      outro = script[`chapter-${currentConjectureIdx + 1}`].outro
-        ? script[`chapter-${currentConjectureIdx + 1}`].outro
-        : [];
-      scene = script[`chapter-${currentConjectureIdx + 1}`].outro
-        ? script[`chapter-${currentConjectureIdx + 1}`].outro
-        : [];
-    }
-    send({
-      type: "RESET_CONTEXT",
-      introText: intro,
-      outroText: outro,
-      scene: scene,
-      currentText: null,
-      lastText: [],
-      cursorMode: true,
-    });
-  }, [currentConjectureIdx]); */
 
   // Effect to update the current text being displayed
   useEffect(() => {

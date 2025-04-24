@@ -10,15 +10,22 @@ const chapterMachine = createMachine(
       currentText: {},
       lastText: [],
       cursorMode: true,
-      // The callback that will notify the parent when the intro is complete.
+      isOutro: false,
       onIntroComplete: () => {},
+      onOutroComplete: () => {},
     },
     states: {
       idle: {
         after: {
-          1000: {
-            target: "intro",
-          },
+          1000: [
+            {
+              target: "outro",
+              cond: (context) => context.isOutro,
+            },
+            {
+              target: "intro",
+            },
+          ],
         },
       },
       intro: {
@@ -30,12 +37,15 @@ const chapterMachine = createMachine(
               cond: "continueIntro",
             },
             {
-              // When there’s no more intro text, call the callback and enter the final "done" state.
               target: "done",
               cond: (context) => context.introText.length === 0,
               actions: "triggerOnIntroComplete",
             },
           ],
+          RESET_CONTEXT: {
+            target: "idle",
+            actions: "resetContext",
+          },
         },
       },
       introReading: {
@@ -45,7 +55,6 @@ const chapterMachine = createMachine(
           },
         },
       },
-      // Other states remain unchanged…
       experiment: {
         on: {
           ADVANCE: {
@@ -68,47 +77,27 @@ const chapterMachine = createMachine(
             },
           ],
           RESET_CONTEXT: {
-            actions: assign({
-              introText: (_, event) => event.introText,
-              outroText: (_, event) => event.outroText,
-              scene: (_, event) => event.scene,
-              currentText: (_, event) => event.isOutro ? event.outroText[0] || null : event.introText[0] || null,
-              lastText: () => [],
-              cursorMode: (_, event) => event.cursorMode,
-            }),
+            target: "idle",
+            actions: "resetContext",
           },
         },
       },
       loadingNextChapter: {
         on: {
           RESET_CONTEXT: {
-            target: "intro",
-            actions: assign({
-              introText: (_, event) => event.introText,
-              outroText: (_, event) => event.outroText,
-              scene: (_, event) => event.scene,
-              currentText: (_, event) => event.isOutro ? event.outroText[0] || null : event.introText[0] || null,
-              lastText: () => [],
-              cursorMode: (_, event) => event.cursorMode,
-            }),
+            target: "idle",
+            actions: "resetContext",
           },
         },
       },
-      // This final state indicates that the intro is fully completed.
       done: {
         type: "final",
       },
     },
     on: {
       RESET_CONTEXT: {
-        actions: assign({
-          introText: (_, event) => event.introText,
-          outroText: (_, event) => event.outroText,
-          scene: (_, event) => event.scene,
-          currentText: (_, event) => event.isOutro ? event.outroText[0] || null : event.introText[0] || null,
-          lastText: () => [],
-          cursorMode: (_, event) => event.cursorMode,
-        }),
+        target: "idle",
+        actions: "resetContext",
       },
     },
   },
@@ -118,54 +107,30 @@ const chapterMachine = createMachine(
       continueOutro: (context) => context.outroText.length > 0,
     },
     actions: {
+      resetContext: assign({
+        introText: (_, event) => event.introText,
+        outroText: (_, event) => event.outroText,
+        scene: (_, event) => event.scene,
+        currentText: (_, event) => event.isOutro ? event.outroText[0] || null : event.introText[0] || null,
+        lastText: () => [],
+        cursorMode: (_, event) => event.cursorMode,
+        isOutro: (_, event) => event.isOutro,
+      }),
       introDialogueStep: assign({
-        currentText: (context) => {
-          console.log("Current introText before slicing:", context.introText);
-          return context.introText[0] || {};
-        },
-        introText: (context) => {
-          const sliced = context.introText.length > 0 ? context.introText.slice(1) : [];
-          console.log("New introText after slicing:", sliced);
-          return sliced;
-        },
-        lastText: (context) => {
-          if (context.introText.length > 0) {
-            return [...context.lastText, context.currentText];
-          }
-          return [];
-        },
+        currentText: (context) => context.introText[0] || {},
+        introText: (context) => context.introText.length > 0 ? context.introText.slice(1) : [],
+        lastText: (context) => context.introText.length > 0 ? [...context.lastText, context.currentText] : [],
       }),
       toggleCursorMode: assign({
         cursorMode: (context) => !context.cursorMode,
       }),
       outroDialogStep: assign({     
-        currentText: (context) => {
-          console.log("🎬 Running outroDialogStep with outroText:", context.outroText);
-          if (context.outroText[0]) {
-            return context.outroText[0];
-          }
-          return {};
-        },
-        outroText: (context) => {
-          if (context.outroText.length > 0) {
-            return context.outroText.slice(1);
-          }
-          return [];
-        },
-        lastText: (context) => {
-          if (context.outroText.length > 0) {
-            return [...context.lastText, context.currentText];
-          }
-          return [];
-        },
+        currentText: (context) => context.outroText[0] || {},
+        outroText: (context) => context.outroText.length > 0 ? context.outroText.slice(1) : [],
+        lastText: (context) => context.outroText.length > 0 ? [...context.lastText, context.currentText] : [],
       }),
-      triggerOnIntroComplete: (context) => {
-        // Call the callback passed in via context.
-        context.onIntroComplete();
-      },
-      triggerOnOutroComplete: (context) => {
-        context.onOutroComplete?.();
-      },      
+      triggerOnIntroComplete: (context) => context.onIntroComplete(),
+      triggerOnOutroComplete: (context) => context.onOutroComplete?.(),
     },
   }
 );
