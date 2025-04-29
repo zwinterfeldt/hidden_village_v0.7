@@ -346,13 +346,6 @@ const Chapter = (props) => {
     <>
       <Background height={height} width={width} />
       {characters}
-      {cursorMode && (
-        <CursorMode 
-          rowDimensions={rowDimensions} 
-          poseData={poseData} 
-          callback={handleAdvance}
-        />
-      )}
       <TextBox
         text={displayText}
         rowDimensionsCallback={rowDimensions}
@@ -363,6 +356,13 @@ const Chapter = (props) => {
       />
       {["intro", "outro", "loadingNextChapter"].includes(state.value) && (
         <Pose poseData={poseData} colAttr={columnDimensions(3)} />
+      )}
+      {cursorMode && (
+        <CursorMode 
+          rowDimensions={rowDimensions} 
+          poseData={poseData} 
+          callback={handleAdvance}
+        />
       )}
     </>
   );

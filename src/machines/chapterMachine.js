@@ -9,7 +9,7 @@ const chapterMachine = createMachine(
       scene: [],
       currentText: {},
       lastText: [],
-      cursorMode: true,
+      cursorMode: false,
       isOutro: false,
       onIntroComplete: () => {},
       onOutroComplete: () => {},
@@ -30,11 +30,24 @@ const chapterMachine = createMachine(
       },
       intro: {
         entry: ["introDialogueStep"],
+        initial: "reading",
+        states: {
+          reading: {
+            after: {
+              1500: {
+                target: "ready",
+                actions: assign({ cursorMode: true })
+              }
+            }
+          },
+          ready: {}
+        },
         on: {
           NEXT: [
             {
               target: "intro",
               cond: "continueIntro",
+              actions: assign({ cursorMode: false })
             },
             {
               target: "done",
@@ -64,11 +77,24 @@ const chapterMachine = createMachine(
       },
       outro: {
         entry: "outroDialogStep",
+        initial: "reading",
+        states: {
+          reading: {
+            after: {
+              1500: {
+                target: "ready",
+                actions: assign({ cursorMode: true })
+              }
+            }
+          },
+          ready: {}
+        },
         on: {
           NEXT: [
             {
               target: "outro",
               cond: "continueOutro",
+              actions: assign({ cursorMode: false })
             },
             {
               target: "done",
@@ -113,7 +139,7 @@ const chapterMachine = createMachine(
         scene: (_, event) => event.scene,
         currentText: (_, event) => event.isOutro ? event.outroText[0] || null : event.introText[0] || null,
         lastText: () => [],
-        cursorMode: (_, event) => event.cursorMode,
+        cursorMode: () => false,
         isOutro: (_, event) => event.isOutro,
       }),
       introDialogueStep: assign({
