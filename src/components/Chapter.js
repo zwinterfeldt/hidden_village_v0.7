@@ -354,7 +354,7 @@ const Chapter = (props) => {
         onClickCallback={handleAdvance}
         isLoading={isLoading}
       />
-      {["intro", "outro", "loadingNextChapter"].includes(state.value) && (
+      {(state.value === "intro" || state.value.intro || state.value === "outro" || state.value.outro || state.value === "loadingNextChapter") && (
         <Pose poseData={poseData} colAttr={columnDimensions(3)} />
       )}
       {cursorMode && (
