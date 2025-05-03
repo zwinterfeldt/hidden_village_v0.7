@@ -166,10 +166,25 @@ const DataMenu = (props) => {
           (!endDateUTC || videoDate <= endDateUTC);
   
         const includesAuthor = author ? item.name.includes(author) : true;
-        const includesName = name ? item.name.includes(name) : true;
+
+        // Strip out all spaces from both the game name and item name for comparison
+        const gameNameNoSpaces = name ? name.replace(/\s+/g, '') : '';
+        const includesName = name ? item.name.includes(gameNameNoSpaces) : true;
   
         if (isInDateRange && includesAuthor && includesName) {
+          // console.log(`  ✅ ADDING ${item.name} to filteredVideos`);
+          // console.log("Video date: ", videoDate)
+          // console.log("Author: ", item.author)
+          // console.log("Name: ", item.name)
           filteredVideos.push(item);
+        }
+        else {
+          // --- ADD THIS LOG ---
+          // console.log(`  ❌ SKIPPING ${item.name} because one or more conditions failed.`);
+          // console.log("Video date: ", videoDate)
+          // console.log("Author: ", author)
+          // console.log("Name: ", name)
+          // --- END LOG ---
         }
       }
   
