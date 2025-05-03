@@ -20,7 +20,8 @@ const DataMenu = (props) => {
     menuHeight,
     x,
     y,
-    trigger
+    trigger,
+    onClose = () => {},
   } = props;
 
   const [all_data, setAllData] = useState(false);
@@ -59,24 +60,27 @@ const DataMenu = (props) => {
 
   // When component mounts, user email is either loading, fetched, or reached an error
   useEffect(() => {
+    let isMounted = true;
+  
     const fetchEmail = async () => {
       try {
         setIsLoading(true);
         const email = await getUserEmailFromDatabase();
-        //const gameList = await getAuthorizedGameList();
-        // console.log("data received:", gameList);
-        setUserEmail(email);
-        //setGameList(gameList);
+        if (isMounted) setUserEmail(email);
       } catch (error) {
-        console.error('Error fetching email:', error);
-        setError(error.message);
+        if (isMounted) setError(error.message);
       } finally {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     };
-
+  
     fetchEmail();
+  
+    return () => {
+      isMounted = false;
+    };
   }, []);
+  
 
   const downloadVideos = async (gameName, start, end) => {
     try {
@@ -379,7 +383,7 @@ const DataMenu = (props) => {
       />
 
       <Text
-        text={"Download all Data Files for this Game"}              
+        text={"Get All Data Files for This Game"}              
         style={new TextStyle({
           align: "center",
           fontFamily: "Arial",
@@ -472,6 +476,19 @@ const DataMenu = (props) => {
         x={x + innerRectMargins + fieldTextMarginsFromInnerRect + + checkButtonWidth * 6 + checkButtonWidth * 0.8} 
         y={y + menuHeight - innerRectMargins - innerRectHeight + fieldTextMarginsFromInnerRect + fieldTextMarginsFromEachOther * 5}
         anchor={0}
+      />
+
+      <RectButton
+        height={menuHeight * 0.08}
+        width={menuWidth * 0.08}
+        x={x + menuWidth - innerRectMargins - menuWidth * 0.06}
+        y={y + (menuHeight - innerRectMargins - innerRectHeight) / 2}
+        color={red}
+        fontSize={14}
+        fontColor={white}
+        text={"X"}
+        fontWeight={800}
+        callback={onClose}
       />
 
       <RectButton //Button for downloading the data

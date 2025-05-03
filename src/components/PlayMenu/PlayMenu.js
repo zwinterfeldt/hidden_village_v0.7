@@ -116,9 +116,9 @@ const PlayMenu = (props) => {
                 callback={button.callback}
             />
         ))}
-                {state.value === "main" && ( // if the state is main, show the data button and the data menu
+        {state.value === "main" && ( // if the state is main, show the data button and the data menu
           <>
-            <Button
+          <Button
             height={height * 0.01}
             width={width * 0.05}
             x={width - (width * 0.05)}
@@ -131,12 +131,13 @@ const PlayMenu = (props) => {
             callback={() => setdataMenuVisable(!isDataMenuVisable)}
           />
           <DataMenu 
-          trigger={isDataMenuVisable} 
-          menuWidth={width * 0.4}
-          menuHeight={height * 0.5}
-          x={width * 0.5 - (width * 0.4 * 0.5)}
-          y={height * 0.5 - (height * 0.5 * 0.5)}
-        />
+            trigger={isDataMenuVisable} 
+            menuWidth={width * 0.4}
+            menuHeight={height * 0.5}
+            x={width * 0.5 - (width * 0.4 * 0.5)}
+            y={height * 0.5 - (height * 0.5 * 0.5)}
+            onClose={() => setdataMenuVisable(false)}
+          />
         </>
         )}
         {state.value === "test" && ( //if the state is test, show the test module
