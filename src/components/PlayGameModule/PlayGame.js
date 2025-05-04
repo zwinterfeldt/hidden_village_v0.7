@@ -21,7 +21,7 @@ const hasShownIntro = (chapterIdx) => shownIntros.has(chapterIdx);
     const uuidsList = Curriculum.getCurrentConjectures();
     const [uuidIDX, setuuidIDX] = useState(0);
     // Send the UUID list to the playGameMachine for context
-    const [state, send] = useMachine(PlayGameMachine, {
+    const [state, send] = useMachine(PlayGameMachine, { 
         context: {
             uuids: uuidsList
         }
