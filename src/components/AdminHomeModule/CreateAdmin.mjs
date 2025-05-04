@@ -8,7 +8,6 @@ const UserPermissions = {
 };
 
 const adminUserEmail = "breamer19@outlook.com"
-const adminUserEmail = "dlwowns@daum.net"
 const adminUserRole = UserPermissions.Admin
 const adminUserOrganization = "MSUMankato"
 const adminUserPassword = "Admin1"
