@@ -10,8 +10,10 @@ import { setAddtoCurricular } from '../ConjectureSelector/ConjectureSelectorModu
 import { StoryEditorContentEditor } from "./StoryEditorModuleBoxes";
 import Settings from '../Settings'; // Import the Settings component
 import { idToSprite } from "../Chapter"; //Import list of sprites
-import { saveGameDialoguesToFirebase, loadGameDialoguesFromFirebase } from "../../firebase/database";
+import { saveGameDialoguesToFirebase,loadGameDialoguesFromFirebase } from "../../firebase/database";
 import { useEffect } from "react";import { saveNarrativeDraftToFirebase } from "../../firebase/database";
+
+
 
 // stores a list of conjectures
 export const Curriculum = {
@@ -94,7 +96,7 @@ const StoryEditorModule = (props) => {
   const [dialogues, setDialogues] = useState([]);
 
   //Stores Chapters
-  const [chapters, setChapters] = useState(["chapter-1"]);
+  const [chapters, setChapters] = useState([1]);
 
   useEffect(() => {
     const gameId = gameUUID ?? Curriculum.getCurrentUUID();
@@ -104,29 +106,11 @@ const StoryEditorModule = (props) => {
     }
     loadGameDialoguesFromFirebase(gameId).then((loaded) => {
       if (loaded) {
-        // Ensure all dialogues have properly formatted chapters
-        const updatedDialogues = loaded.map(dialogue => {
-          if (!dialogue.hasOwnProperty('chapter')) {
-            return { ...dialogue, chapter: "chapter-1" }; // Default to chapter-1
-          }
-          // If chapter exists but isn't formatted correctly, format it
-          else if (typeof dialogue.chapter === 'number' || 
-                  !dialogue.chapter.startsWith('chapter-')) {
-            return { ...dialogue, chapter: `chapter-${dialogue.chapter}` };
-          }
-          return dialogue;
-        });
-        
-        // Extract all unique chapters from dialogues
-        const uniqueChapters = [...new Set(updatedDialogues.map(d => d.chapter))];
-        if (uniqueChapters.length > 0) {
-          setChapters(uniqueChapters.sort());
-        }
-        
-        setDialogues(updatedDialogues);
+        setDialogues(loaded);
       }
     });
   }, []);
+
 
   //Change Chapter
   const handleChangeChapter = (dialogueIndex, newChapterName) => {
@@ -137,23 +121,22 @@ const StoryEditorModule = (props) => {
 
   //Add chapter, called by "Add Chapter" button
   const handleAddChapter = () => {
+    //If chapters.length is 0, the first newChapterNumber will be 1
     const newChapterNumber = chapters.length + 1;
-    // Format as "chapter-X"
-    setChapters([...chapters, `chapter-${newChapterNumber}`]);
-  };
+    alert("Chapter has been added.")
 
+    //Store numeric value
+    setChapters([...chapters, newChapterNumber]);
+  };
   //Add a new dialogue
   const handleAddDialogue = () => {
     const newText = prompt("Enter dialogue text:");
     if (newText && newText.trim() !== "") {
-      // Default to the latest chapter (or first if none exist)
-      const defaultChapter = chapters.length > 0 ? chapters[chapters.length - 1] : "chapter-1";
-      
+      //Example defaults for character, type, etc.
       const newDialogue = {
         text: newText,
         character: "player",
-        type: "Intro",
-        chapter: defaultChapter // Add formatted chapter
+        type: "Intro"
       };
       setDialogues([...dialogues, newDialogue]);
     }
@@ -245,22 +228,11 @@ const StoryEditorModule = (props) => {
 
   // Publish function that includes reset
   async function publishAndReset(currentUUID)  {
-    let promise = await writeToDatabaseCurricular(currentUUID);
-    if (promise != undefined) { // promise is undefined if the game cannot be published
-      // Don't reset values when publishing - this keeps dialogues accessible
-      alert("Game published successfully! Your dialogues are preserved.");
-      
-      // Optional: If you want to clear some data but KEEP the game UUID:
-      localStorage.removeItem('CurricularName');
-      localStorage.removeItem('CurricularAuthor');
-      localStorage.removeItem('CurricularKeywords');
-      localStorage.removeItem('CurricularPIN');
-      
-      // IMPORTANT: Do NOT clear the curriculum or reset the UUID
-      // This keeps the connection to your dialogues intact
-      // Curriculum.clearCurriculum(); - REMOVE THIS
-      // Curriculum.CurrentConjectures = []; - REMOVE THIS
-    }
+      promise = await writeToDatabaseCurricular(currentUUID);
+      if (promise != undefined){ // promise is undefined if the game cannot be published
+        resetCurricularValues();
+        Curriculum.CurrentConjectures = [];
+      }
   };
 
   return (
