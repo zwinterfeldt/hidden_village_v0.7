@@ -223,7 +223,7 @@ const DataMenu = (props) => {
       alert('Failed to download videos. Please check the console for details.');
     }
   };
-  
+
 
   const draw = useCallback(
     (g) => {
@@ -398,7 +398,7 @@ const DataMenu = (props) => {
       />
 
       <Text
-        text={"Get All Data Files for This Game"}              
+        text={"Select entire date range"}              
         style={new TextStyle({
           align: "center",
           fontFamily: "Arial",
